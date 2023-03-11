@@ -16,8 +16,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
       this.hasMany(models.Reviews, {
-        sourceKey: "reviewId",
-        foreignKey: "reviewId",
+        sourceKey: "musicId",
+        foreignKey: "musicId",
       });
 
     }

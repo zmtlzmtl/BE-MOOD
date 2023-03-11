@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    reivew: {
+    review: {
       type: DataTypes.STRING,
       allowNull: false,
     },
