@@ -25,7 +25,7 @@ class UserService {
   login = async (id, password) => {
     const login = await this.userRepository.login(id,password)
     if(!login){
-        throw new makeError({messagge : "로그인에 실패하였습니다.", code : 401})
+        throw new makeError({messagge : "로그인에 실패하였습니다.", code : 400})
     }
     return login
   }
