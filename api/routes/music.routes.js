@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const { S3 } = require("aws-sdk");
 const { Musics } = require("../../db/models/");
+const { Op } = require("sequelize");
 router = express.Router();
 
 const storage = multer.memoryStorage();
@@ -63,6 +64,19 @@ router.get("/music", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(400).json({ msg: err.message });
+  }
+});
+
+router.get("/mood/:status", async (req, res) => {
+  try {
+    const { status } = req.params;
+    const project = await Musics.findAll({
+      where: { status: { [Op.between]: [+status - 10, +status + 10] } },
+    });
+    return res.status(200).json({ data: project });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: err.message });
   }
 });
 module.exports = router;
