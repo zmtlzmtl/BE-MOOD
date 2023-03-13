@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 const { S3 } = require("aws-sdk");
 const { Musics } = require("../../db/models/");
-const { Users } = require("../../db/models");
 router = express.Router();
 
 const storage = multer.memoryStorage();
@@ -41,8 +40,15 @@ router.post("/music", multer({ storage }).any(), async (req, res) => {
 
 router.get("/music/:musicId", async (req, res) => {
   try {
+    const { musicId } = req.params;
+    const project = await Musics.findOne({
+      where: { musicId },
+      attributes: ["musicTitle", "musicContent", "composer", "musicUrl"],
+    });
+    res.status(200).json({ data: project });
   } catch (err) {
     console.log(err);
+    return res.status(400).json({ err: err.message });
   }
 });
 
