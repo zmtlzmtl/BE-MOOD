@@ -29,6 +29,22 @@ class UserController {
       next(error);
     }
   };
+
+  check = async (req, res, next) => {
+    const { id, nickname } = req.body;
+    try {
+      if (!nickname) {
+        await this.userService.idCheck(id);
+        res.status(200).json({ message: "사용가능한 아이디 입니다." });
+      }
+      if (!id) {
+        await this.userService.nickNameCheck(nickname);
+        res.status(200).json({ message: "사용가능한 닉네임 입니다." });
+      }
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = UserController;
