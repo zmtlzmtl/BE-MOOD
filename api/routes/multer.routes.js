@@ -52,4 +52,17 @@ router.get("/music/:musicId", async (req, res) => {
   }
 });
 
+router.get("/music", async (req, res) => {
+  try {
+    const composer = req.query;
+    const project = await Musics.findAll({
+      where: composer,
+      attributes: ["musicTitle", "musicContent"],
+    });
+    res.status(200).json({ data: project });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ msg: err.message });
+  }
+});
 module.exports = router;
