@@ -1,11 +1,11 @@
 const express = require("express");
 const multer = require("multer");
 const { S3 } = require("aws-sdk");
-const { memoryStorage } = require("multer");
 const { Musics } = require("../../db/models/");
+const { Users } = require("../../db/models");
 router = express.Router();
 
-const storage = multer.memoryStorage(); //require buffer
+const storage = multer.memoryStorage();
 
 s3Upload = async (file) => {
   const s3 = new S3();
@@ -21,20 +21,28 @@ router.post("/music", multer({ storage }).any(), async (req, res) => {
   try {
     const file = req.files[0];
     const result = await s3Upload(file);
-    let userId = 1;
     let Url = result.Location;
-    let { musicTitle, musicContent, status } = req.body;
+    let userId = 1;
+    let { musicTitle, musicContent, status, composer } = req.body;
     await Musics.create({
       musicUrl: Url,
       musicTitle,
       musicContent,
       status,
+      composer,
       userId,
     });
-    res.json();
+    return res.status(200).json({ msg: "생성완료" });
   } catch (err) {
     console.log(err);
-    return res.status(400).json({ err: err.message });
+    return res.status(400).json({ msg: "생성실패" });
+  }
+});
+
+router.get("/music/:musicId", async (req, res) => {
+  try {
+  } catch (err) {
+    console.log(err);
   }
 });
 
