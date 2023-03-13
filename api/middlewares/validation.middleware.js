@@ -85,14 +85,6 @@ const Validation = {
   //review check
   paramGetCheck: async (req, res, next) => {
     const check = Joi.object().keys({
-    //   userId: Joi.number()
-    //     .required()
-    //     .error(
-    //       new makeError({
-    //         message: "알맞은 형식의 유저정보를 입력하세요.",
-    //         code: 400,
-    //       })
-    //     ),
       musicId: Joi.number()
         .required()
         .error(
@@ -111,14 +103,6 @@ const Validation = {
   },
   paramCheck: async (req, res, next) => {
     const check = Joi.object().keys({
-    //   userId: Joi.number()
-    //     .required()
-    //     .error(
-    //       new makeError({
-    //         message: "알맞은 형식의 유저정보를 입력하세요.",
-    //         code: 400,
-    //       })
-    //     ),
       musicId: Joi.number()
         .required()
         .error(
