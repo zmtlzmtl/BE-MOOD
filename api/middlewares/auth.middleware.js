@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
   try {
     const decodedToken = jwt.verify(token, process.env.KEY);
     const userId = decodedToken.userId;
-    const user = await Users.findOne({ where: { email: userId } });
+    const user = await Users.findOne({ where: { userId: userId } });
     if (!user) {
       return res
         .status(401)
