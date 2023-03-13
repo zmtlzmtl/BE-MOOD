@@ -54,7 +54,7 @@ const Validation = {
   //로그인 check
   loginCheck: async (req, res, next) => {
     const check = Joi.object().keys({
-      eid: Joi.string()
+      id: Joi.string()
       .regex(/^[a-zA-Z0-9]{4,}$/)
       .required()
       .error(
