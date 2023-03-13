@@ -55,14 +55,14 @@ const Validation = {
   loginCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       id: Joi.string()
-      .regex(/^[a-zA-Z0-9]{4,}$/)
-      .required()
-      .error(
-        new makeError({
-          message: "id값이 잘못되었습니다.",
-          code: 400,
-        })
-      ),
+        .regex(/^[a-zA-Z0-9]{4,}$/)
+        .required()
+        .error(
+          new makeError({
+            message: "id값이 잘못되었습니다.",
+            code: 400,
+          })
+        ),
       password: Joi.string()
         .regex(
           /^(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/
@@ -83,21 +83,55 @@ const Validation = {
     next();
   },
   //review check
-  paramCheck: async (req, res, next) => {
+  paramGetCheck: async (req, res, next) => {
     const check = Joi.object().keys({
-      userId: Joi.number()
-        .required()
-        .error(
-          new makeError({
-            message: "알맞은 형식의 유저정보를 입력하세요.",
-            code: 400,
-          })
-        ),
+    //   userId: Joi.number()
+    //     .required()
+    //     .error(
+    //       new makeError({
+    //         message: "알맞은 형식의 유저정보를 입력하세요.",
+    //         code: 400,
+    //       })
+    //     ),
       musicId: Joi.number()
         .required()
         .error(
           new makeError({
             message: "알맞은 형식의 게시글을 입력하세요.",
+            code: 400,
+          })
+        ),
+    });
+    try {
+      await check.validateAsync(req.params);
+    } catch (error) {
+      next(error);
+    }
+    next();
+  },
+  paramCheck: async (req, res, next) => {
+    const check = Joi.object().keys({
+    //   userId: Joi.number()
+    //     .required()
+    //     .error(
+    //       new makeError({
+    //         message: "알맞은 형식의 유저정보를 입력하세요.",
+    //         code: 400,
+    //       })
+    //     ),
+      musicId: Joi.number()
+        .required()
+        .error(
+          new makeError({
+            message: "알맞은 형식의 게시글을 입력하세요.",
+            code: 400,
+          })
+        ),
+      reviewId: Joi.number()
+        .required()
+        .error(
+          new makeError({
+            message: "알맞은 형식의 댓글을 입력하세요.",
             code: 400,
           })
         ),
