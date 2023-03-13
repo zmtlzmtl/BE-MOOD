@@ -17,12 +17,20 @@ class ReviewRepository {
     });
     return result;
   };
-
+  //리뷰 상세조회
+  getMusicOneReview = async ({ reviewId }) => {
+    const result = await Reviews.findOne({
+      where: { reviewId },
+    });
+    return result;
+  };
   //리뷰 수정하기
   updateMusicReview = async ({ reviewId, review }) => {
     await Reviews.update({ review }, { where: { reviewId } });
     return;
   };
+
+  //리뷰 삭제하기
   deleteMusicReview = async ({ reviewId }) => {
     await Reviews.destroy({ where: { reviewId } });
     return;
