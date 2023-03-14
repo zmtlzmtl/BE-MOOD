@@ -26,7 +26,7 @@ app.use("/css", express.static("./static/css"));
 app.use("/js", express.static("./static/js"));
 
 /* Get 방식으로 / 경로에 접속하면 실행 됨 */
-app.get("/rooms/:roomId", function (request, response) {
+app.get("/api/rooms/:roomId", function (request, response) {
   fs.readFile("./static/index.html", function (err, data) {
     if (err) {
       response.send("에러");
@@ -59,13 +59,11 @@ io.sockets.on("connection", function (socket) {
 
     /* 모든 소켓에게 전송 */
     io.sockets.to(roomId).emit("receive", findRoomChats);
-    io.sockets
-      .to(roomId)
-      .emit("update", {
-        type: "connect",
-        nickname: "SERVER",
-        message: nickname + "님이 접속하였습니다.",
-      });
+    io.sockets.to(roomId).emit("update", {
+      type: "connect",
+      nickname: "SERVER",
+      message: nickname + "님이 접속하였습니다.",
+    });
   });
 
   /* 전송한 메시지 받기 */
@@ -88,13 +86,11 @@ io.sockets.on("connection", function (socket) {
     console.log(socket.nickname + "님이 나가셨습니다.");
 
     /* 나가는 사람을 제외한 나머지 유저에게 메시지 전송 */
-    socket
-      .to(roomId)
-      .emit("update", {
-        type: "disconnect",
-        nickname: "SERVER",
-        message: socket.nickname + "님이 나가셨습니다.",
-      });
+    socket.to(roomId).emit("update", {
+      type: "disconnect",
+      nickname: "SERVER",
+      message: socket.nickname + "님이 나가셨습니다.",
+    });
   });
 });
 
