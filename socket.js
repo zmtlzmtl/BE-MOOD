@@ -26,7 +26,7 @@ app.use("/css", express.static("./static/css"));
 app.use("/js", express.static("./static/js"));
 
 /* Get 방식으로 / 경로에 접속하면 실행 됨 */
-app.get("/api/rooms/:roomId", function (request, response) {
+app.get("/api/room/:roomId", function (request, response) {
   fs.readFile("./static/index.html", function (err, data) {
     if (err) {
       response.send("에러");
@@ -38,7 +38,7 @@ app.get("/api/rooms/:roomId", function (request, response) {
   });
 });
 
-io.sockets.on("connection", function (socket) {
+io.sockets.on("connection", async function (socket) {
   const req = socket.request;
   const {
     headers: { referer }, //referer: http://localhost:8080/rooms/1
@@ -46,20 +46,27 @@ io.sockets.on("connection", function (socket) {
   const roomId = referer.split("/")[referer.split("/").length - 1]; // roomId: 1
   socket.join(roomId); //room을 통해 소켓분리
 
-  /* 새로운 유저가 접속했을 경우 다른 소켓에게도 알려줌 */
-  socket.on("newUser", async (nickname) => {
-    const findRoomChats = await Chats.findAll({
-      where: { roomId },
-      order: [["createdAt", "ASC"]], // 오래된 순으로 정렬한다.
-      limit: 30, // 최근 30개의 채팅 내역만 불러온다.
-    });
-    console.log(nickname + " 님이 접속하였습니다.");
-    /* 소켓에 이름 저장해두기 */
-    socket.nickname = nickname;
+  // 처음 접속한 유저에게만 채팅 내역 전송
+  const findRoomChats = await Chats.findAll({
+    where: { roomId },
+    order: [["createdAt", "ASC"]],
+    limit: 30,
+  });
+  socket.emit("receive", findRoomChats);
 
-    /* 모든 소켓에게 전송 */
-    io.sockets.to(roomId).emit("receive", findRoomChats);
-    io.sockets.to(roomId).emit("update", {
+  socket.on("newUser", function (nickname) {
+    console.log(nickname + " 님이 접속하였습니다.");
+    socket.nickname = nickname;
+  
+    // 해당 소켓에게만 접속 메시지 보내기
+    socket.emit("update", {
+      type: "connect",
+      nickname: "SERVER",
+      message: nickname + "님이 접속하였습니다.",
+    });
+  
+    // 나를 제외한 모든 소켓에게 접속 메시지 보내기
+    socket.to(roomId).emit("update", {
       type: "connect",
       nickname: "SERVER",
       message: nickname + "님이 접속하였습니다.",
