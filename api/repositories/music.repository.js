@@ -1,5 +1,6 @@
 const { Musics } = require("../../db/models");
 const { S3 } = require("aws-sdk");
+const Sequelize = require("sequelize");
 
 class MusicRepository {
   constructor() {}
@@ -45,30 +46,34 @@ class MusicRepository {
   };
   findAllByStatus = async ({ status }) => {
     let mood = await Musics.findAll({
+      order: Sequelize.literal("rand()"),
       where: { status: status },
     });
     return mood;
   };
   findBySurvey1 = async () => {
     let survey1 = await Musics.findAll({
+      order: Sequelize.literal("rand()"),
       where: { status: [4, 7, 8] },
       attributes: ["musicId", "musicTitle", "composer"],
     });
     return survey1;
   };
   findBySurvey2 = async () => {
-    let survey1 = await Musics.findAll({
+    let survey2 = await Musics.findAll({
+      order: Sequelize.literal("rand()"),
       where: { status: 5 },
       attributes: ["musicId", "musicTitle", "composer"],
     });
-    return survey1;
+    return survey2;
   };
   findBySurvey3 = async () => {
-    let survey1 = await Musics.findAll({
+    let survey3 = await Musics.findAll({
+      order: Sequelize.literal("rand()"),
       where: { status: [2, 3, 6] },
       attributes: ["musicId", "musicTitle", "composer"],
     });
-    return survey1;
+    return survey3;
   };
 }
 
