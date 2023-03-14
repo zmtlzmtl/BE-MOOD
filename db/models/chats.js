@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
-    massege: {
+    message: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,

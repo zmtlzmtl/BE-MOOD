@@ -16,7 +16,7 @@ module.exports = {
       nickname: { //소셜로그인이 어떨지 모르겠네 model도
         type: Sequelize.STRING,
       },
-      massege: {
+      message: {
         allowNull: false,
         type: Sequelize.STRING,
       },
