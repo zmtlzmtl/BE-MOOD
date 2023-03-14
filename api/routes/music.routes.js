@@ -13,4 +13,5 @@ router.get("/music", musicController.findAllByComposer);
 
 router.get("/mood/:status", musicController.findAllByStatus);
 
+router.get("/survey/:survey", musicController.findBySurvey);
 module.exports = router;

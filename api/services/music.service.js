@@ -6,12 +6,13 @@ class MusicService {
   }
 
   create = async ({ musicTitle, musicContent, status, composer }) => {
-    await this.musicRepository.create({
+    let music = await this.musicRepository.create({
       musicTitle,
       musicContent,
       status,
       composer,
     });
+    return music;
   };
 
   findOneByMusicId = async ({ musicId }) => {
