@@ -1,5 +1,6 @@
 const musicService = require("../services/music.service");
 const musicRepository = require("../repositories/music.repository");
+const { S3 } = require("aws-sdk");
 
 class MusicController {
   constructor() {
@@ -11,6 +12,7 @@ class MusicController {
       const file = req.files[0];
       const result = await this.musicRepository.s3Upload(file);
       let Url = result.Location;
+      let fileName = result.key;
       let userId = 1;
       let { musicTitle, musicContent, status, composer } = req.body;
       await this.musicRepository.create({
@@ -20,6 +22,7 @@ class MusicController {
         composer,
         userId,
         musicUrl: Url,
+        fileName: fileName,
       });
       return res.status(200).json({ msg: "생성완료" });
     } catch (err) {
@@ -31,9 +34,11 @@ class MusicController {
     try {
       const { musicId } = req.params;
       const project = await this.musicService.findOneByMusicId({ musicId });
-      return res.status(200).json({ data: project });
+      let fileName = project.fileName;
+      project.musicUrl = "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
+      return await res.status(200).json({ data: project });
     } catch (err) {
-      next(err);
+      console.log(err);
       return res.status(400).json({ err: err.message });
     }
   };

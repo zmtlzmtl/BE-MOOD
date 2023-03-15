@@ -4,7 +4,14 @@ const Sequelize = require("sequelize");
 
 class MusicRepository {
   constructor() {}
-  create = async ({ musicTitle, musicContent, status, composer, musicUrl }) => {
+  create = async ({
+    musicTitle,
+    musicContent,
+    status,
+    composer,
+    musicUrl,
+    fileName,
+  }) => {
     let music = await Musics.create({
       musicTitle,
       musicContent,
@@ -12,6 +19,7 @@ class MusicRepository {
       composer,
       userId: 1,
       musicUrl,
+      fileName,
     });
     return music;
   };
@@ -24,6 +32,7 @@ class MusicRepository {
         "composer",
         "musicUrl",
         "musicId",
+        "fileName",
       ],
     });
     return music;

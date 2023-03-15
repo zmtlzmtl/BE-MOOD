@@ -5,7 +5,14 @@ class MusicService {
   constructor() {
     this.musicRepository = new musicRepository();
   }
-  create = async ({ musicTitle, musicContent, status, composer, musicUrl }) => {
+  create = async ({
+    musicTitle,
+    musicContent,
+    status,
+    composer,
+    musicUrl,
+    fileName,
+  }) => {
     let music = await this.musicRepository.create({
       musicTitle,
       musicContent,
@@ -13,6 +20,7 @@ class MusicService {
       composer,
       userId: 1,
       musicUrl,
+      fileName,
     });
     return music;
   };
@@ -26,56 +34,55 @@ class MusicService {
     }
     return music;
   };
+  findAllByComposer = async ({ composer }) => {
+    let music = await this.musicRepository.findAllByComposer({ composer });
+    if (!music) {
+      throw new makeError({
+        message: "적절하지 않은 파라미터 요청입니다.",
+        code: 400,
+      });
+    }
+    return music;
+  };
+  findAllByStatus = async ({ status }) => {
+    let mood = await this.musicRepository.findAllByStatus({ status });
+    if (!status) {
+      throw new makeError({
+        message: "적절하지 않은 파라미터 요청입니다.",
+        code: 400,
+      });
+    }
+    return mood;
+  };
+  findBySurvey1 = async () => {
+    let survey1 = await this.musicRepository.findBySurvey1();
+    if (!survey1) {
+      throw new makeError({
+        message: "적절하지 않은 파라미터 요청입니다.",
+        code: 400,
+      });
+    }
+    return survey1;
+  };
+  findBySurvey2 = async () => {
+    let survey2 = await this.musicRepository.findBySurvey2();
+    if (!survey2) {
+      throw new makeError({
+        message: "적절하지 않은 파라미터 요청입니다.",
+        code: 400,
+      });
+    }
+    return survey2;
+  };
+  findBySurvey3 = async () => {
+    let survey3 = await this.musicRepository.findBySurvey3();
+    if (!survey3) {
+      throw new makeError({
+        message: "적절하지 않은 파라미터 요청입니다.",
+        code: 400,
+      });
+    }
+    return survey3;
+  };
 }
-findAllByComposer = async ({ composer }) => {
-  let music = await this.musicRepository.findAllByComposer({ composer });
-  if (!music) {
-    throw new makeError({
-      message: "적절하지 않은 파라미터 요청입니다.",
-      code: 400,
-    });
-  }
-  return music;
-};
-findAllByStatus = async ({ status }) => {
-  let mood = await this.musicRepository.findAllByStatus({ status });
-  if (!status) {
-    throw new makeError({
-      message: "적절하지 않은 파라미터 요청입니다.",
-      code: 400,
-    });
-  }
-  return mood;
-};
-findBySurvey1 = async () => {
-  let survey1 = await this.musicRepository.findBySurvey1();
-  if (!survey1) {
-    throw new makeError({
-      message: "적절하지 않은 파라미터 요청입니다.",
-      code: 400,
-    });
-  }
-  return survey1;
-};
-findBySurvey2 = async () => {
-  let survey2 = await this.musicRepository.findBySurvey2();
-  if (!survey2) {
-    throw new makeError({
-      message: "적절하지 않은 파라미터 요청입니다.",
-      code: 400,
-    });
-  }
-  return survey2;
-};
-findBySurvey3 = async () => {
-  let survey3 = await this.musicRepository.findBySurvey3();
-  if (!survey3) {
-    throw new makeError({
-      message: "적절하지 않은 파라미터 요청입니다.",
-      code: 400,
-    });
-  }
-  return survey3;
-};
-
 module.exports = MusicService;
