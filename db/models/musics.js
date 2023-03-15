@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Musics extends Model {
     /**
@@ -16,42 +14,48 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
       this.hasMany(models.Reviews, {
-        sourceKey: "reviewId",
-        foreignKey: "reviewId",
+        sourceKey: "musicId",
+        foreignKey: "musicId",
       });
-
     }
   }
-  Musics.init({
-    musicId: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  Musics.init(
+    {
+      musicId: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      musicTitle: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      musicContent: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      musicUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      composer: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    userId: {
-      allowNull: false,
-      type: DataTypes.INTEGER,
-    },
-    musicTitle: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    musicContent: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    musicUrl: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    status: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    modelName: 'Musics',
-  });
+    {
+      sequelize,
+      modelName: "Musics",
+    }
+  );
   return Musics;
 };

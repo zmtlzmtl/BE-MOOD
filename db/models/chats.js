@@ -3,50 +3,34 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Users extends Model {
+  class Chats extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
-      this.hasMany(models.Musics, {
-        sourceKey: "userId",
-        foreignKey: "userId",
-      });
-
-      this.hasMany(models.Reviews, {
-        sourceKey: "userId",
-        foreignKey: "userId",
-      });
-    }
   }
-  Users.init({
-    userId: {
+  Chats.init({
+    chatId: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    id: {
+    roomId: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    nickname: {
+    nickname: {  //소셜로그인이 어떨지 모르겠네 migration도
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
     },
-    email: {
+    message: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
     },
     createdAt: {
       allowNull: false,
@@ -60,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'Users',
+    modelName: 'Chats',
   });
-  return Users;
+  return Chats;
 };
