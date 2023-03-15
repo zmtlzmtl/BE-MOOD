@@ -34,6 +34,7 @@ class MusicController {
       return res.status(200).json({ data: project });
     } catch (err) {
       console.log(err);
+      next(err);
       return res.status(400).json({ err: err.message });
     }
   };
@@ -43,19 +44,21 @@ class MusicController {
       const project = await this.musicService.findAllByComposer({
         composer,
       });
-      res.status(200).json({ data: project });
+      return res.status(200).json({ data: project });
     } catch (err) {
       console.log(err);
-      res.status(400).json({ msg: err.message });
+      next(err);
+      return res.status(400).json({ msg: err.message });
     }
   };
   findAllByStatus = async (req, res) => {
     try {
       const { status } = req.params;
       const project = await this.musicService.findAllByStatus({ status });
-      res.status(200).json({ data: project });
+      return res.status(200).json({ data: project });
     } catch (err) {
       console.log(err);
+      next(err);
       return res.status(400).json({ err: err.message });
     }
   };
@@ -80,6 +83,7 @@ class MusicController {
       } else return res.status(400).json({ msg: "error" });
     } catch (err) {
       console.log(err);
+      next(err);
       return res.status(400).json({ err: err.message });
     }
   };
