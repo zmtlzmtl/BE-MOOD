@@ -33,7 +33,6 @@ class MusicController {
       const project = await this.musicService.findOneByMusicId({ musicId });
       return res.status(200).json({ data: project });
     } catch (err) {
-      console.log(err);
       next(err);
       return res.status(400).json({ err: err.message });
     }
@@ -46,7 +45,6 @@ class MusicController {
       });
       return res.status(200).json({ data: project });
     } catch (err) {
-      console.log(err);
       next(err);
       return res.status(400).json({ msg: err.message });
     }
@@ -57,7 +55,6 @@ class MusicController {
       const project = await this.musicService.findAllByStatus({ status });
       return res.status(200).json({ data: project });
     } catch (err) {
-      console.log(err);
       next(err);
       return res.status(400).json({ err: err.message });
     }
@@ -80,9 +77,8 @@ class MusicController {
           status: [2, 3, 6],
         });
         res.status(200).json({ survey3 });
-      } else return res.status(400).json({ msg: "error" });
+      } else return res.status(400).json({ msg: "invalid survey parameters." });
     } catch (err) {
-      console.log(err);
       next(err);
       return res.status(400).json({ err: err.message });
     }
