@@ -1,6 +1,5 @@
 const musicService = require("../services/music.service");
 const musicRepository = require("../repositories/music.repository");
-const { S3 } = require("aws-sdk");
 
 class MusicController {
   constructor() {
