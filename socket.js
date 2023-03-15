@@ -10,14 +10,14 @@ module.exports = (server) => {
   });
   io.sockets.on("connection", async (socket) => {
     const req = socket.request;
-    
+
     socket.on("roomId", async function (roomId) {
       socket.roomId = roomId;
       socket.join(roomId);
 
       // roomId가 등록되고 나서 findRoomChats를 실행합니다.
       const findRoomChats = await Chats.findAll({
-        where: { roomId: socket.roomId},
+        where: { roomId: socket.roomId },
         order: [["createdAt", "ASC"]],
         limit: 30,
       });
