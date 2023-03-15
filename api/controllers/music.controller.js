@@ -30,32 +30,32 @@ class MusicController {
   findOneByMusicId = async (req, res) => {
     try {
       const { musicId } = req.params;
-      const project = await this.musicRepository.findOneByMusicId({ musicId });
+      const project = await this.musicService.findOneByMusicId({ musicId });
       return res.status(200).json({ data: project });
     } catch (err) {
-      console.log(err);
+      next(err);
       return res.status(400).json({ err: err.message });
     }
   };
   findAllByComposer = async (req, res) => {
     try {
       const composer = req.query;
-      const project = await this.musicRepository.findAllByComposer({
+      const project = await this.musicService.findAllByComposer({
         composer,
       });
-      res.status(200).json({ data: project });
+      return res.status(200).json({ data: project });
     } catch (err) {
-      console.log(err);
-      res.status(400).json({ msg: err.message });
+      next(err);
+      return res.status(400).json({ msg: err.message });
     }
   };
   findAllByStatus = async (req, res) => {
     try {
       const { status } = req.params;
-      const project = await this.musicRepository.findAllByStatus({ status });
-      res.status(200).json({ data: project });
+      const project = await this.musicService.findAllByStatus({ status });
+      return res.status(200).json({ data: project });
     } catch (err) {
-      console.log(err);
+      next(err);
       return res.status(400).json({ err: err.message });
     }
   };
@@ -77,9 +77,9 @@ class MusicController {
           status: [2, 3, 6],
         });
         res.status(200).json({ survey3 });
-      }
+      } else return res.status(400).json({ msg: "invalid survey parameters." });
     } catch (err) {
-      console.log(err);
+      next(err);
       return res.status(400).json({ err: err.message });
     }
   };
