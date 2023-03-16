@@ -58,7 +58,6 @@ class UserService {
   }
 
   async findById(id) {
-    console.log("아이디입니다", id);
     return await this.userRepository.findById(id);
   }
 }
