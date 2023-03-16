@@ -4,11 +4,25 @@ const express = require("express");
 const http = require("http");
 const createSocket = require("./socket");
 const router = require("./api/routes");
+const passport = require("passport");
+const session = require("express-session");
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
+
+app.use(
+  session({
+    secret: process.env.CLIENT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+require("./db/config/possport")(passport);
 
 app.use(
   cors({

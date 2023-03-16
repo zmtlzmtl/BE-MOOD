@@ -45,6 +45,28 @@ class UserService {
     }
     return;
   };
+
+  async findOrCreate(profile) {
+    const kakaoId = `kakao_${profile.id}`;
+    const existingUser = await this.userRepository.findOne({ kakaoId });
+
+    if (existingUser) {
+      return existingUser;
+    }
+
+    const newUser = await this.userRepository.create({
+      id: kakaoId,
+      email: profile._json.kakao_account.email,
+      nickname: profile.displayName,
+    });
+
+    return newUser;
+  }
+
+  async findById(id) {
+    console.log("아이디입니다", id);
+    return await this.userRepository.findById(id);
+  }
 }
 
 module.exports = UserService;
