@@ -1,10 +1,13 @@
 const { Musics, Composers } = require("../../db/models");
 const { S3 } = require("aws-sdk");
 const Sequelize = require("sequelize");
-const { Op } = require('sequelize');
+const { Op } = require("sequelize");
 
 class MusicRepository {
   constructor() {}
+  rand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
   create = async ({
     musicTitle,
     musicContent,
@@ -71,7 +74,6 @@ class MusicRepository {
   };
   findBySurvey1 = async () => {
     let survey1 = await Musics.findAll({
-      order: Sequelize.literal("rand()"),
       where: { status: [4, 7, 8] },
       attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
     });
@@ -79,7 +81,6 @@ class MusicRepository {
   };
   findBySurvey2 = async () => {
     let survey2 = await Musics.findAll({
-      order: Sequelize.literal("rand()"),
       where: { status: 5 },
       attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
     });
@@ -87,33 +88,32 @@ class MusicRepository {
   };
   findBySurvey3 = async () => {
     let survey3 = await Musics.findAll({
-      order: Sequelize.literal("rand()"),
       where: { status: [2, 3, 6] },
       attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
     });
     return survey3;
   };
   findByKeyword = async ({ keyword }) => {
-    console.log(keyword)
+    console.log(keyword);
     const composerInfo = await Composers.findOne({
       where: {
-        composer: { [Op.like]: `%${keyword}%` } 
+        composer: { [Op.like]: `%${keyword}%` },
       },
-    })
+    });
     const composerSong = await Musics.findAll({
       where: {
-        composer: { [Op.like]: `%${keyword}%` } 
+        composer: { [Op.like]: `%${keyword}%` },
       },
-      order: [['musicTitle', 'DESC']],
+      order: [["musicTitle", "DESC"]],
     });
     const musicTitle = await Musics.findAll({
       where: {
-        musicTitle: { [Op.like]: `%${keyword}%` } 
+        musicTitle: { [Op.like]: `%${keyword}%` },
       },
-      order: [['musicTitle', 'DESC']],
+      order: [["musicTitle", "DESC"]],
     });
 
-    const search = {composerInfo, composerSong, musicTitle}
+    const search = { composerInfo, composerSong, musicTitle };
     return search;
   };
 }
