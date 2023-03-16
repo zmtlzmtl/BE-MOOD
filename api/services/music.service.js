@@ -54,7 +54,7 @@ class MusicService {
       survey1[i].dataValues.musicUrl =
         "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
     }
-    if ((survey1 = "")) {
+    if (survey1 == "") {
       throw new makeError({
         message: "status 4,7,8 에 해당하는 음악이 없습니다.",
         code: 400,
