@@ -94,7 +94,6 @@ class MusicRepository {
     return survey3;
   };
   findByKeyword = async ({ keyword }) => {
-    console.log(keyword)
     const composerInfo = await Composers.findOne({
       where: {
         composer: { [Op.like]: `%${keyword}%` } 
@@ -114,6 +113,7 @@ class MusicRepository {
     });
 
     const search = {composerInfo, composerSong, musicTitle}
+    
     return search;
   };
 }

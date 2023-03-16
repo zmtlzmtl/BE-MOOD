@@ -96,16 +96,11 @@ class MusicService {
     const music = await this.musicRepository.findByKeyword({ keyword });
     if (keyword.length === 0) {
       throw new makeError({
-        message: "빈 페이지 입니다.",
+        message: "해당하는 keyword가 없습니다.",
         code: 400,
       });
     }
-    if (!music) {
-      throw new makeError({
-        message: "적절하지 않은 파라미터 요청입니다.",
-        code: 400,
-      });
-    }
+    return music;
   }
 }
 module.exports = MusicService;
