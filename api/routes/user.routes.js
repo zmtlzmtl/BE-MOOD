@@ -3,10 +3,10 @@ router = express.Router();
 const UserController = require("../controllers/user.controller");
 const userController = new UserController();
 
-router.post("/signup", userController.signUp);
+router.post("/signUp", userController.signUp);
 router.post("/login", userController.login);
-router.post("/idcheck", userController.check);
-router.post("/nicknamecheck", userController.check);
+router.post("/idCheck", userController.check);
+router.post("/nicknameCheck", userController.check);
 
 router.get("/kakao", userController.kakaoLogin);
 router.get("/kakao/callback", userController.kakaoCallback);
