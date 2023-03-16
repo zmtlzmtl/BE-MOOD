@@ -12,12 +12,6 @@ class UserService {
         code: 400,
       });
     }
-    if (password !== confirm) {
-      throw new makeError({
-        message: "비밀번호와 비밀번호 확인이 일치하지 않습니다",
-        code: 400,
-      });
-    }
     await this.userRepository.signUp(id, password, email, nickname);
     return;
   };
