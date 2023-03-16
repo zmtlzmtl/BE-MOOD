@@ -1,4 +1,5 @@
 const UserService = require("../services/user.service");
+const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
 class UserController {
@@ -44,6 +45,26 @@ class UserController {
     } catch (error) {
       next(error);
     }
+  };
+
+  kakaoLogin = passport.authenticate("kakao");
+
+  kakaoCallback = (req, res, next) => {
+    passport.authenticate("kakao", async (error, user) => {
+      try {
+        if (error) {
+          return next(error);
+        }
+
+        const token = jwt.sign({ userId: user.userId }, process.env.KEY, {
+          expiresIn: "1h",
+        });
+
+        res.status(200).json({ token, message: "카카오 로그인 성공" });
+      } catch (error) {
+        next(error);
+      }
+    })
   };
 }
 
