@@ -9,8 +9,6 @@ module.exports = (server) => {
     },
   });
   io.sockets.on("connection", async (socket) => {
-    const req = socket.request;
-
     socket.on("roomId", async function (roomId) {
       socket.roomId = roomId;
       socket.join(roomId);
@@ -27,35 +25,25 @@ module.exports = (server) => {
     socket.on("newUser", function (nickname) {
       console.log(nickname + " 님이 접속하였습니다.");
       socket.nickname = nickname;
-      socket.emit("update", {
-        type: "connect",
-        nickname: "SERVER",
-        message: nickname + "님이 접속하였습니다.",
-      });
-      socket.to(socket.roomId).emit("update", {
-        type: "connect",
-        nickname: "SERVER",
-        message: nickname + "님이 접속하였습니다.",
-      });
+      socket.to(socket.roomId).emit("onUser", nickname);
     });
-    socket.on("send_message", function (data) {
+    socket.on("sendMessage", function (data) {
       data.nickname = socket.nickname;
       console.log(data);
+      // 메세지가 안들어왔을때 거르는 방법 고안
+      // if (data.message.length === 0) {
+
+      // }
       Chats.create({
         roomId: socket.roomId,
         nickname: data.nickname,
         message: data.message,
       });
-      socket.to(socket.roomId).emit("receive_message", data);
-      socket.emit("receive_message", data);
+      socket.to(socket.roomId).emit("receiveMessage", data);
     });
     socket.on("disconnect", function () {
       console.log(socket.nickname + "님이 나가셨습니다.");
-      socket.to(socket.roomId).emit("update", {
-        type: "disconnect",
-        nickname: "SERVER",
-        message: socket.nickname + "님이 나가셨습니다.",
-      });
+      socket.to(socket.roomId).emit("offUser", socket.nickname);
     });
   });
 };
