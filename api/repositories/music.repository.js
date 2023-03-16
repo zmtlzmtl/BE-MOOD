@@ -40,7 +40,7 @@ class MusicRepository {
   findAllByComposer = async ({ composer }) => {
     let music = await Musics.findAll({
       where: composer,
-      attributes: ["musicTitle", "musicContent"],
+      attributes: ["musicTitle", "musicContent", "fileName", "musicUrl"],
     });
     return music;
   };
@@ -56,7 +56,15 @@ class MusicRepository {
   findAllByStatus = async ({ status }) => {
     let mood = await Musics.findAll({
       order: Sequelize.literal("rand()"),
-      where: { status: status },
+      where: { status },
+      attributes: [
+        "musicId",
+        "musicTitle",
+        "musicContent",
+        "composer",
+        "musicUrl",
+        "fileName",
+      ],
     });
     return mood;
   };
@@ -64,7 +72,7 @@ class MusicRepository {
     let survey1 = await Musics.findAll({
       order: Sequelize.literal("rand()"),
       where: { status: [4, 7, 8] },
-      attributes: ["musicId", "musicTitle", "composer"],
+      attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
     });
     return survey1;
   };
@@ -72,7 +80,7 @@ class MusicRepository {
     let survey2 = await Musics.findAll({
       order: Sequelize.literal("rand()"),
       where: { status: 5 },
-      attributes: ["musicId", "musicTitle", "composer"],
+      attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
     });
     return survey2;
   };
@@ -80,7 +88,7 @@ class MusicRepository {
     let survey3 = await Musics.findAll({
       order: Sequelize.literal("rand()"),
       where: { status: [2, 3, 6] },
-      attributes: ["musicId", "musicTitle", "composer"],
+      attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
     });
     return survey3;
   };
