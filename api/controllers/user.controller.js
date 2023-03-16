@@ -64,7 +64,7 @@ class UserController {
       } catch (error) {
         next(error);
       }
-    })(req, res, next);
+    })
   };
 }
 
