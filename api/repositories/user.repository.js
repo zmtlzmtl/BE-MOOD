@@ -8,7 +8,7 @@ class UserRepository {
 
   findUser = async (email) => {
     const findUser = await Users.findOne({ where: { email } });
-    // console.log(findUser)
+
     return findUser;
   };
 
@@ -26,6 +26,18 @@ class UserRepository {
     const nickNameCheck = await Users.findOne({ where: { nickname } });
     return nickNameCheck;
   };
+
+  async findOne({ kakaoId }) {
+    return await Users.findOne({ where: { Id: kakaoId } });
+  }
+
+  async create({ id, email, nickname }) {
+    return await Users.create({ id, email, nickname });
+  }
+
+  async findById(id) {
+    return await Users.findByPk(id);
+  }
 }
 
 module.exports = UserRepository;
