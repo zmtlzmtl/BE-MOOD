@@ -1,6 +1,7 @@
-const { Musics } = require("../../db/models");
+const { Musics, Composers } = require("../../db/models");
 const { S3 } = require("aws-sdk");
 const Sequelize = require("sequelize");
+const { Op } = require('sequelize');
 
 class MusicRepository {
   constructor() {}
@@ -91,6 +92,29 @@ class MusicRepository {
       attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
     });
     return survey3;
+  };
+  findByKeyword = async ({ keyword }) => {
+    console.log(keyword)
+    const composerInfo = await Composers.findOne({
+      where: {
+        composer: { [Op.like]: `%${keyword}%` } 
+      },
+    })
+    const composerSong = await Musics.findAll({
+      where: {
+        composer: { [Op.like]: `%${keyword}%` } 
+      },
+      order: [['musicTitle', 'DESC']],
+    });
+    const musicTitle = await Musics.findAll({
+      where: {
+        musicTitle: { [Op.like]: `%${keyword}%` } 
+      },
+      order: [['musicTitle', 'DESC']],
+    });
+
+    const search = {composerInfo, composerSong, musicTitle}
+    return search;
   };
 }
 

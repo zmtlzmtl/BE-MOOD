@@ -81,6 +81,17 @@ class MusicController {
       next(err);
     }
   };
+  findByKeyword = async (req, res, next) => {
+    try {
+      const { keyword } = req.query;
+      const project = await this.musicService.findByKeyword({
+        keyword,
+      });
+      return res.status(200).json({ data: project });
+    } catch (err) {
+      return res.status(400).json({ msg: err.message });
+    }
+  };
 }
 
 module.exports = MusicController;
