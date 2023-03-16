@@ -106,7 +106,6 @@ class MusicService {
         code: 400,
       });
     }
-    return music;
-  };
+  }
 }
 module.exports = MusicService;
