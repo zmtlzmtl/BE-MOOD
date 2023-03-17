@@ -13,24 +13,15 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(
-  session({
-    secret: process.env.CLIENT_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-require("./db/config/possport")(passport);
-
-app.use(
   cors({
     methods: ["GET", "POST", "UPDATE", "DELETE", "PUT", "PATCH"],
     origin: true,
     credentials: true,
   })
 );
+
+app.use(passport.initialize());
+require("./db/config/passport")(passport);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
