@@ -27,8 +27,8 @@ class UserRepository {
     return nickNameCheck;
   };
 
-  async findOne({ kakaoId }) {
-    return await Users.findOne({ where: { Id: kakaoId } });
+  async findOne({ nickname }) {
+    return await Users.findOne({ where: { nickname } });
   }
 
   async create({ id, email, nickname }) {

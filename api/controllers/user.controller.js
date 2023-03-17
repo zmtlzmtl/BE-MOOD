@@ -50,7 +50,7 @@ class UserController {
   kakaoLogin = passport.authenticate("kakao");
 
   kakaoCallback = (req, res, next) => {
-    passport.authenticate("kakao", async (error, user) => {
+    passport.authenticate("kakao", { session: false }, async (error, user) => {
       try {
         if (error) {
           return next(error);
@@ -64,7 +64,7 @@ class UserController {
       } catch (error) {
         next(error);
       }
-    })
+    })(req, res, next);
   };
 }
 
