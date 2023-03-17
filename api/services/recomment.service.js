@@ -29,7 +29,7 @@ class ReCommentService {
         code: 400,
       });
     }
-    return { message: "리뷰가 생성되었습니다." };
+    return { message: "댓글이 생성되었습니다." };
   };
   //코멘트 조회하기
   getReviewComment = async ({ reviewId }) => {
@@ -62,7 +62,7 @@ class ReCommentService {
       reCommentId,
       comment,
     });
-    return { message: "리뷰가 수정되었습니다." };
+    return { message: "댓글이 수정되었습니다." };
   };
 
   //코멘트 삭제하기
@@ -79,7 +79,7 @@ class ReCommentService {
     await this.reCommentRepository.deleteReviewComment({
       existReComment,
     });
-    return { message: "리뷰가 삭제되었습니다." };
+    return { message: "댓글이 삭제되었습니다." };
   };
 }
 
