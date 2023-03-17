@@ -62,20 +62,20 @@ class MusicController {
     try {
       let { survey } = req.params;
       if (survey == 1) {
-        let survey1 = await this.musicRepository.findBySurvey1({
+        let result = await this.musicService.findBySurvey1({
           status: [4, 7, 8],
         });
-        return res.status(200).json({ survey1 });
+        return res.status(200).json({ result });
       } else if (survey == 2) {
-        let survey2 = await this.musicService.findBySurvey2({
+        let result = await this.musicService.findBySurvey2({
           status: 5,
         });
-        return res.status(200).json({ survey2 });
+        return res.status(200).json({ result });
       } else if (survey == 3) {
-        let survey3 = await this.musicRepository.findBySurvey3({
+        let result = await this.musicRepository.findBySurvey3({
           status: [2, 3, 6],
         });
-        return res.status(200).json({ survey3 });
+        return res.status(200).json({ result });
       } else return res.status(400).json({ msg: "invalid survey parameters." });
     } catch (err) {
       next(err);
