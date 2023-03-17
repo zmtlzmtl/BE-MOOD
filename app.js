@@ -5,7 +5,6 @@ const http = require("http");
 const createSocket = require("./socket");
 const router = require("./api/routes");
 const passport = require("passport");
-const session = require("express-session");
 
 dotenv.config();
 
