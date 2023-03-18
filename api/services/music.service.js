@@ -1,6 +1,6 @@
 const musicRepository = require("../repositories/music.repository");
 const { makeError } = require("../error");
-
+const { cloudfront } = require("../middlewares/cloudfront");
 class MusicService {
   constructor() {
     this.musicRepository = new musicRepository();
@@ -33,20 +33,39 @@ class MusicService {
     }
     return music;
   };
-  findAllByStatus = async ({ status }) => {
-    let mood = await this.musicRepository.findAllByStatus({ status });
-    for (let i = 0; i < mood.length; i++) {
-      let fileName = mood[i].dataValues.fileName;
-      mood[i].dataValues.musicUrl =
+  mood = async ({ x, y }) => {
+    if ((x <= 150 && y <= 75) || (x == 0 && y == 0)) {
+      if (x == 0 && y == 75) {
+        let sadCalm = await this.musicRepository.find9and13();
+        return await cloudfront(sadCalm);
+      } else if (x == 150 && y == 0) {
+        let calmSad = await this.musicRepository.find13and14();
+        return await cloudfront(calmSad);
+      } else if (x == 150 && y == 75) {
+        let sosoSadCalm = await this.musicRepository.find9101314();
+        return await cloudfront(sosoSadCalm);
+      }
+      let thirteen = await this.musicRepository.findOnebyStatus13();
+      return await cloudfront(thirteen);
+    } else if (y < 150 && y > 75 && x < 150) {
+      let nine = await this.musicRepository.findOnebyStatus9();
+      let fileName = nine.dataValues.fileName;
+      nine.dataValues.musicUrl =
         "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
+      return nine;
+    } else if (y < 75 && x > 150 && x < 300) {
+      let fourteen = await this.musicRepository.findOnebyStatus14();
+      let fileName = fourteen.dataValues.fileName;
+      fourteen.dataValues.musicUrl =
+        "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
+      return fourteen;
+    } else if (y > 75 && y < 150 && x < 300 && x > 150) {
+      let ten = await this.musicRepository.findOnebyStatus10();
+      let fileName = ten.dataValues.fileName;
+      ten.dataValues.musicUrl =
+        "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
+      return ten;
     }
-    if (mood == "") {
-      throw new makeError({
-        message: "적절하지 않은 파라미터 요청입니다.",
-        code: 400,
-      });
-    }
-    return mood;
   };
   findBySurvey1 = async () => {
     let survey1 = await this.musicRepository.findBySurvey1();
@@ -108,6 +127,6 @@ class MusicService {
       });
     }
     return music;
-  }
+  };
 }
 module.exports = MusicService;

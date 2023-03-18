@@ -1,7 +1,7 @@
 const { Musics, Composers } = require("../../db/models");
 const { S3 } = require("aws-sdk");
 const Sequelize = require("sequelize");
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 
 class MusicRepository {
   constructor() {}
@@ -57,21 +57,57 @@ class MusicRepository {
     };
     return s3.upload(param).promise();
   };
-  findAllByStatus = async ({ status }) => {
-    let mood = await Musics.findAll({
+  //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  findOnebyStatus9 = async () => {
+    let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
-      where: { status },
-      attributes: [
-        "musicId",
-        "musicTitle",
-        "musicContent",
-        "composer",
-        "musicUrl",
-        "fileName",
-      ],
+      where: { status: 9 },
     });
     return mood;
   };
+  findOnebyStatus10 = async () => {
+    let mood = await Musics.findOne({
+      order: Sequelize.literal("rand()"),
+      where: { status: 10 },
+    });
+    return mood;
+  };
+  findOnebyStatus13 = async () => {
+    let mood = await Musics.findOne({
+      order: Sequelize.literal("rand()"),
+      where: { status: 13 },
+    });
+    return mood;
+  };
+  findOnebyStatus14 = async () => {
+    let mood = await Musics.findOne({
+      order: Sequelize.literal("rand()"),
+      where: { status: 14 },
+    });
+    return mood;
+  };
+  find9and13 = async () => {
+    let mood = await Musics.findOne({
+      order: Sequelize.literal("rand()"),
+      where: { status: [9, 13] },
+    });
+    return mood;
+  };
+  find13and14 = async () => {
+    let mood = await Musics.findOne({
+      order: Sequelize.literal("rand()"),
+      where: { status: [13, 14] },
+    });
+    return mood;
+  };
+  find9101314 = async () => {
+    let mood = await Musics.findOne({
+      order: Sequelize.literal("rand()"),
+      where: { status: [9, 10, 13, 14] },
+    });
+    return mood;
+  };
+  //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
   findBySurvey1 = async () => {
     let survey1 = await Musics.findAll({
       where: { status: [4, 7, 8] },
@@ -94,7 +130,6 @@ class MusicRepository {
     return survey3;
   };
   findByKeyword = async ({ keyword }) => {
-
     const composerInfo = await Composers.findOne({
       where: {
         composer: { [Op.like]: `%${keyword}%` },
