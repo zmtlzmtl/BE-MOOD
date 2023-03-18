@@ -10,7 +10,7 @@ class ReCommnetRepository {
 
   //코멘트 조회하기
   getReviewComment = async ({ reviewId }) => {
-    const result = await ReComments.findAll({
+    const result = await ReComments.findAndCountAll({
       where: { reviewId },
       order: [["createdAt", "ASC"]],
     });
