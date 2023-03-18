@@ -30,6 +30,7 @@ module.exports = (server) => {
         socket.nickname = nickname;
 
         socket.emit("onUser", nickname);
+        socket.to(socket.roomId).emit("onUser", nickname)
       });
       socket.on("sendMessage", function (data) {
         data.nickname = socket.nickname;
@@ -45,6 +46,7 @@ module.exports = (server) => {
       });
       socket.on("disconnect", function () {
         console.log(socket.nickname + "님이 나가셨습니다.");
+        socket.emit("offUser", socket.nickname);
         socket.to(socket.roomId).emit("offUser", socket.nickname);
       });
     } catch (err) {
