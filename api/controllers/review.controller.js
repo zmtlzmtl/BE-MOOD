@@ -8,11 +8,12 @@ class ReviewController {
   addMusicReview = async (req, res, next) => {
     const userId = 1;
     const { musicId } = req.params;
-    const { review } = req.body;
+    const { mood, review } = req.body;
     try {
       const addreview = await this.reviewService.addMusicReview({
         userId,
         musicId,
+        mood,
         review,
       });
       return res.status(201).json(addreview);
@@ -37,11 +38,12 @@ class ReviewController {
   //리뷰 수정하기
   updateMusicReview = async (req, res, next) => {
     const { musicId, reviewId } = req.params;
-    const { review } = req.body;
+    const { mood, review } = req.body;
     try {
       const updateReview = await this.reviewService.updateMusicReview({
         musicId,
         reviewId,
+        mood,
         review,
       });
       return res.status(200).json(updateReview);

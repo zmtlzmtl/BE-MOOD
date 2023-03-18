@@ -2,8 +2,8 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Reviews", {
-      reviewId: {
+    await queryInterface.createTable("ReComments", {
+      reCommentId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -18,22 +18,18 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      musicId: {
+      reviewId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: "Musics",
-          key: "musicId",
+          model: "Reviews",
+          key: "reviewId",
         },
         onDelete: "CASCADE",
       },
-      mood: {
-        allowNull: true,
+      comment: {
         type: Sequelize.STRING,
-      },
-      review: {
         allowNull: false,
-        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -48,6 +44,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Reviews");
+    await queryInterface.dropTable("ReComments");
   },
 };
