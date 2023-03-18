@@ -1,4 +1,4 @@
-const { Users } = require("../../db/models");
+const { Users, UserInfos } = require("../../db/models");
 
 class UserRepository {
   signUp = async (id, password, email, nickname) => {
@@ -27,17 +27,36 @@ class UserRepository {
     return nickNameCheck;
   };
 
-  async findOne({ nickname }) {
-    return await Users.findOne({ where: { nickname } });
-  }
+  findByEmail = async (email) => {
+    const user = await Users.findOne({
+      where: {
+        email: email,
+      },
+    });
 
-  async create({ id, email, nickname }) {
-    return await Users.create({ id, email, nickname });
-  }
+    return user;
+  };
 
-  async findById(id) {
-    return await Users.findByPk(id);
-  }
+  // 테이블에 없으면 자동으로 회원가입(DB에 저장)
+  autoSocialSignup = async (email, nickname, profile_image) => {
+    const auto_signup_kakao_user = await Users.create({
+      id: email,
+      email: email,
+      nickname: nickname,
+    });
+
+    const auto_signup_kakao_user_image = await UserInfos.create({
+      src: profile_image,
+      userId: auto_signup_kakao_user.userId,
+    });
+
+    return {
+      user_id: auto_signup_kakao_user.user_id,
+      email: auto_signup_kakao_user.email,
+      nickname: auto_signup_kakao_user.nickname,
+      profile_image: auto_signup_kakao_user_image.src,
+    };
+  };
 }
 
 module.exports = UserRepository;

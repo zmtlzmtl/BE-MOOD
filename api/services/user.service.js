@@ -1,4 +1,6 @@
 const UserRepository = require("../repositories/user.repository");
+const axios = require("axios");
+const jwt = require("jsonwebtoken");
 const { makeError } = require("../error");
 
 class UserService {
@@ -40,28 +42,112 @@ class UserService {
     return;
   };
 
-  async findOrCreate(profile) {
-    const kakaoId = `kakao_${profile.id}`;
-    const existingUser = await this.userRepository.findOne({
-      nickname: profile.displayName,
-    });
+  getKakaoTokens = async (code) => {
+    const KAKAO_OAUTH_TOKEN_API_URL = "https://kauth.kakao.com/oauth/token";
+    const grant_type = "authorization_code";
+    const client_id = process.env.CLIENT_ID;
+    const redirect_uri = process.env.REDIRECT_URI;
+    const authToken = await axios
+      .post(
+        `${KAKAO_OAUTH_TOKEN_API_URL}?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=${redirect_uri}&code=${code}`,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+          },
+        }
+      )
+      .then((res) => {
+        return {
+          access_token: res.data["access_token"],
+          refresh_token: res.data["refresh_token"],
+        };
+      })
+      .catch((error) => {
+        console.error(error);
+        throw new makeError({
+          message: "카카오 로그인중에 axios요청중 문제가 발생하였습니다",
+          code: 404,
+        });
+      });
 
-    if (existingUser) {
-      return existingUser;
+    return authToken;
+  };
+
+  getUserInfo = async (authToken) => {
+    if (!authToken) {
+      throw new makeError({
+        message: "카카카오 로그인중에 authToken을 읽지 못했습니다.",
+        code: 404,
+      });
     }
 
-    const newUser = await this.userRepository.create({
-      id: kakaoId,
-      email: profile._json.kakao_account.email,
-      nickname: profile.displayName,
-    });
+    const userData = await axios
+      .get("https://kapi.kakao.com/v2/user/me", {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Bearer ${authToken.access_token}`,
+        },
+      })
+      .then((res) => {
+        console.log("회원정보: ", res.data.properties);
+        const { nickname, profile_image } = res.data.properties;
+        const { email } = res.data.kakao_account;
 
-    return newUser;
-  }
+        return {
+          email: email,
+          nickname: nickname,
+          profile_image: profile_image,
+        };
+      })
+      .catch((err) => {
+        console.log("회원정보 err: ", err);
+      });
+    return userData;
+  };
 
-  async findById(id) {
-    return await this.userRepository.findById(id);
-  }
+  makeTokenAndUserInfo = async (userData) => {
+    const email = userData.email;
+    const nickname = userData.nickname;
+    const profile_image = userData.profile_image;
+
+    const findUser = await this.userRepository.findByEmail(email);
+
+    if (!findUser) {
+      await this.userRepository.autoSocialSignup(
+        email,
+        nickname,
+        profile_image
+      );
+    }
+
+    const user = await this.userRepository.findByEmail(email);
+
+    const access_token = jwt.sign(
+      {
+        userId: user.userId,
+      },
+      process.env.KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    const refresh_token = jwt.sign(
+      {
+        userId: user.userId,
+      },
+      process.env.KEY,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    return {
+      access_token: access_token,
+      refresh_token: refresh_token,
+      nickname: user.nickname,
+    };
+  };
 }
 
 module.exports = UserService;
