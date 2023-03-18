@@ -1,4 +1,4 @@
-const ReCommentRepository = require("../repositories/reComment.repository");
+const ReCommentRepository = require("../repositories/recomment.repository");
 const ReviewRepository = require("../repositories/review.repository");
 const { makeError } = require("../error");
 
