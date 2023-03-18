@@ -11,7 +11,7 @@ class ReviewRepository {
 
   //리뷰 조회하기
   getMusicReview = async ({ musicId }) => {
-    const result = await Reviews.findAll({
+    const result = await Reviews.findAndCountAll({
       where: { musicId },
       order: [["createdAt", "ASC"]],
     });
