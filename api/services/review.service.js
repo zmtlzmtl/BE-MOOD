@@ -8,7 +8,7 @@ class ReviewService {
     this.reviewRepository = new ReviewRepository();
   }
   //리뷰 작성하기
-  addMusicReview = async ({ userId, musicId, review }) => {
+  addMusicReview = async ({ userId, musicId, mood, review }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {
       throw new makeError({
@@ -19,6 +19,7 @@ class ReviewService {
     const result = await this.reviewRepository.addMusicReview({
       userId,
       musicId,
+      mood,
       review,
     });
     if (!result) {
@@ -39,7 +40,7 @@ class ReviewService {
   };
 
   //리뷰 수정하기 //유저정보 들어와야함
-  updateMusicReview = async ({ musicId, reviewId, review }) => {
+  updateMusicReview = async ({ musicId, reviewId, mood, review }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {
       throw new makeError({
@@ -58,6 +59,7 @@ class ReviewService {
     }
     await this.reviewRepository.updateMusicReview({
       reviewId,
+      mood,
       review,
     });
     return { message: "리뷰가 수정되었습니다." };
