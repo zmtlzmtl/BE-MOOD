@@ -1,86 +1,89 @@
-const ReCommentRepository = require("../repositories/reComment.repository");
 const ReviewRepository = require("../repositories/review.repository");
+const MusicRepository = require("../repositories/music.repository");
 const { makeError } = require("../error");
 
-class ReCommentService {
+class ReviewService {
   constructor() {
+    this.musicRepository = new MusicRepository();
     this.reviewRepository = new ReviewRepository();
-    this.reCommentRepository = new ReCommentRepository();
-  }
-  //코멘트 작성하기
-  addReviewComment = async ({ userId, reviewId, comment }) => {
-    const existReview = await this.reviewRepository.getMusicOneReview({
-      reviewId,
-    });
-    if (!existReview) {
+  } //리뷰 작성하기
+  addMusicReview = async ({ userId, musicId, mood, review }) => {
+    const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
+    if (!existMusic) {
       throw new makeError({
-        message: "알맞은 형식의 리뷰를 입력하세요.",
-        code: 400,
+        message: "존재하지 않는 게시글입니다.",
+        code: 404,
       });
     }
-    const result = await this.reCommentRepository.addReviewComment({
+    const result = await this.reviewRepository.addMusicReview({
       userId,
-      reviewId,
-      comment,
+      musicId,
+      mood,
+      review,
     });
     if (!result) {
       throw new makeError({
         message: "리뷰 작성에 실패하였습니다.",
-        code: 400,
+        code: 500,
       });
     }
-    return { message: "댓글이 생성되었습니다." };
-  };
-  //코멘트 조회하기
-  getReviewComment = async ({ reviewId }) => {
+    return { message: "리뷰가 생성되었습니다." };
+  }; //리뷰 조회하기
+
+  getMusicReview = async ({ musicId }) => {
+    const reviews = await this.reviewRepository.getMusicReview({
+      musicId,
+    });
+    return reviews;
+  }; //리뷰 수정하기 //유저정보 들어와야함
+
+  updateMusicReview = async ({ musicId, reviewId, mood, review }) => {
+    const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
+    if (!existMusic) {
+      throw new makeError({
+        message: "존재하지 않는 게시글입니다.",
+        code: 404,
+      });
+    }
     const existReview = await this.reviewRepository.getMusicOneReview({
       reviewId,
     });
     if (!existReview) {
       throw new makeError({
-        message: "알맞은 형식의 리뷰를 입력하세요.",
-        code: 400,
+        message: "리뷰를 찾을 수 없습니다.",
+        code: 404,
       });
     }
-    const reComments = await this.reCommentRepository.getReviewComment({
+    await this.reviewRepository.updateMusicReview({
+      reviewId,
+      mood,
+      review,
+    });
+    return { message: "리뷰가 수정되었습니다." };
+  }; //리뷰 삭제하기 //유저정보 들어와야함
+
+  deleteMusicReview = async ({ musicId, reviewId }) => {
+    const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
+    if (!existMusic) {
+      throw new makeError({
+        message: "존재하지 않는 게시글입니다.",
+        code: 404,
+      });
+    }
+    const existReview = await this.reviewRepository.getMusicOneReview({
       reviewId,
     });
-    return reComments;
-  };
-  //코멘트 수정하기
-  updateReviewComment = async ({ reCommentId, comment }) => {
-    const existReComment = await this.reCommentRepository.existReComment({
-      reCommentId,
-    });
-    if (!existReComment) {
+    if (!existReview) {
       throw new makeError({
-        message: "댓글을 찾을수 없습니다.",
-        code: 400,
+        message: "리뷰를 찾을 수 없습니다.",
+        code: 404,
       });
     }
-    await this.reCommentRepository.updateReviewComment({
-      reCommentId,
-      comment,
+    await this.reviewRepository.deleteMusicReview({
+      reviewId,
     });
-    return { message: "댓글이 수정되었습니다." };
-  };
-
-  //코멘트 삭제하기
-  deleteReviewComment = async ({ reCommentId }) => {
-    const existReComment = await this.reCommentRepository.existReComment({
-      reCommentId,
-    });
-    if (!existReComment) {
-      throw new makeError({
-        message: "댓글을 찾을수 없습니다.",
-        code: 400,
-      });
-    }
-    await this.reCommentRepository.deleteReviewComment({
-      existReComment,
-    });
-    return { message: "댓글이 삭제되었습니다." };
+    return { message: "리뷰가 삭제되었습니다." };
   };
 }
 
-module.exports = ReCommentService;
+module.exports = ReviewService;
