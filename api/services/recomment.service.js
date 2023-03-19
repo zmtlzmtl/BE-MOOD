@@ -1,25 +1,27 @@
+const ReCommentRepository = require("../repositories/recomment.repository");
 const ReviewRepository = require("../repositories/review.repository");
-const MusicRepository = require("../repositories/music.repository");
 const { makeError } = require("../error");
 
-class ReviewService {
+class ReCommentService {
   constructor() {
-    this.musicRepository = new MusicRepository();
     this.reviewRepository = new ReviewRepository();
-  } //리뷰 작성하기
-  addMusicReview = async ({ userId, musicId, mood, review }) => {
-    const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
-    if (!existMusic) {
+    this.reCommentRepository = new ReCommentRepository();
+  }
+  //코멘트 작성하기
+  addReviewComment = async ({ userId, reviewId, comment }) => {
+    const existReview = await this.reviewRepository.getMusicOneReview({
+      reviewId,
+    });
+    if (!existReview) {
       throw new makeError({
-        message: "존재하지 않는 게시글입니다.",
+        message: "존재하지 않는 리뷰입니다.",
         code: 404,
       });
     }
-    const result = await this.reviewRepository.addMusicReview({
+    const result = await this.reCommentRepository.addReviewComment({
       userId,
-      musicId,
-      mood,
-      review,
+      reviewId,
+      comment,
     });
     if (!result) {
       throw new makeError({
@@ -27,63 +29,49 @@ class ReviewService {
         code: 500,
       });
     }
-    return { message: "리뷰가 생성되었습니다." };
-  }; //리뷰 조회하기
+    return { message: "리뷰에 대한 댓글이 생성되었습니다." };
+  };
+  //코멘트 조회하기
+  getReviewComment = async ({ reviewId }) => {
+    const reComments = await this.reCommentRepository.getReviewComment({
+      reviewId,
+    });
+    return reComments;
+  };
+  //코멘트 수정하기
+  updateReviewComment = async ({ reCommentId, comment }) => {
+    const existReComment = await this.reCommentRepository.existReComment({
+      reCommentId,
+    });
+    if (!existReComment) {
+      throw new makeError({
+        message: "존재하지 않는 댓글입니다.",
+        code: 404,
+      });
+    }
+    await this.reCommentRepository.updateReviewComment({
+      reCommentId,
+      comment,
+    });
+    return { message: "리뷰에 대한 댓글이 수정되었습니다." };
+  };
 
-  getMusicReview = async ({ musicId }) => {
-    const reviews = await this.reviewRepository.getMusicReview({
-      musicId,
+  //코멘트 삭제하기
+  deleteReviewComment = async ({ reCommentId }) => {
+    const existReComment = await this.reCommentRepository.existReComment({
+      reCommentId,
     });
-    return reviews;
-  }; //리뷰 수정하기 //유저정보 들어와야함
-
-  updateMusicReview = async ({ musicId, reviewId, mood, review }) => {
-    const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
-    if (!existMusic) {
+    if (!existReComment) {
       throw new makeError({
-        message: "존재하지 않는 게시글입니다.",
+        message: "존재하지 않는 댓글입니다.",
         code: 404,
       });
     }
-    const existReview = await this.reviewRepository.getMusicOneReview({
-      reviewId,
+    await this.reCommentRepository.deleteReviewComment({
+      reCommentId,
     });
-    if (!existReview) {
-      throw new makeError({
-        message: "리뷰를 찾을 수 없습니다.",
-        code: 404,
-      });
-    }
-    await this.reviewRepository.updateMusicReview({
-      reviewId,
-      mood,
-      review,
-    });
-    return { message: "리뷰가 수정되었습니다." };
-  }; //리뷰 삭제하기 //유저정보 들어와야함
-
-  deleteMusicReview = async ({ musicId, reviewId }) => {
-    const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
-    if (!existMusic) {
-      throw new makeError({
-        message: "존재하지 않는 게시글입니다.",
-        code: 404,
-      });
-    }
-    const existReview = await this.reviewRepository.getMusicOneReview({
-      reviewId,
-    });
-    if (!existReview) {
-      throw new makeError({
-        message: "리뷰를 찾을 수 없습니다.",
-        code: 404,
-      });
-    }
-    await this.reviewRepository.deleteMusicReview({
-      reviewId,
-    });
-    return { message: "리뷰가 삭제되었습니다." };
+    return { message: "리뷰에 대한 댓글이 삭제되었습니다." };
   };
 }
 
-module.exports = ReviewService;
+module.exports = ReCommentService;
