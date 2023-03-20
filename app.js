@@ -4,7 +4,6 @@ const express = require("express");
 const http = require("http");
 const createSocket = require("./socket");
 const router = require("./api/routes");
-const passport = require("passport");
 
 dotenv.config();
 
@@ -18,9 +17,6 @@ app.use(
     credentials: true,
   })
 );
-
-app.use(passport.initialize());
-require("./db/config/passport")(passport);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
