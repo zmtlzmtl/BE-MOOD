@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Musics extends Model {
+  class Scraps extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,23 +13,15 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "userId",
         foreignKey: "userId",
       });
-      this.hasMany(models.Reviews, {
-        sourceKey: "musicId",
-        foreignKey: "musicId",
-      });
-      this.hasMany(models.Likes, {
-        sourceKey: "musicId",
-        foreignKey: "musicId",
-      });
-      this.hasMany(models.Scraps, {
-        sourceKey: "musicId",
+      this.belongsTo(models.Musics, {
+        targetKey: "musicId",
         foreignKey: "musicId",
       });
     }
   }
-  Musics.init(
+  Scraps.init(
     {
-      musicId: {
+      scrapId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -39,35 +31,25 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
-      musicTitle: {
-        type: DataTypes.STRING,
+      musicId: {
         allowNull: false,
-      },
-      musicContent: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      musicUrl: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      status: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
-      composer: {
-        type: DataTypes.STRING,
+      createdAt: {
         allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
-      fileName: {
-        type: DataTypes.STRING,
+      updatedAt: {
         allowNull: false,
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
       },
     },
     {
       sequelize,
-      modelName: "Musics",
+      modelName: "Scraps",
     }
   );
-  return Musics;
+  return Scraps;
 };
