@@ -8,7 +8,6 @@ router.post("/login", userController.login);
 router.post("/idCheck", userController.check);
 router.post("/nicknameCheck", userController.check);
 
-router.get("/kakao", userController.kakaoLogin);
-router.get("/kakao/callback", userController.kakaoCallback);
+router.post("/kakao/login", userController.kakaoLogin);
 
 module.exports = router;
