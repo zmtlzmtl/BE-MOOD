@@ -6,20 +6,14 @@ const reCommentController = new ReCommentController();
 //로그인 미들웨어 자리
 const Validation = require("../middlewares/validation.middleware");
 
-router.post(
-  "/:reviewId/recomment",
-  reCommentController.addReviewComment
-);
-router.get(
-  "/:reviewId/recomment",
-  reCommentController.getReviewComment
-);
+router.post("/:reviewId/recomment", reCommentController.addReviewComment);
+router.get("/:reviewId/recomment", reCommentController.getReviewComment);
 router.put(
-  "/:reviewId/recomment/recommentId",
+  "/:reviewId/recomment/:reCommentId",
   reCommentController.updateReviewComment
 );
 router.delete(
-  "/:reviewId/recomment/recommentId",
+  "/:reviewId/recomment/:reCommentId",
   reCommentController.deleteReviewComment
 );
 
