@@ -58,112 +58,112 @@ class MusicRepository {
     return s3.upload(param).promise();
   };
   //ㅡㅡㅡㅡㅡ교점 없음
-  findOnebyStatus1 = async () => {
+  findOneByStatus1 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 1 },
     });
     return mood;
   };
-  findOnebyStatus2 = async () => {
+  findOneByStatus2 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 2 },
     });
     return mood;
   };
-  findOnebyStatus3 = async () => {
+  findOneByStatus3 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 3 },
     });
     return mood;
   };
-  findOnebyStatus4 = async () => {
+  findOneByStatus4 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 4 },
     });
     return mood;
   };
-  findOnebyStatus5 = async () => {
+  findOneByStatus5 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 5 },
     });
     return mood;
   };
-  findOnebyStatus6 = async () => {
+  findOneByStatus6 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 6 },
     });
     return mood;
   };
-  findOnebyStatus7 = async () => {
+  findOneByStatus7 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 7 },
     });
     return mood;
   };
-  findOnebyStatus8 = async () => {
+  findOneByStatus8 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 8 },
     });
     return mood;
   };
-  findOnebyStatus9 = async () => {
+  findOneByStatus9 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 9 },
     });
     return mood;
   };
-  findOnebyStatus10 = async () => {
+  findOneByStatus10 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 10 },
     });
     return mood;
   };
-  findOnebyStatus11 = async () => {
+  findOneByStatus11 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 11 },
     });
     return mood;
   };
-  findOnebyStatus12 = async () => {
+  findOneByStatus12 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 12 },
     });
     return mood;
   };
-  findOnebyStatus13 = async () => {
+  findOneByStatus13 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 13 },
     });
     return mood;
   };
-  findOnebyStatus14 = async () => {
+  findOneByStatus14 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 14 },
     });
     return mood;
   };
-  findOnebyStatus15 = async () => {
+  findOneByStatus15 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 15 },
     });
     return mood;
   };
-  findOnebyStatus16 = async () => {
+  findOneByStatus16 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status: 16 },
