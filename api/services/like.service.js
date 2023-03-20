@@ -21,14 +21,14 @@ class LikeService {
     }
   };
 
-  likeStatus = async(userId,musicId) =>{
-    const findLike = await this.likeRepository.findLike(userId, musicId)
-    if(!findLike){
-      return {likeStatus : false}
-    }else {
-      return {likeStatus : true}
+  likeStatus = async (userId, musicId) => {
+    const findLike = await this.likeRepository.findLike(userId, musicId);
+    if (!findLike) {
+      return { likeStatus: false };
+    } else {
+      return { likeStatus: true };
     }
-  }
+  };
 }
 
 module.exports = LikeService;

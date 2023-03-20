@@ -7,7 +7,7 @@ const ReCommentRouter = require("./recomment.routes");
 const LikeRouter = require("./like.route");
 
 router.use("/", UserRouter);
-router.use("/review",ReCommentRouter)
+router.use("/review", ReCommentRouter);
 router.use("/music", [LikeRouter, ReviewRouter]);
 router.use("/", MusicRouter);
 router.get("/", (_req, res) => {
