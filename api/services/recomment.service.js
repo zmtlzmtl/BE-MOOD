@@ -1,4 +1,4 @@
-const ReCommentRepository = require("../repositories/reComment.repository");
+const ReCommentRepository = require("../repositories/recomment.repository");
 const ReviewRepository = require("../repositories/review.repository");
 const { makeError } = require("../error");
 
@@ -14,8 +14,8 @@ class ReCommentService {
     });
     if (!existReview) {
       throw new makeError({
-        message: "알맞은 형식의 리뷰를 입력하세요.",
-        code: 400,
+        message: "존재하지 않는 리뷰입니다.",
+        code: 404,
       });
     }
     const result = await this.reCommentRepository.addReviewComment({
@@ -26,22 +26,13 @@ class ReCommentService {
     if (!result) {
       throw new makeError({
         message: "리뷰 작성에 실패하였습니다.",
-        code: 400,
+        code: 500,
       });
     }
-    return { message: "댓글이 생성되었습니다." };
+    return { message: "리뷰에 대한 댓글이 생성되었습니다." };
   };
   //코멘트 조회하기
   getReviewComment = async ({ reviewId }) => {
-    const existReview = await this.reviewRepository.getMusicOneReview({
-      reviewId,
-    });
-    if (!existReview) {
-      throw new makeError({
-        message: "알맞은 형식의 리뷰를 입력하세요.",
-        code: 400,
-      });
-    }
     const reComments = await this.reCommentRepository.getReviewComment({
       reviewId,
     });
@@ -54,15 +45,15 @@ class ReCommentService {
     });
     if (!existReComment) {
       throw new makeError({
-        message: "댓글을 찾을수 없습니다.",
-        code: 400,
+        message: "존재하지 않는 댓글입니다.",
+        code: 404,
       });
     }
     await this.reCommentRepository.updateReviewComment({
       reCommentId,
       comment,
     });
-    return { message: "댓글이 수정되었습니다." };
+    return { message: "리뷰에 대한 댓글이 수정되었습니다." };
   };
 
   //코멘트 삭제하기
@@ -72,14 +63,14 @@ class ReCommentService {
     });
     if (!existReComment) {
       throw new makeError({
-        message: "댓글을 찾을수 없습니다.",
-        code: 400,
+        message: "존재하지 않는 댓글입니다.",
+        code: 404,
       });
     }
     await this.reCommentRepository.deleteReviewComment({
-      existReComment,
+      reCommentId,
     });
-    return { message: "댓글이 삭제되었습니다." };
+    return { message: "리뷰에 대한 댓글이 삭제되었습니다." };
   };
 }
 
