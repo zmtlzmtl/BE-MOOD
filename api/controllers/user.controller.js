@@ -47,24 +47,23 @@ class UserController {
     }
   };
 
-  kakaoLogin = passport.authenticate("kakao");
+  kakaoLogin = async (req, res, next) => {
+    try {
+      const { code } = req.body;
+      const authToken = await this.userService.getKakaoTokens(code);
+      const userData = await this.userService.getUserInfo(authToken);
+      const { access_token, refresh_token, nickname } =
+        await this.userService.makeTokenAndUserInfo(userData);
 
-  kakaoCallback = (req, res, next) => {
-    passport.authenticate("kakao", { session: false }, async (error, user) => {
-      try {
-        if (error) {
-          return next(error);
-        }
-
-        const token = jwt.sign({ userId: user.userId }, process.env.KEY, {
-          expiresIn: "1h",
-        });
-
-        res.status(200).json({ token, message: "카카오 로그인 성공" });
-      } catch (error) {
-        next(error);
-      }
-    })(req, res, next);
+      res.status(200).send({
+        message: "로그인 성공",
+        access_token: access_token,
+        refresh_token: refresh_token,
+        nickname: nickname,
+      });
+    } catch (error) {
+      next(error);
+    }
   };
 }
 
