@@ -1,11 +1,10 @@
 const musicRepository = require("../repositories/music.repository");
 const { makeError } = require("../error");
-const { cloudfront } = require("../middlewares/cloudfront");
+const { cloudfront } = require("../middlewares/cloudfront.middleware");
 class MusicService {
   constructor() {
     this.musicRepository = new musicRepository();
   }
-
   findOneByMusicId = async ({ musicId }) => {
     let music = await this.musicRepository.findOneByMusicId({ musicId });
     if (music == null) {
