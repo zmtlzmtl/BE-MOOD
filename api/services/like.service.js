@@ -24,9 +24,9 @@ class LikeService {
   likeStatus = async (userId, musicId) => {
     const findLike = await this.likeRepository.findLike(userId, musicId);
     if (!findLike) {
-      return { likeStatus: false };
+      return false;
     } else {
-      return { likeStatus: true };
+      return true;
     }
   };
 }
