@@ -22,7 +22,9 @@ class LikeController {
       const { musicId } = req.params;
 
       const likeStatus = await this.likeService.likestatus(userId, musicId);
-      res.status(200).json({ message:"좋아요 조회에 성공했습니다.",likeStatus });
+      res
+        .status(200)
+        .json({ message: "좋아요 조회에 성공했습니다.", likeStatus });
     } catch (error) {
       next(error);
     }
