@@ -42,7 +42,9 @@ class UserService {
 
   async findOrCreate(profile) {
     const kakaoId = `kakao_${profile.id}`;
-    const existingUser = await this.userRepository.findOne({ kakaoId });
+    const existingUser = await this.userRepository.findOne({
+      nickname: profile.displayName,
+    });
 
     if (existingUser) {
       return existingUser;
