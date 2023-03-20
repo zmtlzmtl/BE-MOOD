@@ -22,7 +22,9 @@ class ScrapController {
       const { musicId } = req.params;
 
       const scrapStatus = await this.scrapService.scrapStatus(userId, musicId);
-      res.status(200).json({ message:"좋아요 조회에 성공했습니다.",scrapStatus });
+      res
+        .status(200)
+        .json({ message: "좋아요 조회에 성공했습니다.", scrapStatus });
     } catch (error) {
       next(error);
     }
