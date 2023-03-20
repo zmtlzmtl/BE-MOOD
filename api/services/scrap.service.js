@@ -24,7 +24,7 @@ class ScrapService {
   scrapStatus = async (userId, musicId) => {
     const findScrap = await this.scrapRepository.findScrap(userId, musicId);
     if (!findScrap) {
-      return false ;
+      return false;
     } else {
       return true;
     }
