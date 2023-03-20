@@ -1,6 +1,8 @@
 const musicRepository = require("../repositories/music.repository");
 const { makeError } = require("../error");
 const { cloudfront } = require("../middlewares/cloudfront.middleware");
+const { cloudfrontfor } = require("../middlewares/cloudfront.middleware");
+
 class MusicService {
   constructor() {
     this.musicRepository = new musicRepository();
@@ -25,12 +27,7 @@ class MusicService {
         code: 400,
       });
     }
-    for (let i = 0; i < music.length; i++) {
-      let fileN = music[i].dataValues.fileName;
-      music[i].dataValues.musicUrl =
-        "https://d13uh5mnneeyhq.cloudfront.net/" + fileN;
-    }
-    return music;
+    return await cloudfrontfor(music);
   };
   mood = async ({ x, y }) => {
     if (x >= 0 && x <= 150 && y >= 0 && y <= 75) {
@@ -160,67 +157,56 @@ class MusicService {
       let four = await this.musicRepository.findOneByStatus4();
       return await cloudfront(four);
     }
-    findBySurvey1 = async () => {
-      let survey1 = await this.musicRepository.findBySurvey1();
-      if (survey1 == "") {
-        throw new makeError({
-          message: "status 4,7,8 에 해당하는 음악이 없습니다.",
-          code: 400,
-        });
-      }
-      for (let i = 0; i < survey1.length; i++) {
-        let fileName = survey1[i].dataValues.fileName;
-        survey1[i].dataValues.musicUrl =
-          "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
-      }
-      let randNum = await this.musicRepository.rand(0, survey1.length);
-      let randOne = survey1[randNum].dataValues;
-      return randOne;
-    };
-    findBySurvey2 = async () => {
-      let survey2 = await this.musicRepository.findBySurvey2();
-      if (survey2 == "") {
-        throw new makeError({
-          message: "status: 5 에 해당하는 음악이 없습니다.",
-          code: 400,
-        });
-      }
-      for (let i = 0; i < survey2.length; i++) {
-        let fileName = survey2[i].dataValues.fileName;
-        survey2[i].dataValues.musicUrl =
-          "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
-      }
-      let randNum = await this.musicRepository.rand(0, survey2.length);
-      let randOne = survey2[randNum].dataValues;
-      return randOne;
-    };
-    findBySurvey3 = async () => {
-      let survey3 = await this.musicRepository.findBySurvey3();
-      if (survey3 == "") {
-        throw new makeError({
-          message: "status: 2,3,6 에 해당하는 음악이 없습니다.",
-          code: 400,
-        });
-      }
-      for (let i = 0; i < survey3.length; i++) {
-        let fileName = survey3[i].dataValues.fileName;
-        survey3[i].dataValues.musicUrl =
-          "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
-      }
-      let randNum = await this.musicRepository.rand(0, survey3.length);
-      let randOne = survey3[randNum].dataValues;
-      return randOne;
-    };
-    findByKeyword = async ({ keyword }) => {
-      const music = await this.musicRepository.findByKeyword({ keyword });
-      if (keyword.length === 0) {
-        throw new makeError({
-          message: "해당하는 keyword가 없습니다.",
-          code: 400,
-        });
-      }
-      return music;
-    };
+  };
+  findBySurvey1 = async () => {
+    let survey1 = await this.musicRepository.findBySurvey1();
+    if (survey1 == "") {
+      throw new makeError({
+        message: "status 4,7,8 에 해당하는 음악이 없습니다.",
+        code: 400,
+      });
+    }
+    await cloudfrontfor(survey1);
+    let randNum = await this.musicRepository.rand(0, survey1.length);
+    let randomResult = survey1[randNum].dataValues;
+    return randomResult;
+  };
+  findBySurvey2 = async () => {
+    let survey2 = await this.musicRepository.findBySurvey2();
+    if (survey2 == "") {
+      throw new makeError({
+        message: "status: 5 에 해당하는 음악이 없습니다.",
+        code: 400,
+      });
+    }
+    await cloudfrontfor(survey2);
+    let randNum = await this.musicRepository.rand(0, survey2.length);
+    let randomResult = survey2[randNum].dataValues;
+    return randomResult;
+  };
+  findBySurvey3 = async () => {
+    let survey3 = await this.musicRepository.findBySurvey3();
+    if (survey3 == "") {
+      throw new makeError({
+        message: "status: 2,3,6 에 해당하는 음악이 없습니다.",
+        code: 400,
+      });
+    }
+    await cloudfrontfor(survey3);
+    let randNum = await this.musicRepository.rand(0, survey3.length);
+    let randomResult = survey3[randNum].dataValues;
+    return randomResult;
+  };
+  findByKeyword = async ({ keyword }) => {
+    const music = await this.musicRepository.findByKeyword({ keyword });
+    if (keyword.length === 0) {
+      throw new makeError({
+        message: "해당하는 keyword가 없습니다.",
+        code: 400,
+      });
+    }
+    return music;
   };
 }
+
 module.exports = MusicService;
