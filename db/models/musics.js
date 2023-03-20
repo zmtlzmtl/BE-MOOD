@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "musicId",
         foreignKey: "musicId",
       });
+      this.hasMany(models.Likes, {
+        sourceKey: "musicId",
+        foreignKey: "musicId",
+      });
     }
   }
   Musics.init(

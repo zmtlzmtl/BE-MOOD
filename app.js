@@ -4,7 +4,6 @@ const express = require("express");
 const http = require("http");
 const createSocket = require("./socket");
 const router = require("./api/routes");
-const passport = require("passport");
 
 dotenv.config();
 
