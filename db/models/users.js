@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "userId",
         foreignKey: "userId",
       });
+      this.hasMany(models.Scraps, {
+        sourceKey: "userId",
+        foreignKey: "userId",
+      });
     }
   }
   Users.init(
