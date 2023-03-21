@@ -1,4 +1,4 @@
-const { Reviews } = require("../../db/models/");
+const { Users, Reviews } = require("../../db/models/");
 
 class ReviewRepository {
   constructor() {}
@@ -11,8 +11,16 @@ class ReviewRepository {
 
   //리뷰 조회하기
   getMusicReview = async ({ musicId }) => {
-    const result = await Reviews.findAndCountAll({
+    const result = await Reviews.findAll({
       where: { musicId },
+      include: [
+        {
+          model: Users,
+          attributes: ["nickname"],
+        },
+      ],
+      group: ["Reviews.userId"],
+      attributes: ["User.nickname", "review", "createdAt", "updatedAt"],
       order: [["createdAt", "ASC"]],
     });
     return result;

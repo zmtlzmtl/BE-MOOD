@@ -35,7 +35,16 @@ class ReviewService {
     const reviews = await this.reviewRepository.getMusicReview({
       musicId,
     });
-    return reviews;
+    const count = reviews.length;
+    const rows = reviews.map((data) => {
+      return {
+        nickname: data.User.nickname,
+        review: data.review,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+      };
+    });
+    return { count, rows };
   };
 
   //리뷰 수정하기
