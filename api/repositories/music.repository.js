@@ -1,7 +1,7 @@
 const { Musics, Composers } = require("../../db/models");
 const { S3 } = require("aws-sdk");
 const Sequelize = require("sequelize");
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 
 class MusicRepository {
   constructor() {}
@@ -299,6 +299,13 @@ class MusicRepository {
     });
     return mood;
   };
+  find4and8 = async () => {
+    let mood = await Musics.findOne({
+      order: Sequelize.literal("rand()"),
+      where: { status: [4, 8] },
+    });
+    return mood;
+  };
   find8and12 = async () => {
     let mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
@@ -312,27 +319,6 @@ class MusicRepository {
       where: { status: [1, 5] },
     });
     return mood;
-  };
-  findBySurvey1 = async () => {
-    let survey1 = await Musics.findAll({
-      where: { status: [4, 7, 8] },
-      attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
-    });
-    return survey1;
-  };
-  findBySurvey2 = async () => {
-    let survey2 = await Musics.findAll({
-      where: { status: 5 },
-      attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
-    });
-    return survey2;
-  };
-  findBySurvey3 = async () => {
-    let survey3 = await Musics.findAll({
-      where: { status: [2, 3, 6] },
-      attributes: ["musicId", "musicTitle", "composer", "musicUrl", "fileName"],
-    });
-    return survey3;
   };
   findByKeyword = async ({ keyword }) => {
     const composerInfo = await Composers.findOne({

@@ -56,29 +56,6 @@ class MusicController {
       next(err);
     }
   };
-  findBySurvey = async (req, res, next) => {
-    try {
-      let { survey } = req.params;
-      if (survey == 1) {
-        let data = await this.musicService.findBySurvey1({
-          status: [4, 7, 8],
-        });
-        return res.status(200).json({ data });
-      } else if (survey == 2) {
-        let data = await this.musicService.findBySurvey2({
-          status: 5,
-        });
-        return res.status(200).json({ data });
-      } else if (survey == 3) {
-        let data = await this.musicService.findBySurvey3({
-          status: [2, 3, 6],
-        });
-        return res.status(200).json({ data });
-      } else return res.status(400).json({ msg: "invalid survey parameters." });
-    } catch (err) {
-      next(err);
-    }
-  };
   findByKeyword = async (req, res, next) => {
     try {
       const { keyword } = req.query;

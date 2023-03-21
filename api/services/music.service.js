@@ -127,8 +127,8 @@ class MusicService {
       return await cloudfront(seven);
     } else if (x > 450 && x <= 600 && y > 150 && y <= 225) {
       if (x == 600 && y == 225) {
-        let find48 = await this.musicRepository.find48();
-        return await cloudfront(find48);
+        let find4and8 = await this.musicRepository.find4and8();
+        return await cloudfront(find4and8);
       }
       let eight = await this.musicRepository.findOneByStatus8();
       return await cloudfront(eight);
@@ -157,45 +157,6 @@ class MusicService {
       let four = await this.musicRepository.findOneByStatus4();
       return await cloudfront(four);
     }
-  };
-  findBySurvey1 = async () => {
-    let survey1 = await this.musicRepository.findBySurvey1();
-    if (survey1 == "") {
-      throw new makeError({
-        message: "status 4,7,8 에 해당하는 음악이 없습니다.",
-        code: 400,
-      });
-    }
-    await cloudfrontfor(survey1);
-    let randNum = await this.musicRepository.rand(0, survey1.length);
-    let randomResult = survey1[randNum].dataValues;
-    return randomResult;
-  };
-  findBySurvey2 = async () => {
-    let survey2 = await this.musicRepository.findBySurvey2();
-    if (survey2 == "") {
-      throw new makeError({
-        message: "status: 5 에 해당하는 음악이 없습니다.",
-        code: 400,
-      });
-    }
-    await cloudfrontfor(survey2);
-    let randNum = await this.musicRepository.rand(0, survey2.length);
-    let randomResult = survey2[randNum].dataValues;
-    return randomResult;
-  };
-  findBySurvey3 = async () => {
-    let survey3 = await this.musicRepository.findBySurvey3();
-    if (survey3 == "") {
-      throw new makeError({
-        message: "status: 2,3,6 에 해당하는 음악이 없습니다.",
-        code: 400,
-      });
-    }
-    await cloudfrontfor(survey3);
-    let randNum = await this.musicRepository.rand(0, survey3.length);
-    let randomResult = survey3[randNum].dataValues;
-    return randomResult;
   };
   findByKeyword = async ({ keyword }) => {
     const music = await this.musicRepository.findByKeyword({ keyword });
