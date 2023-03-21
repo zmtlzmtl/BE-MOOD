@@ -36,7 +36,16 @@ class ReCommentService {
     const reComments = await this.reCommentRepository.getReviewComment({
       reviewId,
     });
-    return reComments;
+    const count = reComments.length;
+    const rows = reComments.map((data) => {
+      return {
+        nickname: data.User.nickname,
+        comment: data.comment,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+      };
+    });
+    return { count, rows };
   };
   //코멘트 수정하기
   updateReviewComment = async ({ userId, reCommentId, comment }) => {

@@ -1,4 +1,4 @@
-const { ReComments } = require("../../db/models/");
+const { Users, ReComments } = require("../../db/models/");
 
 class ReCommnetRepository {
   constructor() {}
@@ -10,8 +10,16 @@ class ReCommnetRepository {
 
   //코멘트 조회하기
   getReviewComment = async ({ reviewId }) => {
-    const result = await ReComments.findAndCountAll({
+    const result = await ReComments.findAll({
       where: { reviewId },
+      include: [
+        {
+          model: Users,
+          attributes: ["nickname"],
+        },
+      ],
+      group: ["ReComments.userId"],
+      attributes: ["User.nickname", "comment", "createdAt", "updatedAt"],
       order: [["createdAt", "ASC"]],
     });
     return result;
