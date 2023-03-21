@@ -6,14 +6,13 @@ class ReviewController {
   }
   //리뷰 작성하기
   addMusicReview = async (req, res, next) => {
-    const userId = 1;
+    const { userId } = res.locals.user;
     const { musicId } = req.params;
-    const { mood, review } = req.body;
+    const { review } = req.body;
     try {
       const addreview = await this.reviewService.addMusicReview({
         userId,
         musicId,
-        mood,
         review,
       });
       return res.status(201).json(addreview);
@@ -37,13 +36,14 @@ class ReviewController {
 
   //리뷰 수정하기
   updateMusicReview = async (req, res, next) => {
+    const { userId } = res.locals.user;
     const { musicId, reviewId } = req.params;
-    const { mood, review } = req.body;
+    const { review } = req.body;
     try {
       const updateReview = await this.reviewService.updateMusicReview({
+        userId,
         musicId,
         reviewId,
-        mood,
         review,
       });
       return res.status(200).json(updateReview);
@@ -54,9 +54,11 @@ class ReviewController {
 
   //리뷰 삭제하기
   deleteMusicReview = async (req, res, next) => {
+    const { userId } = res.locals.user;
     const { musicId, reviewId } = req.params;
     try {
       const deleteReview = await this.reviewService.deleteMusicReview({
+        userId,
         musicId,
         reviewId,
       });
