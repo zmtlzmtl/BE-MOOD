@@ -18,7 +18,6 @@ class ReCommnetRepository {
           attributes: ["nickname"],
         },
       ],
-      group: ["ReComments.userId"],
       order: [["createdAt", "ASC"]],
     });
     return result;

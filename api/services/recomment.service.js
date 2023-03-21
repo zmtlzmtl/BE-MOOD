@@ -39,6 +39,9 @@ class ReCommentService {
     const count = reComments.length;
     const rows = reComments.map((data) => {
       return {
+        userId: data.userId,
+        reviewId: data.reviewId,
+        reCommentId: data.reCommentId,
         nickname: data.User.nickname,
         comment: data.comment,
         createdAt: data.createdAt,

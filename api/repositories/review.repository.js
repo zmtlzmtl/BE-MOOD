@@ -19,7 +19,6 @@ class ReviewRepository {
           attributes: ["nickname"],
         },
       ],
-      group: ["Reviews.userId"],
       order: [["createdAt", "ASC"]],
     });
     return result;

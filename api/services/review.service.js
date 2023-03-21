@@ -38,6 +38,9 @@ class ReviewService {
     const count = reviews.length;
     const rows = reviews.map((data) => {
       return {
+        userId: data.userId,
+        musicId: data.musicId,
+        reviewId: data.reviewId,
         nickname: data.User.nickname,
         review: data.review,
         createdAt: data.createdAt,

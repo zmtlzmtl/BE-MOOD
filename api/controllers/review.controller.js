@@ -9,7 +9,7 @@ class ReviewController {
     const { userId } = res.locals.user;
     const { musicId } = req.params;
     const { review } = req.body;
-    try {
+        try {
       const addreview = await this.reviewService.addMusicReview({
         userId,
         musicId,
