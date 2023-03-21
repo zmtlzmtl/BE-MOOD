@@ -4,8 +4,6 @@ function cloudfront(file) {
     "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
   return file;
 }
-module.exports = { cloudfront };
-
 function cloudfrontfor(file) {
   let fileName;
   for (let i = 0; i < file.length; i++) {
@@ -15,4 +13,4 @@ function cloudfrontfor(file) {
   }
   return file;
 }
-module.exports = { cloudfrontfor };
+module.exports = { cloudfront, cloudfrontfor };
