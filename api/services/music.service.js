@@ -124,7 +124,7 @@ class MusicService {
         let find3478 = await this.musicRepository.find3478();
         return await cloudfront(find3478);
       }
-      let seven = await this.musicRepository.findOnebyStatus7();
+      let seven = await this.musicRepository.findOneByStatus7();
       return await cloudfront(seven);
     } else if (x > 75 && x <= 100 && y > 50 && y <= 75) {
       if (x == 100 && y == 75) {
