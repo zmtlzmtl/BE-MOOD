@@ -5,9 +5,6 @@ const { Op } = require("sequelize");
 
 class MusicRepository {
   constructor() {}
-  rand(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
   create = async ({
     musicTitle,
     musicContent,
