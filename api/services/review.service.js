@@ -8,7 +8,7 @@ class ReviewService {
     this.reviewRepository = new ReviewRepository();
   }
   //리뷰 작성하기
-  addMusicReview = async ({ userId, musicId, mood, review }) => {
+  addMusicReview = async ({ userId, musicId, review }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {
       throw new makeError({
@@ -19,7 +19,6 @@ class ReviewService {
     const result = await this.reviewRepository.addMusicReview({
       userId,
       musicId,
-      mood,
       review,
     });
     if (!result) {
@@ -39,8 +38,8 @@ class ReviewService {
     return reviews;
   };
 
-  //리뷰 수정하기 //유저정보 들어와야함
-  updateMusicReview = async ({ musicId, reviewId, mood, review }) => {
+  //리뷰 수정하기
+  updateMusicReview = async ({ userId, musicId, reviewId, review }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {
       throw new makeError({
@@ -57,16 +56,21 @@ class ReviewService {
         code: 404,
       });
     }
+    if (userId !== existReview.userId) {
+      throw new makeError({
+        message: "권한이 없습니다.",
+        code: 403,
+      });
+    }
     await this.reviewRepository.updateMusicReview({
       reviewId,
-      mood,
       review,
     });
     return { message: "리뷰가 수정되었습니다." };
   };
 
   //리뷰 삭제하기 //유저정보 들어와야함
-  deleteMusicReview = async ({ musicId, reviewId }) => {
+  deleteMusicReview = async ({ userId, musicId, reviewId }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {
       throw new makeError({
@@ -81,6 +85,12 @@ class ReviewService {
       throw new makeError({
         message: "리뷰를 찾을 수 없습니다.",
         code: 404,
+      });
+    }
+    if (userId !== existReview.userId) {
+      throw new makeError({
+        message: "권한이 없습니다.",
+        code: 403,
       });
     }
     await this.reviewRepository.deleteMusicReview({

@@ -4,8 +4,8 @@ class ReviewRepository {
   constructor() {}
 
   //리뷰 작성하기
-  addMusicReview = async ({ userId, musicId, mood, review }) => {
-    const result = await Reviews.create({ userId, musicId, mood, review });
+  addMusicReview = async ({ userId, musicId, review }) => {
+    const result = await Reviews.create({ userId, musicId, review });
     return result;
   };
 
@@ -25,8 +25,8 @@ class ReviewRepository {
     return result;
   };
   //리뷰 수정하기
-  updateMusicReview = async ({ reviewId, mood, review }) => {
-    await Reviews.update({ mood, review }, { where: { reviewId } });
+  updateMusicReview = async ({ reviewId, review }) => {
+    await Reviews.update({ review }, { where: { reviewId } });
     return;
   };
 
