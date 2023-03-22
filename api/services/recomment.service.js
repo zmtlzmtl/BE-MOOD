@@ -36,10 +36,22 @@ class ReCommentService {
     const reComments = await this.reCommentRepository.getReviewComment({
       reviewId,
     });
-    return reComments;
+    const count = reComments.length;
+    const rows = reComments.map((data) => {
+      return {
+        userId: data.userId,
+        reviewId: data.reviewId,
+        reCommentId: data.reCommentId,
+        nickname: data.User.nickname,
+        comment: data.comment,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt,
+      };
+    });
+    return { count, rows };
   };
   //코멘트 수정하기
-  updateReviewComment = async ({ reCommentId, comment }) => {
+  updateReviewComment = async ({ userId, reCommentId, comment }) => {
     const existReComment = await this.reCommentRepository.existReComment({
       reCommentId,
     });
@@ -47,6 +59,12 @@ class ReCommentService {
       throw new makeError({
         message: "존재하지 않는 댓글입니다.",
         code: 404,
+      });
+    }
+    if (userId !== existReComment.userId) {
+      throw new makeError({
+        message: "권한이 없습니다.",
+        code: 403,
       });
     }
     await this.reCommentRepository.updateReviewComment({
@@ -57,7 +75,7 @@ class ReCommentService {
   };
 
   //코멘트 삭제하기
-  deleteReviewComment = async ({ reCommentId }) => {
+  deleteReviewComment = async ({ userId, reCommentId }) => {
     const existReComment = await this.reCommentRepository.existReComment({
       reCommentId,
     });
@@ -65,6 +83,12 @@ class ReCommentService {
       throw new makeError({
         message: "존재하지 않는 댓글입니다.",
         code: 404,
+      });
+    }
+    if (userId !== existReComment.userId) {
+      throw new makeError({
+        message: "권한이 없습니다.",
+        code: 403,
       });
     }
     await this.reCommentRepository.deleteReviewComment({

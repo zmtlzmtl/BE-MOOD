@@ -6,13 +6,12 @@ class ReCommentController {
   }
   //코멘트 작성하기
   addReviewComment = async (req, res, next) => {
-    const userId = 1;
+    const { userId } = res.locals.user;
     const { reviewId } = req.params;
     const { comment } = req.body;
     try {
       const addReComment = await this.reCommentService.addReviewComment({
         userId,
-
         reviewId,
         comment,
       });
@@ -36,10 +35,12 @@ class ReCommentController {
 
   //코멘트 수정하기
   updateReviewComment = async (req, res, next) => {
+    const { userId } = res.locals.user;
     const { reviewId, reCommentId } = req.params;
     const { comment } = req.body;
     try {
       const updateReComment = await this.reCommentService.updateReviewComment({
+        userId,
         reviewId,
         reCommentId,
         comment,
@@ -52,9 +53,11 @@ class ReCommentController {
 
   //코멘트 삭제하기
   deleteReviewComment = async (req, res, next) => {
+    const { userId } = res.locals.user;
     const { reviewId, reCommentId } = req.params;
     try {
       const deleteReComment = await this.reCommentService.deleteReviewComment({
+        userId,
         reviewId,
         reCommentId,
       });

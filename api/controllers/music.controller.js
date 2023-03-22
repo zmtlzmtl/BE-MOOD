@@ -1,6 +1,5 @@
 const musicService = require("../services/music.service");
 const musicRepository = require("../repositories/music.repository");
-const { makeError } = require("../error");
 
 class MusicController {
   constructor() {
@@ -10,9 +9,9 @@ class MusicController {
   create = async (req, res) => {
     try {
       let file = req.files[0];
-      let result = await this.musicRepository.s3Upload(file);
-      let Url = result.Location;
-      let fileN = result.key;
+      let data = await this.musicRepository.s3Upload(file);
+      let Url = data.Location;
+      let fileN = data.key;
       let { musicTitle, musicContent, status, composer } = req.body;
       let music = await this.musicRepository.create({
         musicTitle,
@@ -49,34 +48,10 @@ class MusicController {
       next(err);
     }
   };
-  findAllByStatus = async (req, res, next) => {
+  findAllByCoOrdinates = async (req, res, next) => {
     try {
-      const { status } = req.params;
-      const project = await this.musicService.findAllByStatus({ status });
-      return res.status(200).json({ data: project });
-    } catch (err) {
-      next(err);
-    }
-  };
-  findBySurvey = async (req, res, next) => {
-    try {
-      let { survey } = req.params;
-      if (survey == 1) {
-        let result = await this.musicService.findBySurvey1({
-          status: [4, 7, 8],
-        });
-        return res.status(200).json({ result });
-      } else if (survey == 2) {
-        let result = await this.musicService.findBySurvey2({
-          status: 5,
-        });
-        return res.status(200).json({ result });
-      } else if (survey == 3) {
-        let result = await this.musicRepository.findBySurvey3({
-          status: [2, 3, 6],
-        });
-        return res.status(200).json({ result });
-      } else return res.status(400).json({ msg: "invalid survey parameters." });
+      const mood = await this.musicService.mood(req.params);
+      return res.status(200).json({ data: mood });
     } catch (err) {
       next(err);
     }

@@ -1,18 +1,24 @@
-const { Reviews } = require("../../db/models/");
+const { Users, Reviews } = require("../../db/models/");
 
 class ReviewRepository {
   constructor() {}
 
   //리뷰 작성하기
-  addMusicReview = async ({ userId, musicId, mood, review }) => {
-    const result = await Reviews.create({ userId, musicId, mood, review });
+  addMusicReview = async ({ userId, musicId, review }) => {
+    const result = await Reviews.create({ userId, musicId, review });
     return result;
   };
 
   //리뷰 조회하기
   getMusicReview = async ({ musicId }) => {
-    const result = await Reviews.findAndCountAll({
+    const result = await Reviews.findAll({
       where: { musicId },
+      include: [
+        {
+          model: Users,
+          attributes: ["nickname"],
+        },
+      ],
       order: [["createdAt", "ASC"]],
     });
     return result;
@@ -25,8 +31,8 @@ class ReviewRepository {
     return result;
   };
   //리뷰 수정하기
-  updateMusicReview = async ({ reviewId, mood, review }) => {
-    await Reviews.update({ mood, review }, { where: { reviewId } });
+  updateMusicReview = async ({ reviewId, review }) => {
+    await Reviews.update({ review }, { where: { reviewId } });
     return;
   };
 
