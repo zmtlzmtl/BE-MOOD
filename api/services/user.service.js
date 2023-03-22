@@ -2,10 +2,7 @@ const UserRepository = require("../repositories/user.repository");
 const MusicRepository = require("../repositories/music.repository");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const {
-  cloudfront,
-  cloudfrontfor,
-} = require("../middlewares/cloudfront.middleware");
+const { cloudfrontfor } = require("../middlewares/cloudfront.middleware");
 const { makeError } = require("../error");
 
 class UserService {
