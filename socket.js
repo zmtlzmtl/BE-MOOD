@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
 const { Chats } = require("./db/models");
+const logger = require("./db/config/logger")
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -26,11 +27,11 @@ module.exports = (server) => {
       });
       socket.on("scroll", async function (index) {
         console.log(index + "스크롤이벤트발생");
-        const offset = (index - 1)  * 30;
-        if (index >= 2) {
+        const offset = (index - 1) * 30;
+        if (index !== 1) {
           const chats = await Chats.findAll({
             where: { roomId: socket.roomId },
-            order: [["chatId", "DESC"]],
+            order: [["createdAt", "DESC"]],
             limit: 30,
             offset: offset,
           });
@@ -65,7 +66,8 @@ module.exports = (server) => {
         socket.to(socket.roomId).emit("offUser", socket.nickname);
       });
     } catch (err) {
-      console.log(err);
+      logger.error(err);
+      socket.emit("error", err);
     }
   });
 };
