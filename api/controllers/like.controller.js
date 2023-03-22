@@ -21,7 +21,7 @@ class LikeController {
       const { userId } = res.locals.user;
       const { musicId } = req.params;
 
-      const likeStatus = await this.likeService.likestatus(userId, musicId);
+      const likeStatus = await this.likeService.likeStatus(userId, musicId);
       res
         .status(200)
         .json({ message: "좋아요 조회에 성공했습니다.", likeStatus });
