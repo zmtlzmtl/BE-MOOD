@@ -18,9 +18,9 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      review: {
-        type: Sequelize.STRING,
+      profileUrl: {
         allowNull: true,
+        type: Sequelize.STRING,
       },
       myStatus: {
         type: Sequelize.STRING,

@@ -1,8 +1,11 @@
-const { Users, UserInfos } = require("../../db/models");
+const { Users, UserInfos, Likes, Scraps, Musics } = require("../../db/models");
 
 class UserRepository {
   signUp = async (id, password, email, nickname) => {
-    await Users.create({ id, password, email, nickname });
+    const makeUser = await Users.create({ id, password, email, nickname });
+    await UserInfos.create({
+      userId: makeUser.userId,
+    });
     return;
   };
 
@@ -46,8 +49,8 @@ class UserRepository {
     });
 
     const auto_signup_kakao_user_image = await UserInfos.create({
-      src: profile_image,
       userId: auto_signup_kakao_user.userId,
+      profileUrl: profile_image,
     });
 
     return {
@@ -56,6 +59,47 @@ class UserRepository {
       nickname: auto_signup_kakao_user.nickname,
       profile_image: auto_signup_kakao_user_image.src,
     };
+  };
+
+  userInfo = async (userId) => {
+    const findUser = await Users.findOne({ where: { userId } });
+    const findUserInfo = await UserInfos.findOne({ where: { userId } });
+
+    return {
+      userId: findUser.userId,
+      nickname: findUser.nickname,
+      profileUrl: findUserInfo.profileUrl,
+      myStatus: findUserInfo.myStatus,
+    };
+  };
+
+  likeList = async (userId) => {
+    const likeList = await Likes.findAll({ where: { userId } });
+    return likeList;
+  };
+
+  scrapList = async (userId) => {
+    const scrapList = await Scraps.findAll({ where: { userId } });
+    return scrapList;
+  };
+
+  findMusic = async (musicId) => {
+    const musicList = await Musics.findAll({
+      where: { musicId },
+      attributes: ["musicTitle", "composer", "musicUrl", "musicId", "fileName"],
+    });
+    return musicList;
+  };
+
+  uploadProfile = async (userId, fileName) => {
+    await UserInfos.update({ profileUrl: fileName }, { where: { userId } });
+    return;
+  };
+
+  deleteUser = async (userId) => {
+    await Users.destroy({ where: { userId } });
+    await UserInfos.destroy({ where: { userId } });
+    return;
   };
 }
 

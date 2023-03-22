@@ -1,10 +1,16 @@
 const UserRepository = require("../repositories/user.repository");
+const MusicRepository = require("../repositories/music.repository");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
+const {
+  cloudfront,
+  cloudfrontfor,
+} = require("../middlewares/cloudfront.middleware");
 const { makeError } = require("../error");
 
 class UserService {
   userRepository = new UserRepository();
+  musicRepository = new MusicRepository();
 
   signUp = async (id, password, confirm, email, nickname) => {
     const findEmail = await this.userRepository.findUser(email);
@@ -147,6 +153,52 @@ class UserService {
       refresh_token: refresh_token,
       nickname: user.nickname,
     };
+  };
+
+  userInfo = async (userId) => {
+    const userInfo = await this.userRepository.userInfo(userId);
+    userInfo.profileUrl =
+      "https://d13uh5mnneeyhq.cloudfront.net/" + userInfo.profileUrl;
+    return userInfo;
+  };
+
+  likeList = async (userId) => {
+    const likeList = await this.userRepository.likeList(userId);
+    const musicId = [];
+    for (let i = 0; i < likeList.length; i++) {
+      musicId.push(likeList[i].musicId);
+    }
+    const musicList = await this.userRepository.findMusic(musicId);
+    return await cloudfrontfor(musicList);
+  };
+
+  scrapList = async (userId) => {
+    const scrapList = await this.userRepository.scrapList(userId);
+    const musicId = [];
+    for (let i = 0; i < scrapList.length; i++) {
+      musicId.push(scrapList[i].musicId);
+    }
+    const musicList = await this.userRepository.findMusic(musicId);
+    return await cloudfrontfor(musicList);
+  };
+
+  uploadImage = async (file) => {
+    const data = await this.musicRepository.s3Upload(file);
+    return data;
+  };
+
+  uploadProfile = async (userId, fileName) => {
+    const userInfo = await this.userRepository.userInfo(userId);
+    if (!userInfo) {
+      throw new makeError({ message: "수정할 사용자가 없습니다", code: 400 });
+    }
+    await this.userRepository.uploadProfile(userId, fileName);
+    return;
+  };
+
+  deleteUser = async (userId) => {
+    await this.userRepository.deleteUser(userId);
+    return;
   };
 }
 
