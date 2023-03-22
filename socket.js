@@ -26,11 +26,11 @@ module.exports = (server) => {
       });
       socket.on("scroll", async function (index) {
         console.log(index + "스크롤이벤트발생");
-        const offset = (index - 1) * 30;
-        if (index !== 1) {
+        const offset = (index - 1)  * 30;
+        if (index >= 2) {
           const chats = await Chats.findAll({
             where: { roomId: socket.roomId },
-            order: [["createdAt", "DESC"]],
+            order: [["chatId", "DESC"]],
             limit: 30,
             offset: offset,
           });
