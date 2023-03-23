@@ -36,10 +36,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    mood: {
-      allowNull: true,
-      type: DataTypes.STRING,
-    },
     review: {
       allowNull: false,
       type: DataTypes.STRING,
