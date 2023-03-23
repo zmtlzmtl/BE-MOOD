@@ -11,7 +11,7 @@ class MusicController {
       let file = req.files[0];
       let data = await this.musicRepository.s3Upload(file);
       let Url = data.Location;
-      let fileN = data.key;
+      let fileN = data.Key;
       let { musicTitle, musicContent, status, composer } = req.body;
       let music = await this.musicRepository.create({
         musicTitle,
