@@ -127,7 +127,7 @@ class UserRepository {
       include: [
         {
           model: Reviews,
-          as: 'Review',
+          as: "Review",
           attributes: [],
         },
       ],

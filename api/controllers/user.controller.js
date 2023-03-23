@@ -77,19 +77,21 @@ class UserController {
   likeList = async (req, res, next) => {
     const { userId } = res.locals.user;
     const likeList = await this.userService.likeList(userId);
-    console.log(likeList)
-    res
-      .status(200)
-      .json({ message: "사용자가 좋아요한 음악조회를 성공했습니다.", likeList });
+    console.log(likeList);
+    res.status(200).json({
+      message: "사용자가 좋아요한 음악조회를 성공했습니다.",
+      likeList,
+    });
   };
 
   scrapList = async (req, res, next) => {
     const { userId } = res.locals.user;
     const scrapList = await this.userService.scrapList(userId);
-    console.log(scrapList)
-    res
-      .status(200)
-      .json({ message: "사용자가 스크랩한 음악조회를 성공했습니다.", scrapList });
+    console.log(scrapList);
+    res.status(200).json({
+      message: "사용자가 스크랩한 음악조회를 성공했습니다.",
+      scrapList,
+    });
   };
 
   uploadProfile = async (req, res, next) => {
@@ -113,17 +115,17 @@ class UserController {
     res.status(200).json({ message: "업로드성공" });
   };
 
-  reviewList = async (req,res,next) => {
-    const {userId} = res.locals.user
-    const data = await this.userService.reviewList(userId)
-    res.status(200).json({message:"리뷰 조회 성공",reviesList:data})
-  }
+  reviewList = async (req, res, next) => {
+    const { userId } = res.locals.user;
+    const data = await this.userService.reviewList(userId);
+    res.status(200).json({ message: "리뷰 조회 성공", reviesList: data });
+  };
 
-  recommentList = async (req,res,next) => {
-    const {userId} = res.locals.user
-    const data = await this.userService.recommentList(userId)
-    res.status(200).json({message:"대댓글 조회 성공",recommentList:data})
-  }
+  recommentList = async (req, res, next) => {
+    const { userId } = res.locals.user;
+    const data = await this.userService.recommentList(userId);
+    res.status(200).json({ message: "대댓글 조회 성공", recommentList: data });
+  };
 
   deleteUser = async (req, res, next) => {
     const { userId } = res.locals.user;
