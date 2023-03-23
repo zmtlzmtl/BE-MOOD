@@ -20,7 +20,7 @@ module.exports = (server) => {
         // roomId가 등록되고 나서 findRoomChats를 실행합니다.
         const chats = await Chats.findAll({
           where: { roomId: socket.roomId },
-          order: [["createdAt", "DESC"]],
+          order: [["chatId", "DESC"]],
           limit: 30,
         });
         const findRoomChats = chats.reverse();
@@ -33,12 +33,11 @@ module.exports = (server) => {
         if (index >= 2) {
           const chats = await Chats.findAll({
             where: { roomId: socket.roomId },
-            order: [["createdAt", "DESC"]],
+            order: [["chatId", "DESC"]],
             limit: 30,
             offset: offset,
           });
           const findRoomChats = chats.reverse();
-          console.log(findRoomChats[0]);
           return socket.emit("plusScroll", findRoomChats);
         } else {
           return;
