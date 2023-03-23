@@ -1,4 +1,4 @@
-const { Musics, Composers } = require("../../db/models");
+const { Musics, Composers, Likes, Streamings } = require("../../db/models");
 const { S3 } = require("aws-sdk");
 const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
@@ -337,6 +337,56 @@ class MusicRepository {
     });
     const search = { composerInfo, composerSong, musicTitle };
     return search;
+  };
+
+  likeChart = async () => {
+    const likeChart = await Musics.findAll({
+      attributes: [
+        "musicId",
+        "musicTitle",
+        "composer",
+        "musicUrl",
+        "fileName",
+        [Sequelize.fn("COUNT", Sequelize.col("Likes.musicId")), "likesCount"],
+      ],
+      include: [
+        {
+          model: Likes,
+          attributes: [],
+          duplicating: false,
+        },
+      ],
+      group: ["Musics.musicId"],
+      order: [[Sequelize.literal("likesCount"), "DESC"]],
+      limit: 10,
+    });
+
+    return likeChart;
+  };
+
+  streamingChart = async () => {
+    const scrapChart = await Musics.findAll({
+      attributes: [
+        "musicId",
+        "musicTitle",
+        "composer",
+        "musicUrl",
+        "fileName",
+        [Sequelize.fn("COUNT", Sequelize.col("Streamings.musicId")), "streamingCount"],
+      ],
+      include: [
+        {
+          model: Streamings,
+          attributes: [],
+          duplicating: false,
+        },
+      ],
+      group: ["Musics.musicId"],
+      order: [[Sequelize.literal("streamingCount"), "DESC"]],
+      limit: 10,
+    });
+
+    return scrapChart;
   };
 }
 
