@@ -113,6 +113,18 @@ class UserController {
     res.status(200).json({ message: "업로드성공" });
   };
 
+  reviewList = async (req,res,next) => {
+    const {userId} = res.locals.user
+    const data = await this.userService.reviewList(userId)
+    res.status(200).json({message:"리뷰 조회 성공",reviesList:data})
+  }
+
+  recommentList = async (req,res,next) => {
+    const {userId} = res.locals.user
+    const data = await this.userService.recommentList(userId)
+    res.status(200).json({message:"대댓글 조회 성공",recommentList:data})
+  }
+
   deleteUser = async (req, res, next) => {
     const { userId } = res.locals.user;
     await this.userService.deleteUser(userId);

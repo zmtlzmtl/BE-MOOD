@@ -1,4 +1,13 @@
-const { Users, UserInfos, Likes, Scraps, Musics } = require("../../db/models");
+const {
+  Users,
+  UserInfos,
+  Likes,
+  Scraps,
+  Musics,
+  Reviews,
+  ReComments,
+} = require("../../db/models");
+const sequelize = require("sequelize");
 
 class UserRepository {
   signUp = async (id, password, email, nickname) => {
@@ -94,6 +103,35 @@ class UserRepository {
   uploadProfile = async (userId, fileName) => {
     await UserInfos.update({ profileUrl: fileName }, { where: { userId } });
     return;
+  };
+
+  findReview = async (userId) => {
+    const reviewData = await Reviews.findAll({
+      where: { userId },
+      attributes: ["musicId", "reviewId", "review", "createdAt"],
+    });
+    return reviewData;
+  };
+
+  findRecomment = async (userId) => {
+    const recommentData = await ReComments.findAll({
+      where: { userId },
+      attributes: [
+        "reCommentId",
+        "reviewId",
+        "comment",
+        "createdAt",
+        [sequelize.col("Review.musicId"), "musicId"],
+      ],
+      include: [
+        {
+          model: Reviews,
+          as: 'Review',
+          attributes: [],
+        },
+      ],
+    });
+    return recommentData;
   };
 
   deleteUser = async (userId) => {
