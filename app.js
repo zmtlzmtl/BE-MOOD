@@ -10,10 +10,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
-const logger = require("./db/config/logger")
+const logger = require("./db/config/logger");
 const morgan = require("morgan");
 app.use(
-  morgan(":method :status :url :response-time ms", { stream: logger.stream })
+  morgan(":method :status :url :response-time ms", { stream: logger.stream }) //데이터의 통로 stream
 );
 
 app.use(

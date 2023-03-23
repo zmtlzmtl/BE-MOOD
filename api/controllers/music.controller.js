@@ -67,6 +67,16 @@ class MusicController {
       return res.status(400).json({ msg: err.message });
     }
   };
+
+  likeChart =  async (req,res,next) => {
+    const likeChart = await this.musicService.likeChart()
+    res.status(200).json({message:"좋아요 차트 조회에 성공했습니다.", likeChart})
+  }
+
+  streamingChart = async (req,res,next)=> {
+    const streamingChart = await this.musicService.streamingChart()
+    res.status(200).json({message:"스크랩 차트 조회에 성공했습니다.",streamingChart})
+  }
 }
 
 module.exports = MusicController;

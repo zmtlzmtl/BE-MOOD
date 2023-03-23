@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "musicId",
         foreignKey: "musicId",
       });
+      this.hasMany(models.Streamings, {
+        sourceKey: "musicId",
+        foreignKey: "musicId",
+      });
     }
   }
   Musics.init(
@@ -62,6 +66,10 @@ module.exports = (sequelize, DataTypes) => {
       fileName: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      tag: {
+        type: DataTypes.JSON,
+        allowNull: true,
       },
     },
     {

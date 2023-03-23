@@ -169,5 +169,15 @@ class MusicService {
     }
     return music;
   };
+
+  likeChart = async () => {
+    const likeChart = await this.musicRepository.likeChart()
+    return cloudfrontfor(likeChart)
+  }
+
+  streamingChart = async() => {
+    const streamingChart = await this.musicRepository.streamingChart()
+    return cloudfrontfor(streamingChart)
+  }
 }
 module.exports = MusicService;
