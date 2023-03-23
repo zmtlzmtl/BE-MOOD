@@ -80,7 +80,7 @@ class UserController {
     console.log(likeList)
     res
       .status(200)
-      .json({ message: "사용자의 좋아요정보를 조회성공했습니다.", likeList });
+      .json({ message: "사용자가 좋아요한 음악조회를 성공했습니다.", likeList });
   };
 
   scrapList = async (req, res, next) => {
@@ -89,7 +89,7 @@ class UserController {
     console.log(scrapList)
     res
       .status(200)
-      .json({ message: "사용자의 좋아요정보를 조회성공했습니다.", scrapList });
+      .json({ message: "사용자가 스크랩한 음악조회를 성공했습니다.", scrapList });
   };
 
   uploadProfile = async (req, res, next) => {
