@@ -109,6 +109,7 @@ class UserRepository {
     const reviewData = await Reviews.findAll({
       where: { userId },
       attributes: ["musicId", "reviewId", "review", "createdAt"],
+      order: [[sequelize.literal("reviewId"), "DESC"]],
     });
     return reviewData;
   };
@@ -130,6 +131,7 @@ class UserRepository {
           attributes: [],
         },
       ],
+      order: [[sequelize.literal("reCommentId"), "DESC"]],
     });
     return recommentData;
   };
