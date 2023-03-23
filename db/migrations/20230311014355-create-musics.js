@@ -42,6 +42,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      tag: {
+        type: Sequelize.JSON,
+        allowNull: true,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
