@@ -1,21 +1,8 @@
 name: mood-BE
 
-on:
-  push:
-    branches:
-      - feature/*
-      - dev
-      - main
-  pull_request:
-    branches:
-      - feature/*
-      - dev
-      - main
-
+on: [push, pull_request]
 jobs:
   build:
     runs-on: self-hosted
-
     steps:
-      - run: npm i
-      - run: pm2 restart app
+      - uses: actions/checkout@v3
