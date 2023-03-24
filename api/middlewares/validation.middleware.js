@@ -25,6 +25,17 @@ const Validation = {
             code: 400,
           })
         ),
+      confirm: Joi.string()
+        .regex(
+          /^(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/
+        )
+        .required()
+        .error(
+          new makeError({
+            message: "비밀번호 확인값이 잘못되었습니다.",
+            code: 400,
+          })
+        ),
       email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
         .required()
