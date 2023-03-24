@@ -24,8 +24,8 @@ class UserRepository {
     return findUser;
   };
 
-  login = async (id, password) => {
-    const findUser = await Users.findOne({ where: { id, password } });
+  login = async (id) => {
+    const findUser = await Users.findOne({ where: { id } });
     return findUser;
   };
 

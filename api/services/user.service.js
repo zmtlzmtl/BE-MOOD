@@ -1,5 +1,6 @@
 const UserRepository = require("../repositories/user.repository");
 const MusicRepository = require("../repositories/music.repository");
+const bcrypt = require("bcrypt");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const { cloudfrontfor } = require("../middlewares/cloudfront.middleware");
@@ -23,14 +24,26 @@ class UserService {
         code: 400,
       });
     }
-    await this.userRepository.signUp(id, password, email, nickname);
+    
+    const hashedPw = await bcrypt.hash(password, 10);
+    await this.userRepository.signUp(id, hashedPw, email, nickname);
     return;
   };
 
   login = async (id, password) => {
-    const login = await this.userRepository.login(id, password);
+    const login = await this.userRepository.login(id);
     if (!login) {
       throw new makeError({ message: "로그인에 실패하였습니다.", code: 400 });
+    }
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      login.password
+    );
+    if (!isPasswordCorrect) {
+      throw new makeError({
+        message: "비밀번호가 일치하지 않습니다.",
+        code: 400,
+      });
     }
     return login;
   };
