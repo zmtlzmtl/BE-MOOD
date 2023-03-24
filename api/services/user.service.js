@@ -193,6 +193,15 @@ class UserService {
     return;
   };
 
+  reviewList = async (userId) => {
+    const reviewData = await this.userRepository.findReview(userId);
+    return reviewData;
+  };
+  recommentList = async (userId) => {
+    const recommentData = await this.userRepository.findRecomment(userId);
+    return recommentData;
+  };
+
   deleteUser = async (userId) => {
     await this.userRepository.deleteUser(userId);
     return;
