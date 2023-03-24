@@ -1,4 +1,4 @@
-name: mood-BE CI
+name: mood-BE 
 
 on:
   push:
