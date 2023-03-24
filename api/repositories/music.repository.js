@@ -343,8 +343,7 @@ class MusicRepository {
       },
       order: [["musicTitle", "DESC"]],
     });
-    const search = { composerInfo, composerSong, musicTitle };
-    return search;
+    return { composerInfo, composerSong, musicTitle };
   };
 }
 
