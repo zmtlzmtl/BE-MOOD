@@ -379,7 +379,10 @@ class MusicRepository {
         "composer",
         "musicUrl",
         "fileName",
-        [Sequelize.fn("COUNT", Sequelize.col("Streamings.musicId")), "streamingCount"],
+        [
+          Sequelize.fn("COUNT", Sequelize.col("Streamings.musicId")),
+          "streamingCount",
+        ],
       ],
       include: [
         {
