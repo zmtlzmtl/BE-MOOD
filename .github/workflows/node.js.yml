@@ -1,4 +1,4 @@
-name: mood-BE 
+name: mood-BE
 
 on:
   push:
@@ -28,3 +28,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm i
+      - run: pm2 restart app
