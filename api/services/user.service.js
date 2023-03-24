@@ -10,6 +10,12 @@ class UserService {
   musicRepository = new MusicRepository();
 
   signUp = async (id, password, confirm, email, nickname) => {
+    if (password !== confirm || !confirm) {
+      throw new makeError({
+        message: "비밀번호 확인란을 확인하세요",
+        code: 400,
+      });
+    }
     const findEmail = await this.userRepository.findUser(email);
     if (findEmail) {
       throw new makeError({
@@ -154,17 +160,17 @@ class UserService {
 
   userInfo = async (userId) => {
     const userInfo = await this.userRepository.userInfo(userId);
-    if(!userInfo.profileUrl){
-      userInfo.profileUrl = null
-    } else{
-      if (userInfo.profileUrl.includes("kakaocdn") === true) {
-      userInfo.profileUrl = userInfo.profileUrl;
+    if (!userInfo.profileUrl) {
+      userInfo.profileUrl = null;
     } else {
-      userInfo.profileUrl =
-        "https://d13uh5mnneeyhq.cloudfront.net/" + userInfo.profileUrl;
+      if (userInfo.profileUrl.includes("kakaocdn") === true) {
+        userInfo.profileUrl = userInfo.profileUrl;
+      } else {
+        userInfo.profileUrl =
+          "https://d13uh5mnneeyhq.cloudfront.net/" + userInfo.profileUrl;
+      }
     }
-    }
-    
+
     return userInfo;
   };
 
