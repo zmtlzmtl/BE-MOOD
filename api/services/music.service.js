@@ -170,6 +170,9 @@ class MusicService {
         code: 400,
       });
     }
+    if (music.composerSong.length === 0 && music.musicTitle.length === 0) {
+      return { message: "해당하는 keyword가 없습니다." };
+    }
     return music;
   };
 
