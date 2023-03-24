@@ -154,8 +154,12 @@ class UserService {
 
   userInfo = async (userId) => {
     const userInfo = await this.userRepository.userInfo(userId);
-    userInfo.profileUrl =
-      "https://d13uh5mnneeyhq.cloudfront.net/" + userInfo.profileUrl;
+    if (userInfo.profileUrl.includes("kakaocdn") === true) {
+      userInfo.profileUrl = userInfo.profileUrl;
+    } else {
+      userInfo.profileUrl =
+        "https://d13uh5mnneeyhq.cloudfront.net/" + userInfo.profileUrl;
+    }
     return userInfo;
   };
 

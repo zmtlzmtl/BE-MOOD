@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
   const [tokenType, token] = (authorization ?? "").split(" ");
 
   if (token) {
-    const { userId } = jwt.verify(token, process.env.JWT_KEY);
+    const { userId } = jwt.verify(token, process.env.KEY);
 
     const user = await Users.findOne({ where: { userId } });
 
