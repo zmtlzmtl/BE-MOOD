@@ -1,4 +1,5 @@
 const musicRepository = require("../repositories/music.repository");
+const LikeRepository = require("../repositories/like.repository")
 const { makeError } = require("../error");
 const {
   cloudfront,
@@ -8,6 +9,8 @@ class MusicService {
   constructor() {
     this.musicRepository = new musicRepository();
   }
+  likeRepository = new LikeRepository()
+
   findOneByMusicId = async ({ musicId }) => {
     let music = await this.musicRepository.findOneByMusicId({ musicId });
     if (music == null) {
@@ -170,8 +173,16 @@ class MusicService {
     return music;
   };
 
-  likeChart = async () => {
+  likeChart = async (userId) => {
     const likeChart = await this.musicRepository.likeChart()
+    for(let i = 0 ; i <likeChart.length ; i++){
+      const Like = await this.likeRepository.findLike(userId, likeChart[i].musicId)
+      if(!Like){
+        likeChart[i].dataValues.likeStatus = false
+      } else{
+        likeChart[i].dataValues.likeStatus = true
+      }
+    }
     return cloudfrontfor(likeChart)
   }
 

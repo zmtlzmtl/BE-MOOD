@@ -69,7 +69,12 @@ class MusicController {
   };
 
   likeChart =  async (req,res,next) => {
-    const likeChart = await this.musicService.likeChart()
+    if (!res.locals.user) {
+      res.locals.user = { userId: 0 };
+    }
+    const { userId } = res.locals.user;
+    
+    const likeChart = await this.musicService.likeChart(userId)
     res.status(200).json({message:"좋아요 차트 조회에 성공했습니다.", likeChart})
   }
 
