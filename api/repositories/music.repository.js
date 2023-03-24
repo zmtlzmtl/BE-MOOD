@@ -12,6 +12,7 @@ class MusicRepository {
     composer,
     musicUrl,
     fileName,
+    tag,
   }) => {
     let music = await Musics.create({
       musicTitle,
@@ -21,6 +22,7 @@ class MusicRepository {
       userId: 1,
       musicUrl,
       fileName,
+      tag,
     });
     return music;
   };
@@ -320,18 +322,24 @@ class MusicRepository {
   findByKeyword = async ({ keyword }) => {
     const composerInfo = await Composers.findOne({
       where: {
-        composer: { [Op.like]: `%${keyword}%` },
+        [Op.or]: [
+          { composer: { [Op.substring]: keyword } },
+          { tag: { [Op.substring]: keyword } },
+        ],
       },
     });
     const composerSong = await Musics.findAll({
       where: {
-        composer: { [Op.like]: `%${keyword}%` },
+        composer: { [Op.substring]: keyword },
       },
       order: [["musicTitle", "DESC"]],
     });
     const musicTitle = await Musics.findAll({
       where: {
-        musicTitle: { [Op.like]: `%${keyword}%` },
+        [Op.or]: [
+          { musicTitle: { [Op.substring]: keyword } },
+          { tag: { [Op.substring]: keyword } },
+        ],
       },
       order: [["musicTitle", "DESC"]],
     });
