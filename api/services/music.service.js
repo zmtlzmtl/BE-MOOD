@@ -233,5 +233,19 @@ class MusicService {
     const streamingChart = await this.musicRepository.streamingChart();
     return cloudfrontfor(streamingChart);
   };
+
+  sendStreaming = async (userId, musicId) => {
+    const makeStreaming = await this.musicRepository.sendStreaming(
+      userId,
+      musicId
+    );
+    if (!makeStreaming) {
+      throw makeError({
+        message: "스트리밍을 생성하지 못했습니다.",
+        code: 400,
+      });
+    }
+    return;
+  };
 }
 module.exports = MusicService;

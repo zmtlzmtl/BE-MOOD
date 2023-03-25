@@ -86,6 +86,14 @@ class MusicController {
       .status(200)
       .json({ message: "스크랩 차트 조회에 성공했습니다.", streamingChart });
   };
+
+  sendStreaming = async (req, res, next) => {
+    const { userId } = res.locals.user;
+    const { musicId } = req.params;
+
+    await this.musicService.sendStreaming(userId, musicId);
+    res.status(201).json({ message: "스트리밍수 증가" });
+  };
 }
 
 module.exports = MusicController;
