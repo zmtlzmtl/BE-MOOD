@@ -4,5 +4,14 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: self-hosted
+    environment: development
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - name: Install Dependencies
+        run: npm install
+      - name: create env file
+        working-directory: ./
+        run: |
+          touch .env
+          echo DEV_DB_USERNAME=${{vars.DEV_DB_USERNAME}} > .env
