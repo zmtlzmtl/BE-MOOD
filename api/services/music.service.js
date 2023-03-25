@@ -1,5 +1,5 @@
 const musicRepository = require("../repositories/music.repository");
-const LikeRepository = require("../repositories/like.repository")
+const LikeRepository = require("../repositories/like.repository");
 const { makeError } = require("../error");
 const {
   cloudfront,
@@ -9,7 +9,7 @@ class MusicService {
   constructor() {
     this.musicRepository = new musicRepository();
   }
-  likeRepository = new LikeRepository()
+  likeRepository = new LikeRepository();
 
   findOneByMusicId = async ({ musicId }) => {
     let music = await this.musicRepository.findOneByMusicId({ musicId });
@@ -177,21 +177,38 @@ class MusicService {
   };
 
   likeChart = async (userId) => {
-    const likeChart = await this.musicRepository.likeChart()
-    for(let i = 0 ; i <likeChart.length ; i++){
-      const Like = await this.likeRepository.findLike(userId, likeChart[i].musicId)
-      if(!Like){
-        likeChart[i].dataValues.likeStatus = false
-      } else{
-        likeChart[i].dataValues.likeStatus = true
+    const likeChart = await this.musicRepository.likeChart();
+    for (let i = 0; i < likeChart.length; i++) {
+      const Like = await this.likeRepository.findLike(
+        userId,
+        likeChart[i].musicId
+      );
+      if (!Like) {
+        likeChart[i].dataValues.likeStatus = false;
+      } else {
+        likeChart[i].dataValues.likeStatus = true;
       }
     }
-    return cloudfrontfor(likeChart)
-  }
+    return cloudfrontfor(likeChart);
+  };
 
-  streamingChart = async() => {
-    const streamingChart = await this.musicRepository.streamingChart()
-    return cloudfrontfor(streamingChart)
-  }
+  streamingChart = async () => {
+    const streamingChart = await this.musicRepository.streamingChart();
+    return cloudfrontfor(streamingChart);
+  };
+
+  sendStreaming = async (userId, musicId) => {
+    const makeStreaming = await this.musicRepository.sendStreaming(
+      userId,
+      musicId
+    );
+    if (!makeStreaming) {
+      throw makeError({
+        message: "스트리밍을 생성하지 못했습니다.",
+        code: 400,
+      });
+    }
+    return;
+  };
 }
 module.exports = MusicService;

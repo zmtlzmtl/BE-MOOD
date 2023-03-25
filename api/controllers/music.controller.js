@@ -69,20 +69,29 @@ class MusicController {
     }
   };
 
-  likeChart =  async (req,res,next) => {
-    if (!res.locals.user) {
-      res.locals.user = { userId: 0 };
-    }
+  likeChart = async (req, res, next) => {
     const { userId } = res.locals.user;
-    
-    const likeChart = await this.musicService.likeChart(userId)
-    res.status(200).json({message:"좋아요 차트 조회에 성공했습니다.", likeChart})
-  }
 
-  streamingChart = async (req,res,next)=> {
-    const streamingChart = await this.musicService.streamingChart()
-    res.status(200).json({message:"스크랩 차트 조회에 성공했습니다.",streamingChart})
-  }
+    const likeChart = await this.musicService.likeChart(userId);
+    res
+      .status(200)
+      .json({ message: "좋아요 차트 조회에 성공했습니다.", likeChart });
+  };
+
+  streamingChart = async (req, res, next) => {
+    const streamingChart = await this.musicService.streamingChart();
+    res
+      .status(200)
+      .json({ message: "스크랩 차트 조회에 성공했습니다.", streamingChart });
+  };
+
+  sendStreaming = async (req, res, next) => {
+    const { userId } = res.locals.user;
+    const { musicId } = req.params;
+
+    await this.musicService.sendStreaming(userId, musicId);
+    res.status(201).json({ message: "스트리밍수 증가" });
+  };
 }
 
 module.exports = MusicController;
