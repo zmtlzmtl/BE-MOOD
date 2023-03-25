@@ -1,5 +1,4 @@
 const UserService = require("../services/user.service");
-const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
 class UserController {

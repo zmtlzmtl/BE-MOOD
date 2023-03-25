@@ -1,5 +1,6 @@
 const UserRepository = require("../repositories/user.repository");
 const MusicRepository = require("../repositories/music.repository");
+const bcrypt = require("bcrypt");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
 const { cloudfrontfor } = require("../middlewares/cloudfront.middleware");
@@ -10,6 +11,12 @@ class UserService {
   musicRepository = new MusicRepository();
 
   signUp = async (id, password, confirm, email, nickname) => {
+    if (password !== confirm || !confirm) {
+      throw new makeError({
+        message: "비밀번호 확인란을 확인하세요",
+        code: 400,
+      });
+    }
     const findEmail = await this.userRepository.findUser(email);
     if (findEmail) {
       throw new makeError({
@@ -17,14 +24,26 @@ class UserService {
         code: 400,
       });
     }
-    await this.userRepository.signUp(id, password, email, nickname);
+    
+    const hashedPw = await bcrypt.hash(password, 10);
+    await this.userRepository.signUp(id, hashedPw, email, nickname);
     return;
   };
 
   login = async (id, password) => {
-    const login = await this.userRepository.login(id, password);
+    const login = await this.userRepository.login(id);
     if (!login) {
       throw new makeError({ message: "로그인에 실패하였습니다.", code: 400 });
+    }
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      login.password
+    );
+    if (!isPasswordCorrect) {
+      throw new makeError({
+        message: "비밀번호가 일치하지 않습니다.",
+        code: 400,
+      });
     }
     return login;
   };
@@ -154,8 +173,17 @@ class UserService {
 
   userInfo = async (userId) => {
     const userInfo = await this.userRepository.userInfo(userId);
-    userInfo.profileUrl =
-      "https://d13uh5mnneeyhq.cloudfront.net/" + userInfo.profileUrl;
+    if (!userInfo.profileUrl) {
+      userInfo.profileUrl = null;
+    } else {
+      if (userInfo.profileUrl.includes("kakaocdn") === true) {
+        userInfo.profileUrl = userInfo.profileUrl;
+      } else {
+        userInfo.profileUrl =
+          "https://d13uh5mnneeyhq.cloudfront.net/" + userInfo.profileUrl;
+      }
+    }
+
     return userInfo;
   };
 

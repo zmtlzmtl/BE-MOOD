@@ -12,15 +12,18 @@ class MusicController {
       let data = await this.musicRepository.s3Upload(file);
       let Url = data.Location;
       let fileN = data.Key;
-      let { musicTitle, musicContent, status, composer } = req.body;
+      let { musicTitle, musicContent, status, composer, tag, condition } =
+        req.body;
       let music = await this.musicRepository.create({
         musicTitle,
         musicContent,
         status,
         composer,
+        tag,
         userId: 1,
         musicUrl: Url,
         fileName: fileN,
+        condition,
       });
       return res.status(200).json({ music, msg: "생성 완료" });
     } catch (err) {
@@ -69,7 +72,12 @@ class MusicController {
   };
 
   likeChart = async (req, res, next) => {
-    const likeChart = await this.musicService.likeChart();
+    if (!res.locals.user) {
+      res.locals.user = { userId: 0 };
+    }
+    const { userId } = res.locals.user;
+
+    const likeChart = await this.musicService.likeChart(userId);
     res
       .status(200)
       .json({ message: "좋아요 차트 조회에 성공했습니다.", likeChart });

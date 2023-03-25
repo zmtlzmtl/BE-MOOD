@@ -6,7 +6,7 @@ const Validation = {
   signUpCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       id: Joi.string()
-        .regex(/^[a-zA-Z0-9]{4,}$/)
+        .regex(/^(?=.*[a-z])(?=.*\d)[a-z\d]{4,}$/)
         .required()
         .error(
           new makeError({
@@ -22,6 +22,17 @@ const Validation = {
         .error(
           new makeError({
             message: "비밀번호값이 잘못되었습니다.",
+            code: 400,
+          })
+        ),
+      confirm: Joi.string()
+        .regex(
+          /^(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/
+        )
+        .required()
+        .error(
+          new makeError({
+            message: "비밀번호 확인값이 잘못되었습니다.",
             code: 400,
           })
         ),
@@ -55,7 +66,7 @@ const Validation = {
   loginCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       id: Joi.string()
-        .regex(/^[a-zA-Z0-9]{4,}$/)
+        .regex(/^(?=.*[a-z])(?=.*\d)[a-z\d]{4,}$/)
         .required()
         .error(
           new makeError({

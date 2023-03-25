@@ -12,6 +12,8 @@ class MusicRepository {
     composer,
     musicUrl,
     fileName,
+    tag,
+    condition,
   }) => {
     let music = await Musics.create({
       musicTitle,
@@ -21,6 +23,8 @@ class MusicRepository {
       userId: 1,
       musicUrl,
       fileName,
+      tag,
+      condition,
     });
     return music;
   };
@@ -320,23 +324,28 @@ class MusicRepository {
   findByKeyword = async ({ keyword }) => {
     const composerInfo = await Composers.findOne({
       where: {
-        composer: { [Op.like]: `%${keyword}%` },
+        [Op.or]: [
+          { composer: { [Op.substring]: keyword } },
+          { tag: { [Op.substring]: keyword } },
+        ],
       },
     });
     const composerSong = await Musics.findAll({
       where: {
-        composer: { [Op.like]: `%${keyword}%` },
+        composer: { [Op.substring]: keyword },
       },
       order: [["musicTitle", "DESC"]],
     });
     const musicTitle = await Musics.findAll({
       where: {
-        musicTitle: { [Op.like]: `%${keyword}%` },
+        [Op.or]: [
+          { musicTitle: { [Op.substring]: keyword } },
+          { tag: { [Op.substring]: keyword } },
+        ],
       },
       order: [["musicTitle", "DESC"]],
     });
-    const search = { composerInfo, composerSong, musicTitle };
-    return search;
+    return { composerInfo, composerSong, musicTitle };
   };
 
   likeChart = async () => {
@@ -372,7 +381,10 @@ class MusicRepository {
         "composer",
         "musicUrl",
         "fileName",
-        [Sequelize.fn("COUNT", Sequelize.col("Streamings.musicId")), "streamingCount"],
+        [
+          Sequelize.fn("COUNT", Sequelize.col("Streamings.musicId")),
+          "streamingCount",
+        ],
       ],
       include: [
         {
