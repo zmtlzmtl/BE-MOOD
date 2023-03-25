@@ -4,7 +4,7 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: self-hosted
-    environment: development
+    environment: cd
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
