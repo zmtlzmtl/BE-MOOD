@@ -14,4 +14,8 @@ jobs:
         working-directory: ./
         run: |
           touch .env
-          echo DEV_DB_USERNAME=${{vars.DEV_DB_USERNAME}} > .env
+          echo DEV_DB_USERNAME=${{ vars.DEV_DB_USERNAME }} > .env
+          echo DEV_DB_PASSWORD=${{ vars.DB_PASSWORD }} > .env
+          echo DEV_DB_DATABASE=${{ vars.DB_DATABASE_DEV }} > .env
+          echo DEV_DB_HOST=${{ vars.DB_HOST }} > .env
+          echo DEV_DB_DIALECT=${{ vars.DIALECT }} > .env
