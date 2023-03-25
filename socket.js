@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const { Users, Chats } = require("./db/models");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const logger = require("./db/config/logger");
 
@@ -43,24 +44,31 @@ module.exports = (server) => {
           return;
         }
       });
-      socket.on("newUser", async (token) => {
-        console.log("--------" + token);
-        const decodedToken = jwt.verify(token, process.env.KEY);
-        const userId = decodedToken.userId;
-        const user = await Users.findOne({ where: { userId: userId } });
-        socket.nickname = user.nickname;
-        if (!user) {
-          return socket.emit(
-            "onUser",
-            "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
-          );
-        } else {
-          console.log(socket.nickname + " 님이 접속하였습니다.");
+      try {
+        socket.on("newUser", async (token) => {
+          const decodedToken = jwt.verify(token, process.env.KEY, {
+            ignoreExpiration: false,
+          });
+          const userId = decodedToken.userId;
+          console.log(userId);
+          const user = await Users.findOne({ where: { userId: userId } });
+          socket.nickname = user.nickname;
+          if (!user) {
+            return socket.emit(
+              "onUser",
+              "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
+            );
+          } else {
+            console.log(socket.nickname + " 님이 접속하였습니다.");
 
-          socket.emit("onUser", socket.nickname);
-          socket.to(socket.roomId).emit("onUser", socket.nickname);
-        }
-      });
+            socket.emit("onUser", socket.nickname);
+            socket.to(socket.roomId).emit("onUser", socket.nickname);
+          }
+        });
+      } catch (err) {
+        logger.error(err);
+        socket.emit("onUser", err);
+      }
       socket.on("sendMessage", function (data) {
         data.nickname = socket.nickname;
         Chats.create({
