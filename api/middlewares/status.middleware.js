@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { Users } = require("../../db/models");
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -11,6 +12,8 @@ module.exports = async (req, res, next) => {
       const user = await Users.findOne({ where: { userId } });
 
       res.locals.user = user;
+    } else {
+      res.locals.user = { userId: uuidv4() };
     }
     next();
   } catch (error) {

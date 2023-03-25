@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "userId",
         foreignKey: "userId",
       });
+      this.hasMany(models.Streamings, {
+        sourceKey: "userId",
+        foreignKey: "userId",
+      });
     }
   }
   Users.init(
