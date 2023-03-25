@@ -5,14 +5,15 @@ class MusicController {
   constructor() {
     this.musicService = new musicService();
     this.musicRepository = new musicRepository();
-  }
+  } //test
   create = async (req, res) => {
     try {
       let file = req.files[0];
       let data = await this.musicRepository.s3Upload(file);
       let Url = data.Location;
-      let fileN = data.key;
-      let { musicTitle, musicContent, status, composer, tag } = req.body;
+      let fileN = data.Key;
+      let { musicTitle, musicContent, status, composer, tag, condition } =
+        req.body;
       let music = await this.musicRepository.create({
         musicTitle,
         musicContent,
@@ -22,6 +23,7 @@ class MusicController {
         userId: 1,
         musicUrl: Url,
         fileName: fileN,
+        condition,
       });
       return res.status(200).json({ music, msg: "생성 완료" });
     } catch (err) {
@@ -83,14 +85,6 @@ class MusicController {
     res
       .status(200)
       .json({ message: "스크랩 차트 조회에 성공했습니다.", streamingChart });
-  };
-
-  sendStreaming = async (req, res, next) => {
-    const { userId } = res.locals.user;
-    const { musicId } = req.params;
-
-    await this.musicService.sendStreaming(userId, musicId);
-    res.status(201).json({ message: "스트리밍수 증가" });
   };
 }
 

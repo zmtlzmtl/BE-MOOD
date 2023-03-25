@@ -13,6 +13,7 @@ class MusicRepository {
     musicUrl,
     fileName,
     tag,
+    condition,
   }) => {
     let music = await Musics.create({
       musicTitle,
@@ -23,6 +24,7 @@ class MusicRepository {
       musicUrl,
       fileName,
       tag,
+      condition,
     });
     return music;
   };
