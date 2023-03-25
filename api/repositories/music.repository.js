@@ -398,6 +398,11 @@ class MusicRepository {
 
     return scrapChart;
   };
+
+  sendStreaming = async (userId, musicId) => {
+    const streaming = await Streamings.create({ userId, musicId });
+    return streaming;
+  };
 }
 
 module.exports = MusicRepository;
