@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { Users, Chats } = require("./db/models");
+const { Users, UserInfos, Chats } = require("./db/models");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -54,8 +54,19 @@ module.exports = (server) => {
           const decodedToken = jwt.verify(token, process.env.KEY);
           const userId = decodedToken.userId;
           console.log(userId);
-          const user = await Users.findOne({ where: { userId: userId } });
+          const user = await Users.findOne({
+            where: { userId },
+            attributes: ["nickname"],
+            include: [
+              {
+                model: UserInfos,
+                attributes: ["profileUrl"],
+              },
+            ],
+          });
+          socket.user = user;
           socket.nickname = user.nickname;
+          console.log(socket.user.UserInfo.profileUrl)
           if (!user) {
             return socket.emit(
               "onUser",
@@ -64,8 +75,8 @@ module.exports = (server) => {
           } else if (!socket.nickname) return;
           else {
             console.log(socket.nickname + " 님이 접속하였습니다.");
-            socket.emit("onUser", socket.nickname);
-            socket.to(socket.roomId).emit("onUser", socket.nickname);
+            socket.emit("onUser", user);
+            socket.to(socket.roomId).emit("onUser", user);
           }
         } catch (err) {
           logger.error(err);
@@ -73,7 +84,7 @@ module.exports = (server) => {
         }
       });
       socket.on("sendMessage", function (data) {
-        data.nickname = socket.nickname;
+        data.user = socket.user;
         Chats.create({
           roomId: socket.roomId,
           nickname: socket.nickname,
