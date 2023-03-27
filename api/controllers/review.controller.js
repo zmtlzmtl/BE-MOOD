@@ -1,4 +1,5 @@
 const ReviewService = require("../services/review.service");
+const logger = require("../../db/config/logger");
 
 class ReviewController {
   constructor() {
@@ -6,7 +7,8 @@ class ReviewController {
   }
   //리뷰 작성하기
   addMusicReview = async (req, res, next) => {
-    const userId = 1;
+    logger.info(`addMusicReview`);
+    const { userId } = res.locals.user;
     const { musicId } = req.params;
     const { review } = req.body;
     try {
@@ -24,6 +26,7 @@ class ReviewController {
   //리뷰 조회하기
   getMusicReview = async (req, res, next) => {
     const { musicId } = req.params;
+    logger.info(`getMusicReview`);
     try {
       const reviews = await this.reviewService.getMusicReview({
         musicId,
@@ -36,10 +39,13 @@ class ReviewController {
 
   //리뷰 수정하기
   updateMusicReview = async (req, res, next) => {
+    logger.info(`updateMusicReview`);
+    const { userId } = res.locals.user;
     const { musicId, reviewId } = req.params;
     const { review } = req.body;
     try {
       const updateReview = await this.reviewService.updateMusicReview({
+        userId,
         musicId,
         reviewId,
         review,
@@ -52,9 +58,12 @@ class ReviewController {
 
   //리뷰 삭제하기
   deleteMusicReview = async (req, res, next) => {
+    logger.info(`deleteMusicReview`);
+    const { userId } = res.locals.user;
     const { musicId, reviewId } = req.params;
     try {
       const deleteReview = await this.reviewService.deleteMusicReview({
+        userId,
         musicId,
         reviewId,
       });

@@ -1,0 +1,24 @@
+name: mood-BE
+
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: self-hosted
+    environment: cd
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - name: Install Dependencies
+        run: npm install
+      - name: create env file
+        working-directory: ./
+        run: |
+          touch .env
+          echo DEV_DB_USERNAME=${{ vars.DEV_DB_USERNAME }} > .env
+          echo DEV_DB_PASSWORD=${{ vars.DB_PASSWORD }} > .env
+          echo DEV_DB_DATABASE=${{ vars.DB_DATABASE_DEV }} > .env
+          echo DEV_DB_HOST=${{ vars.DB_HOST }} > .env
+          echo DEV_DB_DIALECT=${{ vars.DIALECT }} > .env

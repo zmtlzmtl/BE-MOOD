@@ -1,35 +1,39 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Chats extends Model {
+  class Scraps extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    static associate(models) {
+      // define association here
+      this.belongsTo(models.Users, {
+        targetKey: "userId",
+        foreignKey: "userId",
+      });
+      this.belongsTo(models.Musics, {
+        targetKey: "musicId",
+        foreignKey: "musicId",
+      });
+    }
   }
-  Chats.init(
+  Scraps.init(
     {
-      chatId: {
+      scrapId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      roomId: {
-        type: DataTypes.STRING,
+      userId: {
         allowNull: false,
-        unique: true,
+        type: DataTypes.INTEGER,
       },
-      nickname: {
-        //소셜로그인이 어떨지 모르겠네 migration도
-        type: DataTypes.STRING,
+      musicId: {
         allowNull: false,
-        unique: true,
-      },
-      message: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        type: DataTypes.INTEGER,
       },
       createdAt: {
         allowNull: false,
@@ -44,8 +48,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Chats",
+      modelName: "Scraps",
     }
   );
-  return Chats;
+  return Scraps;
 };

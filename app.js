@@ -10,6 +10,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
+const logger = require("./db/config/logger");
+const morgan = require("morgan");
+app.use(
+  morgan(":method :status :url :response-time ms", { stream: logger.stream }) //데이터의 통로 stream
+);
+
 app.use(
   cors({
     methods: ["GET", "POST", "UPDATE", "DELETE", "PUT", "PATCH"],
@@ -24,16 +30,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api", router);
 
 app.use((error, req, res, next) => {
-  console.error(error);
+  logger.error(error);
   return res
     .status(error.code || 500)
     .json({ message: error.message || "서버 에러." });
 });
 
 const server = http.createServer(app);
-
 createSocket(server);
 
 server.listen(PORT, () => {
-  console.log(PORT, "포트로 서버가 열렸어요!");
+  logger.info(`${process.env.NODE_ENV} - API Server Listening At Port ${PORT}`);
 });

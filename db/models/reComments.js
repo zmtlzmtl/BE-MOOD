@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Reviews extends Model {
+  class ReComments extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -15,14 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         targetKey: "userId",
         foreignKey: "userId",
       });
-      this.belongsTo(models.Musics, {
-        targetKey: "musicId",
-        foreignKey: "musicId",
+      this.belongsTo(models.Reviews, {
+        targetKey: "reviewId",
+        foreignKey: "reviewId",
       });
     }
   }
-  Reviews.init({
-    reviewId: {
+  ReComments.init({
+    reCommentId: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
@@ -32,13 +32,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    musicId: {
+    reviewId: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },
-    review: {
-      allowNull: false,
+    comment: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     createdAt: {
       allowNull: false,
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'Reviews',
+    modelName: 'ReComments',
   });
-  return Reviews;
+  return ReComments;
 };

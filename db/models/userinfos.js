@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Users extends Model {
+  class UserInfos extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,58 +9,29 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.hasMany(models.Musics, {
-        sourceKey: "userId",
-        foreignKey: "userId",
-      });
-
-      this.hasMany(models.Reviews, {
-        sourceKey: "userId",
-        foreignKey: "userId",
-      });
-
-      this.hasOne(models.UserInfos, {
-        sourceKey: "userId",
-        foreignKey: "userId",
-      });
-      this.hasMany(models.Likes, {
-        sourceKey: "userId",
-        foreignKey: "userId",
-      });
-      this.hasMany(models.Scraps, {
-        sourceKey: "userId",
-        foreignKey: "userId",
-      });
-      this.hasMany(models.Streamings, {
-        sourceKey: "userId",
+      this.belongsTo(models.Users, {
+        targetKey: "userId",
         foreignKey: "userId",
       });
     }
   }
-  Users.init(
+  UserInfos.init(
     {
-      userId: {
+      userInfoId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      id: {
-        type: DataTypes.STRING,
+      userId: {
         allowNull: false,
-        unique: true,
+        type: DataTypes.INTEGER,
       },
-      nickname: {
+      profileUrl: {
+        allowNull: true,
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
       },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
+      myStatus: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -77,8 +48,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Users",
+      modelName: "UserInfos",
     }
   );
-  return Users;
+  return UserInfos;
 };
