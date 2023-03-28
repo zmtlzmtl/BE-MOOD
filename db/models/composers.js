@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Composers extends Model {
     /**
@@ -17,33 +15,47 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  Composers.init({
-    composerId: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
+  Composers.init(
+    {
+      composerId: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+      },
+      composer: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      describe: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      tag: {
+        type: DataTypes.JSON,
+        allowNull: true,
+      },
+      imageUrl: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      birthDeath: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      englishFullname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      koreanFullname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    composer: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    describe: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    tag: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    imageUrl: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  }, 
-  {
-    sequelize,
-    modelName: 'Composers',
-  });
+    {
+      sequelize,
+      modelName: "Composers",
+    }
+  );
   return Composers;
 };
