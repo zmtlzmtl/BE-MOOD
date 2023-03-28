@@ -37,7 +37,7 @@ class MusicRepository {
     if (tag) {
       const tagList = tag.split(",");
       for (const tag of tagList) {
-        const tags = await Tags.findOrCreate({ where: { tagName: tag } });
+        const tags = await Tags.findOrCreate({ where: { tagName: tag.trim() } });
         const musicTags = await MusicTags.create({
           musicId: music.musicId,
           tagId: tags[0].tagId,
@@ -349,7 +349,7 @@ class MusicRepository {
     const composerInfo = await Composers.findOne({
       where: {
         [Op.or]: [
-          { composer: { [Op.substring]: keyword } },
+          { composer: { keyword } },
           { tag: { [Op.substring]: keyword } },
         ],
       },
@@ -359,16 +359,33 @@ class MusicRepository {
         composer: { [Op.substring]: keyword },
       },
       order: [["musicTitle", "DESC"]],
+      attributes: ["composer", "musicTitle", "musicContent", "fileName", "musicUrl"],
     });
     const musicTitle = await Musics.findAll({
-      where: {
-        [Op.or]: [
-          { musicTitle: { [Op.substring]: keyword } },
-          { tag: { [Op.substring]: keyword } },
-        ],
-      },
+      include: [
+        {
+          model: MusicTags,
+          include: [
+            {
+              model: Tags,
+              where: { tagName: keyword },
+            },
+          ],
+        },
+      ],
       order: [["musicTitle", "DESC"]],
+      attributes: ["composer", "musicTitle", "musicContent", "fileName", "musicUrl"],
     });
+    if (!musicTitle) {
+      const musicTitle = await Musics.findAll({
+        where: {
+          musicTitle: { [Op.substring]: keyword },
+        },
+        order: [["musicTitle", "DESC"]],
+        attributes: ["composer", "musicTitle", "musicContent", "fileName", "musicUrl"],
+      });
+      return musicTitle;
+    }
     return { composerInfo, composerSong, musicTitle };
   };
 
