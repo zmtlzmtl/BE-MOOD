@@ -34,6 +34,7 @@ class UserController {
       res.status(200).json({
         message: "로그인에 성공하였습니다.",
         accessToken,
+        expiresIn: 60,
         refreshToken,
       });
     } catch (error) {
@@ -68,8 +69,8 @@ class UserController {
       res.status(200).send({
         message: "로그인 성공",
         access_token: access_token,
+        expiresIn: 60,
         refresh_token: refresh_token,
-        nickname: nickname,
       });
     } catch (error) {
       next(error);
