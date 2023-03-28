@@ -346,14 +346,16 @@ class MusicRepository {
     return mood;
   };
   findByKeyword = async ({ keyword }) => {
+    console.log(keyword)
     const composerInfo = await Composers.findOne({
       where: {
         [Op.or]: [
-          { composer: { keyword } },
+          { composer: keyword },
           { tag: { [Op.substring]: keyword } },
         ],
       },
     });
+    console.log(composerInfo)
     const composerSong = await Musics.findAll({
       where: {
         composer: { [Op.substring]: keyword },
