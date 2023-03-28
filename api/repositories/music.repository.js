@@ -71,7 +71,6 @@ class MusicRepository {
   findAllByComposer = async ({ composer }) => {
     let music = await Musics.findAll({
       where: composer,
-      attributes: ["musicTitle", "musicContent", "fileName", "musicUrl"],
     });
     return music;
   };
