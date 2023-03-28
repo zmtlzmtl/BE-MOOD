@@ -12,6 +12,7 @@ router.post("/login", validationMiddleWare.loginCheck, userController.login);
 router.post("/idcheck", userController.check);
 router.post("/nicknamecheck", userController.check);
 router.post("/kakao/login", userController.kakaoLogin);
+router.post("/refresh", userController.refresh);
 router.get("/user/userinfo", authMiddleWare, userController.userInfo);
 router.get("/user/likelist", authMiddleWare, userController.likeList);
 router.get("/user/scraplist", authMiddleWare, userController.scrapList);
