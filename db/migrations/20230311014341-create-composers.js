@@ -18,10 +18,18 @@ module.exports = {
         allowNull: false,
       },
       tag: {
-        type: Sequelize.JSON,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       imageUrl: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      birthDeath: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      koreanFullname: {
         type: Sequelize.STRING,
         allowNull: false,
       },

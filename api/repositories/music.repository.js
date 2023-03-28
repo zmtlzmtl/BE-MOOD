@@ -1,4 +1,12 @@
-const { Musics, Composers, Likes, Streamings } = require("../../db/models");
+const {
+  Musics,
+  Composers,
+  Likes,
+  Streamings,
+  Tags,
+  MusicTags,
+} = require("../../db/models");
+const { makeError } = require("../error");
 const { S3 } = require("aws-sdk");
 const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
@@ -26,6 +34,24 @@ class MusicRepository {
       tag,
       condition,
     });
+    if (tag) {
+      const tagList = tag.split(",");
+      for (const tag of tagList) {
+        const tags = await Tags.findOrCreate({
+          where: { tagName: tag.trim() },
+        });
+        const musicTags = await MusicTags.create({
+          musicId: music.musicId,
+          tagId: tags[0].tagId,
+        });
+        if (!musicTags) {
+          throw new makeError({
+            message: "태그 생성에 실패하였습니다.",
+            code: 400,
+          });
+        }
+      }
+    }
     return music;
   };
   findOneByMusicId = async ({ musicId }) => {
@@ -45,7 +71,6 @@ class MusicRepository {
   findAllByComposer = async ({ composer }) => {
     let music = await Musics.findAll({
       where: composer,
-      attributes: ["musicTitle", "musicContent", "fileName", "musicUrl"],
     });
     return music;
   };
@@ -324,26 +349,42 @@ class MusicRepository {
   findByKeyword = async ({ keyword }) => {
     const composerInfo = await Composers.findOne({
       where: {
-        [Op.or]: [
-          { composer: { [Op.substring]: keyword } },
-          { tag: { [Op.substring]: keyword } },
-        ],
+        [Op.or]: [{ composer: keyword }, { tag: { [Op.substring]: keyword } }],
       },
     });
+    let composerName = '';
+    if (composerInfo) {
+      composerName = composerInfo.composer;
+    }
     const composerSong = await Musics.findAll({
       where: {
-        composer: { [Op.substring]: keyword },
+        composer: composerName,
       },
       order: [["musicTitle", "DESC"]],
+      attributes: ["musicId", "composer", "musicTitle", "musicContent", "fileName", "musicUrl"],
     });
+    
     const musicTitle = await Musics.findAll({
+      include: [
+        {
+          model: MusicTags,
+          include: [
+            {
+              model: Tags,
+              attributes: [],
+            },
+          ],
+          attributes: [],
+        },
+      ],
+      order: [["musicTitle", "DESC"]],
       where: {
         [Op.or]: [
           { musicTitle: { [Op.substring]: keyword } },
-          { tag: { [Op.substring]: keyword } },
+          { '$MusicTags.Tag.tagName$': keyword },
         ],
       },
-      order: [["musicTitle", "DESC"]],
+      attributes: ["musicId", "composer", "musicTitle", "musicContent", "fileName", "musicUrl"],
     });
     return { composerInfo, composerSong, musicTitle };
   };
