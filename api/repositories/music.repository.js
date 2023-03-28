@@ -1,4 +1,12 @@
-const { Musics, Composers, Likes, Streamings } = require("../../db/models");
+const {
+  Musics,
+  Composers,
+  Likes,
+  Streamings,
+  Tags,
+  MusicTags,
+} = require("../../db/models");
+const { makeError } = require("../error");
 const { S3 } = require("aws-sdk");
 const Sequelize = require("sequelize");
 const { Op } = require("sequelize");
@@ -26,6 +34,22 @@ class MusicRepository {
       tag,
       condition,
     });
+    if (tag) {
+      const tagList = tag.split(",");
+      for (const tag of tagList) {
+        const tags = await Tags.findOrCreate({ where: { tagName: tag } });
+        const musicTags = await MusicTags.create({
+          musicId: music.musicId,
+          tagId: tags[0].tagId,
+        });
+        if (!musicTags) {
+          throw new makeError({
+            message: "태그 생성에 실패하였습니다.",
+            code: 400,
+          });
+        }
+      }
+    }
     return music;
   };
   findOneByMusicId = async ({ musicId }) => {
