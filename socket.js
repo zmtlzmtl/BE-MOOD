@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const { Users, Chats } = require("./db/models");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const logger = require("./db/config/logger");
 
@@ -25,7 +26,12 @@ module.exports = (server) => {
         });
         const findRoomChats = chats.reverse();
         console.log(`접속자: ${socket.id}`);
+        const roomSockets = await io.in(socket.roomId).fetchSockets();
+        const nicknames = roomSockets.map((socket) => socket.nickname);
+        console.log("-------------" + nicknames);
         socket.emit("receive", findRoomChats);
+        socket.emit("userList", nicknames);
+        socket.to(socket.roomId).emit("userList", nicknames);
       });
       socket.on("scroll", async function (index) {
         console.log(index + "스크롤이벤트발생");
@@ -44,21 +50,26 @@ module.exports = (server) => {
         }
       });
       socket.on("newUser", async (token) => {
-        console.log("--------" + token);
-        const decodedToken = jwt.verify(token, process.env.KEY);
-        const userId = decodedToken.userId;
-        const user = await Users.findOne({ where: { userId: userId } });
-        socket.nickname = user.nickname;
-        if (!user) {
-          return socket.emit(
-            "onUser",
-            "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
-          );
-        } else {
-          console.log(socket.nickname + " 님이 접속하였습니다.");
-
-          socket.emit("onUser", socket.nickname);
-          socket.to(socket.roomId).emit("onUser", socket.nickname);
+        try {
+          const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
+          const userId = decodedToken.userId;
+          console.log(userId);
+          const user = await Users.findOne({ where: { userId: userId } });
+          socket.nickname = user.nickname;
+          if (!user) {
+            return socket.emit(
+              "onUser",
+              "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
+            );
+          } else if (!socket.nickname) return;
+          else {
+            console.log(socket.nickname + " 님이 접속하였습니다.");
+            socket.emit("onUser", socket.nickname);
+            socket.to(socket.roomId).emit("onUser", socket.nickname);
+          }
+        } catch (err) {
+          logger.error(err);
+          socket.emit("onUser", err);
         }
       });
       socket.on("sendMessage", function (data) {
