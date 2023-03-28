@@ -25,6 +25,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      birthDeath: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      koreanFullname: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
