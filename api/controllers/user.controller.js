@@ -20,7 +20,7 @@ class UserController {
       const user = await this.userService.login(id, password);
       const accessToken = jwt.sign(
         { userId: user.userId },
-        process.env.ACCESE_SECRET_KEY,
+        process.env.ACCESS_SECRET_KEY,
         {
           expiresIn: "1h",
         }
@@ -34,7 +34,6 @@ class UserController {
       res.status(200).json({
         message: "로그인에 성공하였습니다.",
         accessToken,
-        expiresIn: 60,
         refreshToken,
       });
     } catch (error) {
@@ -69,7 +68,6 @@ class UserController {
       res.status(200).send({
         message: "로그인 성공",
         access_token: access_token,
-        expiresIn: 60,
         refresh_token: refresh_token,
       });
     } catch (error) {
@@ -197,7 +195,7 @@ class UserController {
 
       const newAccessToken = jwt.sign(
         { userId: userId },
-        process.env.ACCESE_SECRET_KEY,
+        process.env.ACCESS_SECRET_KEY,
         { expiresIn: "1h" }
       );
 

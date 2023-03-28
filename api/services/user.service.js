@@ -145,7 +145,7 @@ class UserService {
       {
         userId: user.userId,
       },
-      process.env.ACCESE_SECRET_KEY,
+      process.env.ACCESS_SECRET_KEY,
       {
         expiresIn: "1h",
       }
