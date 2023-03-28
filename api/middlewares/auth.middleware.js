@@ -4,15 +4,18 @@ const { Users } = require("../../db/models");
 module.exports = async (req, res, next) => {
   const { authorization } = req.headers;
   const [tokenType, token] = (authorization ?? "").split(" ");
+
   if (tokenType !== "Bearer" || !token) {
     return res.status(401).json({
       message: "토큰 타입이 일치하지 않거나, 토큰이 존재하지 않습니다.",
     });
   }
+
   try {
-    const decodedToken = jwt.verify(token, process.env.KEY);
+    const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
     const userId = decodedToken.userId;
     const user = await Users.findOne({ where: { userId: userId } });
+
     if (!user) {
       return res
         .status(401)
@@ -22,9 +25,16 @@ module.exports = async (req, res, next) => {
     res.locals.user = user;
     next();
   } catch (error) {
-    res.clearCookie("authorization"); //인증에 실패 할 경우 쿠키 삭제
-    return res.status(401).json({
-      message: "유효하지 않은 토큰입니다.",
-    });
+    res.clearCookie("authorization"); // 인증에 실패 할 경우 쿠키 삭제
+
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        message: "엑세스 토큰이 만료되었습니다.",
+      });
+    } else {
+      return res.status(401).json({
+        message: "유효하지 않은 토큰입니다.",
+      });
+    }
   }
 };

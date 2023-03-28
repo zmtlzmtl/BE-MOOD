@@ -18,13 +18,24 @@ class UserController {
     const { id, password } = req.body;
     try {
       const user = await this.userService.login(id, password);
-      const token = jwt.sign({ userId: user.userId }, process.env.KEY, {
-        expiresIn: "1h",
-      });
+      const accessToken = jwt.sign(
+        { userId: user.userId },
+        process.env.ACCESE_SECRET_KEY,
+        {
+          expiresIn: "1h",
+        }
+      );
+      const refreshToken = jwt.sign(
+        { userId: user.id },
+        process.env.REFRESH_SECRET_KEY,
+        { expiresIn: "1d" }
+      );
 
-      res
-        .status(200)
-        .json({ message: "로그인에 성공하였습니다.", token: `${token}` });
+      res.status(200).json({
+        message: "로그인에 성공하였습니다.",
+        accessToken,
+        refreshToken,
+      });
     } catch (error) {
       next(error);
     }
@@ -159,6 +170,47 @@ class UserController {
       res.status(200).json({ message: "회원탈퇴에 성공하였습니다" });
     } catch (error) {
       next(error);
+    }
+  };
+
+  refresh = async (req, res, next) => {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: "리프레시 토큰이 없습니다." });
+    }
+
+    try {
+      const decodedToken = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_SECRET_KEY
+      );
+      const userId = decodedToken.userId;
+
+      const user = await this.userService.findUser(userId);
+      if (!user) {
+        return res
+          .status(401)
+          .json({ message: "토큰에 해당하는 사용자가 존재하지 않습니다." });
+      }
+
+      const newAccessToken = jwt.sign(
+        { userId: userId },
+        process.env.ACCESE_SECRET_KEY,
+        { expiresIn: "1h" }
+      );
+
+      return res.status(200).json({ accessToken: newAccessToken });
+    } catch (error) {
+      if (error instanceof jwt.TokenExpiredError) {
+        return res
+          .status(401)
+          .json({ message: "리프레시 토큰이 만료되었습니다." });
+      } else {
+        return res
+          .status(401)
+          .json({ message: "유효하지 않은 리프레시 토큰입니다." });
+      }
     }
   };
 }

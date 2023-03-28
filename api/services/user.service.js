@@ -17,14 +17,14 @@ class UserService {
         code: 400,
       });
     }
-    const findEmail = await this.userRepository.findUser(email);
+    const findEmail = await this.userRepository.findByEmail(email);
     if (findEmail) {
       throw new makeError({
         message: "해당 E-mail은 사용할수 없습니다.",
         code: 400,
       });
     }
-    
+
     const hashedPw = await bcrypt.hash(password, 10);
     await this.userRepository.signUp(id, hashedPw, email, nickname);
     return;
@@ -35,10 +35,7 @@ class UserService {
     if (!login) {
       throw new makeError({ message: "로그인에 실패하였습니다.", code: 400 });
     }
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      login.password
-    );
+    const isPasswordCorrect = await bcrypt.compare(password, login.password);
     if (!isPasswordCorrect) {
       throw new makeError({
         message: "비밀번호가 일치하지 않습니다.",
@@ -148,7 +145,7 @@ class UserService {
       {
         userId: user.userId,
       },
-      process.env.KEY,
+      process.env.ACCESE_SECRET_KEY,
       {
         expiresIn: "1h",
       }
@@ -158,7 +155,7 @@ class UserService {
       {
         userId: user.userId,
       },
-      process.env.KEY,
+      process.env.REFRESH_SECRET_KEY,
       {
         expiresIn: "1d",
       }
@@ -233,6 +230,11 @@ class UserService {
   deleteUser = async (userId) => {
     await this.userRepository.deleteUser(userId);
     return;
+  };
+
+  findUser = async (userId) => {
+    const user = await this.userRepository.findUser(userId);
+    return user;
   };
 }
 
