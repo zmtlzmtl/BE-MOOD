@@ -29,10 +29,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      englishFullname: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       koreanFullname: {
         type: Sequelize.STRING,
         allowNull: false,
