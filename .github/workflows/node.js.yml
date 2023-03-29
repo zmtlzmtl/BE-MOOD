@@ -26,23 +26,23 @@ jobs:
       
       - name: create .env file
         run: |
-          echo "ACCESS_SECRET_KEY=${{ vars.ACCESS_SECRET_KEY }}" >> .env
-          echo "AWS_ACCESS_KEY_ID=${{ vars.AWS_ACCESS_KEY_ID }}" >> .env
+          echo "ACCESS_SECRET_KEY=${{ secrets.ACCESS_SECRET_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
           echo "AWS_BUCKET_NAME=${{ vars.AWS_BUCKET_NAME }}" >> .env
           echo "AWS_REGION=${{ vars.AWS_REGION }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY=${{ vars.AWS_SECRET_ACCESS_KEY }}" >> .env
-          echo "CLIENT_ID=${{ vars.CLIENT_ID }}" >> .env
-          echo "CLIENT_SECRET=${{ vars.CLIENT_SECRET }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+          echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
+          echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
           echo "DEV_DB_DATABASE=${{ vars.DEV_DB_DATABASE }}" >> .env
           echo "DEV_DB_DIALECT=${{ vars.DEV_DB_DIALECT }}" >> .env
-          echo "DEV_DB_HOST=${{ vars.DEV_DB_HOST }}" >> .env
-          echo "DEV_DB_PASSWORD=${{ vars.DEV_DB_PASSWORD }}" >> .env
-          echo "DEV_DB_USERNAME=${{ vars.DEV_DB_USERNAME }}" >> .env
+          echo "DEV_DB_HOST=${{ secrets.DEV_DB_HOST }}" >> .env
+          echo "DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}" >> .env
+          echo "DEV_DB_USERNAME=${{ secrets.USERNAME }}" >> .env
           echo "KEY=${{ vars.KEY }}" >> .env
           echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env
           echo "PORT=${{ vars.PORT }}" >> .env
-          echo "REDIRECT_URI=${{ vars.REDIRECT_URI }} >> .env
-          echo "REFRESH_SECRET_KEY=${{ vars.REFRESH_SECRET_KEY }} >> .env
+          echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
+          echo "REFRESH_SECRET_KEY=${{ secrets.REFRESH_SECRET_KEY }} >> .env
           
       - name: pwd
         run: pwd
@@ -50,7 +50,7 @@ jobs:
       - name: create config.json
         run: | 
           cd db/config
-          echo '{"development":{"username":${{vars.USERNAME}},"password":${{vars.PASSWORD}},"database":{{vars.DEV_DB_DATABASE}},"host":{{vars.DEV_DB_HOST}},"dialect":"mysql","define":{"timestamps":false}}}' >> config.json  
+          echo '{"development":{"username":${{secrets.USERNAME}},"password":${{secrets.DEV_DB_PASSWORD}},"database":${{vars.DEV_DB_DATABASE}},"host":${{secrets.DEV_DB_HOST}},"dialect":"mysql","define":{"timestamps":false}}}' >> config.json  
         
       - name: tar gzip
         run: tar zcvf realpro.tar.gz *
