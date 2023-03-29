@@ -10,6 +10,6 @@ permissions:
     owner: ubuntu
     group: ubuntu
 hooks:
-  AfterInstall:
+  AfterAllowTraffic:
   - location: deploy.sh 
     timeout: 120
