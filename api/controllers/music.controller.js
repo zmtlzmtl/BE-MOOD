@@ -42,8 +42,10 @@ class MusicController {
   };
   findAllByComposer = async (req, res, next) => {
     try {
+      const { userId } = res.locals.user;
       const composer = req.query;
       const project = await this.musicService.findAllByComposer({
+        userId,
         composer,
       });
       return res.status(200).json({ data: project });

@@ -23,7 +23,7 @@ class MusicService {
     music.musicUrl = "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
     return music;
   };
-  findAllByComposer = async ({ composer }) => {
+  findAllByComposer = async ({ userId, composer }) => {
     let music = await this.musicRepository.findAllByComposer({ composer });
     if (music == "") {
       throw new makeError({
@@ -31,8 +31,35 @@ class MusicService {
         code: 400,
       });
     }
+    for (let i = 0; i < music.music.length; i++) {
+      const Like = await this.likeRepository.findLike(
+        userId,
+        music.music[i].musicId
+      );
+      if (!Like) {
+        music.music[i].dataValues.likeStatus = false;
+      } else {
+        music.music[i].dataValues.likeStatus = true;
+      }
+    }
+    console.log(music);
     return await cloudfrontfor(music);
   };
+  // likeChart = async (userId) => {
+  //   const likeChart = await this.musicRepository.likeChart();
+  //   for (let i = 0; i < likeChart.length; i++) {
+  //     const Like = await this.likeRepository.findLike(
+  //       userId,
+  //       likeChart[i].musicId
+  //     );
+  //     if (!Like) {
+  //       likeChart[i].dataValues.likeStatus = false;
+  //     } else {
+  //       likeChart[i].dataValues.likeStatus = true;
+  //     }
+  //   }
+  //   return cloudfrontfor(likeChart);
+  // };
   mood = async ({ x, y }) => {
     if (x >= 0 && x <= 25 && y >= 0 && y <= 25) {
       if (x == 25 && y == 25) {
