@@ -43,9 +43,17 @@ jobs:
           echo "PORT=${{ vars.PORT }}" >> .env
           echo "REDIRECT_URI=${{ vars.REDIRECT_URI }} >> .env
           echo "REFRESH_SECRET_KEY=${{ vars.REFRESH_SECRET_KEY }} >> .env
+          
+      - name: pwd
+        run: pwd
       
+      - name: create config.json
+        run: | 
+          cd db/config
+          echo '{"development":{"username":${{vars.USERNAME}},"password":${{vars.PASSWORD}},"database":{{vars.DEV_DB_DATABASE}},"host":{{vars.DEV_DB_HOST}},"dialect":"mysql","define":{"timestamps":false}}}' >> config.json  
+        
       - name: tar gzip
-        run : tar zcvf realpro.tar.gz *
+        run: tar zcvf realpro.tar.gz *
           
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
