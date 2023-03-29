@@ -42,24 +42,8 @@ class MusicService {
         music.music[i].dataValues.likeStatus = true;
       }
     }
-    console.log(music);
     return await cloudfrontfor(music);
   };
-  // likeChart = async (userId) => {
-  //   const likeChart = await this.musicRepository.likeChart();
-  //   for (let i = 0; i < likeChart.length; i++) {
-  //     const Like = await this.likeRepository.findLike(
-  //       userId,
-  //       likeChart[i].musicId
-  //     );
-  //     if (!Like) {
-  //       likeChart[i].dataValues.likeStatus = false;
-  //     } else {
-  //       likeChart[i].dataValues.likeStatus = true;
-  //     }
-  //   }
-  //   return cloudfrontfor(likeChart);
-  // };
   mood = async ({ x, y }) => {
     if (x >= 0 && x <= 25 && y >= 0 && y <= 25) {
       if (x == 25 && y == 25) {
