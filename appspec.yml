@@ -9,7 +9,3 @@ permissions:
     pattern: "**"
     owner: ubuntu
     group: ubuntu
-hooks:
-  AfterAllowTraffic:
-  - location: deploy.sh 
-    timeout: 120
