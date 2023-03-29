@@ -14,7 +14,9 @@ jobs:
           
       - name: Install Dependencies
         run: npm install
-        
+      - name: pwd
+        run: pwd
+      
       - name: create .env file
         run: |
           echo "ACCESS_SECRET_KEY=${{ vars.ACCESS_SECRET_KEY }}" >> .env
