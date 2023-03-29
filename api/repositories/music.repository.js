@@ -69,10 +69,13 @@ class MusicRepository {
     return music;
   };
   findAllByComposer = async ({ composer }) => {
-    let music = await Musics.findAll({
+    let composerInfo = await Composers.findAll({
       where: composer,
     });
-    return music;
+    let music = await Musics.findAll({
+      where: { composer: composer.composer.split(" ").slice(-1)},
+    });
+    return { composerInfo, music };
   };
   s3Upload = async (file) => {
     const s3 = new S3();
@@ -352,18 +355,25 @@ class MusicRepository {
         [Op.or]: [{ composer: keyword }, { tag: { [Op.substring]: keyword } }],
       },
     });
-    let composerName = '';
+    let composerName = "";
     if (composerInfo) {
-      composerName = composerInfo.composer;
+      composerName = composerInfo.composer.split(" ");
     }
     const composerSong = await Musics.findAll({
       where: {
-        composer: composerName,
+        composer: composerName.slice(-1),
       },
       order: [["musicTitle", "DESC"]],
-      attributes: ["musicId", "composer", "musicTitle", "musicContent", "fileName", "musicUrl"],
+      attributes: [
+        "musicId",
+        "composer",
+        "musicTitle",
+        "musicContent",
+        "fileName",
+        "musicUrl",
+      ],
     });
-    
+
     const musicTitle = await Musics.findAll({
       include: [
         {
@@ -381,10 +391,18 @@ class MusicRepository {
       where: {
         [Op.or]: [
           { musicTitle: { [Op.substring]: keyword } },
-          { '$MusicTags.Tag.tagName$': keyword },
+          { "$MusicTags.Tag.tagName$": keyword },
         ],
       },
-      attributes: ["musicId", "composer", "musicTitle", "musicContent", "fileName", "musicUrl"],
+      attributes: [
+        "musicId",
+        "composer",
+        "musicTitle",
+        "musicContent",
+        "fileName",
+        "musicUrl",
+        "tag",
+      ],
     });
     return { composerInfo, composerSong, musicTitle };
   };
