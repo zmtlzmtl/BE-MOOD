@@ -3,22 +3,50 @@ name: mood-BE
 on: [push, pull_request]
 jobs:
   build:
-    runs-on: self-hosted
-    environment: cd
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
+      
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: "18.x"
+          
       - name: Install Dependencies
         run: npm install
-      - name: create env file
-        working-directory: ./
+        
+      - name: create .env file
         run: |
-          touch .env
-          echo DEV_DB_USERNAME=${{ vars.DEV_DB_USERNAME }} > .env
-          echo DEV_DB_PASSWORD=${{ vars.DB_PASSWORD }} > .env
-          echo DEV_DB_DATABASE=${{ vars.DB_DATABASE_DEV }} > .env
-          echo DEV_DB_HOST=${{ vars.DB_HOST }} > .env
-          echo DEV_DB_DIALECT=${{ vars.DIALECT }} > .env
+          echo "ACCESS_SECRET_KEY=${{ vars.ACCESS_SECRET_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_ID=${{ vars.AWS_ACCESS_KEY_ID }}" >> .env
+          echo "AWS_BUCKET_NAME=${{ vars.AWS_BUCKET_NAME }}" >> .env
+          echo "AWS_REGION=${{ vars.AWS_REGION }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=${{ vars.AWS_SECRET_ACCESS_KEY }}" >> .env
+          echo "CLIENT_ID=${{ vars.CLIENT_ID }}" >> .env
+          echo "CLIENT_SECRET=${{ vars.CLIENT_SECRET }}" >> .env
+          echo "DEV_DB_DATABASE=${{ vars.DEV_DB_DATABASE }}" >> .env
+          echo "DEV_DB_DIALECT=${{ vars.DEV_DB_DIALECT }}" >> .env
+          echo "DEV_DB_HOST=${{ vars.DEV_DB_HOST }}" >> .env
+          echo "DEV_DB_PASSWORD=${{ vars.DEV_DB_PASSWORD }}" >> .env
+          echo "DEV_DB_USERNAME=${{ vars.DEV_DB_USERNAME }}" >> .env
+          echo "KEY=${{ vars.KEY }}" >> .env
+          echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env
+          echo "PORT=${{ vars.PORT }}" >> .env
+          echo "REDIRECT_URI=${{ vars.REDIRECT_URI }} >> .env
+          echo "REFRESH_SECRET_KEY=${{ vars.REFRESH_SECRET_KEY }} >> .env
+      
+      - name: tar gzip
+        run : tar zcvf realpro.tar.gz *
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }
+          
+      - name: Upload to S3 
+        run: aws s3 cp --region ap-northeast-2 ./realpro.tar.gz s3://${{AWS_BUCKET_NAME}}/BE-MOOD/realpro.tar.gz
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name moodDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name deploy-mood --s3-location bucket=${{AWS_BUCKET_NAME}},bundleType=tar,key=realpro.tar.gz
