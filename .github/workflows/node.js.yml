@@ -50,7 +50,7 @@ jobs:
       - name: create config.json
         run: | 
           cd db/config
-          echo '{"development":{"username":${{secrets.USERNAME}},"password":${{secrets.DEV_DB_PASSWORD}},"database":${{vars.DEV_DB_DATABASE}},"host":${{secrets.DEV_DB_HOST}},"dialect":"mysql","define":{"timestamps":false}}}' >> config.json  
+          echo '{"development":{"username":"${{secrets.USERNAME}}","password":"${{secrets.DEV_DB_PASSWORD}}","database":"${{vars.DEV_DB_DATABASE}}","host":"${{secrets.DEV_DB_HOST}}","dialect":"mysql","define":{"timestamps":false}}}' >> config.json  
         
       - name: tar gzip
         run: tar zcvf realpro.tar.gz *
