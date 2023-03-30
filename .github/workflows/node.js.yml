@@ -7,7 +7,11 @@ jobs:
     runs-on: self-hosted
     environment: cd
     steps:
-      - uses: actions/checkout@v3
+    
+      - name: Update file permissions
+        run: sudo chmod 700 /home/ubuntu/BE-MOOD/actions-runner/_work/BE-MOOD/BE-MOOD/unfor19-awscli/unfor19-awscli.zip
+      - name: Check out repository
+        uses: actions/checkout@v3
 
       - name: setup node
         uses: actions/setup-node@v3
