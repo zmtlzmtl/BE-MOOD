@@ -8,9 +8,6 @@ jobs:
     environment: cd
     steps:
     
-      - name: Check out repository
-        run: sudo -E env "PATH=$PATH" actions/checkout@v3
-
       - name: setup node
         uses: actions/setup-node@v3
         with:
