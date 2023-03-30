@@ -8,8 +8,6 @@ jobs:
     environment: cd
     steps:
     
-      - name: Update file permissions
-        run: sudo chmod 700 /home/ubuntu/BE-MOOD/actions-runner/_work/BE-MOOD/BE-MOOD/unfor19-awscli/unfor19-awscli.zip
       - name: Check out repository
         run: sudo -E env "PATH=$PATH" actions/checkout@v3
 
