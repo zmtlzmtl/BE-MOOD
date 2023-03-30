@@ -42,8 +42,8 @@ jobs:
           echo "KEY=${{ vars.KEY }}" >> .env
           echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env
           echo "PORT=${{ vars.PORT }}" >> .env
-          echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }} >> .env
-          echo "REFRESH_SECRET_KEY=${{ secrets.REFRESH_SECRET_KEY }} >> .env
+          echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }}" >> .env
+          echo "REFRESH_SECRET_KEY=${{ secrets.REFRESH_SECRET_KEY }}" >> .env
 
       - name: pwd
         run: pwd
