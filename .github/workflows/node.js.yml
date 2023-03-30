@@ -46,7 +46,9 @@ jobs:
           echo "PORT=${{ vars.PORT }}" >> .env
           echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }}" >> .env
           echo "REFRESH_SECRET_KEY=${{ secrets.REFRESH_SECRET_KEY }}" >> .env
-
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+          
       - name: pwd
         run: pwd
 
@@ -70,3 +72,8 @@ jobs:
 
       - name: Code Deploy
         run: aws deploy create-deployment --application-name realDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name realDeployDeploy --s3-location bucket=${{vars.AWS_BUCKET_NAME}},bundleType=tgz,key=BE-MOOD/realpro.tar.gz
+      - name: pm2 kill and start
+        run: |
+          pm2 kill
+          pm2 start app.js
+          pm2 restart app.js
