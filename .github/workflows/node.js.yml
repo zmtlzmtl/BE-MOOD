@@ -67,4 +67,4 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./realpro.tar.gz s3://${{vars.AWS_BUCKET_NAME}}/BE-MOOD/realpro.tar.gz
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name moodDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name deploy-mood --s3-location bucket=${{vars.AWS_BUCKET_NAME}},bundleType=tar,key=realpro.tar.gz
+        run: aws deploy create-deployment --application-name realDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name realDeployDeploy --s3-location bucket=${{vars.AWS_BUCKET_NAME}},bundleType=tar,key=realpro.tar.gz
