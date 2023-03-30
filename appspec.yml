@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/actions-runner/_work/BE-MOOD/BE-MOOD 
+    destination: ./
     overwrite: yes
 permissions:
   - object: /
