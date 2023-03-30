@@ -7,6 +7,8 @@ jobs:
     runs-on: self-hosted
     environment: cd
     steps:
+      - name: Fix permissions
+        run: sudo chown -R $(whoami) /home/ubuntu/BE-MOOD/actions-runner/_work/BE-MOOD/BE-MOOD
       - uses: actions/checkout@v3
     
       - name: setup node
