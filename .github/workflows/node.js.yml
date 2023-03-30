@@ -1,24 +1,79 @@
 name: mood-BE
 
-on: [push, pull_request]
+on: push 
+  pull_request_target:
+    types: [opened]
 jobs:
   build:
     runs-on: self-hosted
     environment: cd
     steps:
       - uses: actions/checkout@v3
+
       - name: setup node
         uses: actions/setup-node@v3
         with:
           node-version: "18.x"
+
+      - id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
+          verbose: false
+          arch: amd64
+          rootdir: ""
+          workdir: ""
+
       - name: Install Dependencies
         run: npm install
-      - name: create env file
-        working-directory: ./
+
+      - name: create .env file
         run: |
-          touch .env
-          echo DEV_DB_USERNAME=${{ vars.DEV_DB_USERNAME }} > .env
-          echo DEV_DB_PASSWORD=${{ vars.DB_PASSWORD }} > .env
-          echo DEV_DB_DATABASE=${{ vars.DB_DATABASE_DEV }} > .env
-          echo DEV_DB_HOST=${{ vars.DB_HOST }} > .env
-          echo DEV_DB_DIALECT=${{ vars.DIALECT }} > .env
+          echo "ACCESS_SECRET_KEY=${{ secrets.ACCESS_SECRET_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+          echo "AWS_BUCKET_NAME=${{ vars.AWS_BUCKET_NAME }}" >> .env
+          echo "AWS_REGION=${{ vars.AWS_REGION }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+          echo "CLIENT_ID=${{ secrets.CLIENT_ID }}" >> .env
+          echo "CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}" >> .env
+          echo "DEV_DB_DATABASE=${{ vars.DEV_DB_DATABASE }}" >> .env
+          echo "DEV_DB_DIALECT=${{ vars.DEV_DB_DIALECT }}" >> .env
+          echo "DEV_DB_HOST=${{ secrets.DEV_DB_HOST }}" >> .env
+          echo "DEV_DB_PASSWORD=${{ secrets.DEV_DB_PASSWORD }}" >> .env
+          echo "DEV_DB_USERNAME=${{ secrets.USERNAME }}" >> .env
+          echo "KEY=${{ vars.KEY }}" >> .env
+          echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env
+          echo "PORT=${{ vars.PORT }}" >> .env
+          echo "REDIRECT_URI=${{ secrets.REDIRECT_URI }}" >> .env
+          echo "REFRESH_SECRET_KEY=${{ secrets.REFRESH_SECRET_KEY }}" >> .env
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env
+          
+      - name: pwd
+        run: pwd
+
+      - name: create config.json
+        run: |
+          cd db/config
+          echo '{"development":{"username":"${{secrets.USERNAME}}","password":"${{secrets.DEV_DB_PASSWORD}}","database":"${{vars.DEV_DB_DATABASE}}","host":"${{secrets.DEV_DB_HOST}}","dialect":"mysql","define":{"timestamps":false}}}' >> config.json
+
+      - name: tar gzip
+        run: tar zcvf realpro.tar.gz *
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./realpro.tar.gz s3://${{vars.AWS_BUCKET_NAME}}/BE-MOOD/
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name realDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name realDeployDeploy --s3-location bucket=${{vars.AWS_BUCKET_NAME}},bundleType=tgz,key=BE-MOOD/realpro.tar.gz
+      - name: pm2 kill and start
+        run: |
+          pm2 kill
+          pm2 start app.js
+          pm2 restart app.js
