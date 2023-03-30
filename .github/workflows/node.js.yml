@@ -64,7 +64,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./realpro.tar.gz s3://${{vars.AWS_BUCKET_NAME}}/BE-MOOD/realpro.tar.gz
+        run: aws s3 cp --region ap-northeast-2 ./realpro.tar.gz s3://${{vars.AWS_BUCKET_NAME}}/BE-MOOD/
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name realDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name realDeployDeploy --s3-location bucket=${{vars.AWS_BUCKET_NAME}}/BE-MOOD,bundleType=tar,key=realpro.tar.gz
+        run: aws deploy create-deployment --application-name realDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name realDeployDeploy --s3-location bucket=${{vars.AWS_BUCKET_NAME}}/BE-MOOD,bundleType=tar.gz,key=realpro.tar.gz
