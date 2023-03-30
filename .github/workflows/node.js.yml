@@ -76,6 +76,4 @@ jobs:
 
       - name: Code Deploy
         run: aws deploy create-deployment --application-name realDeploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name realDeployDeploy --s3-location bucket=${{secrets.AWS_BUCKET_NAME}},bundleType=tgz,key=BE-MOOD/realpro.tar.gz
-        
-      - name: pm2 start
-        run: pm2 start app.js
+      
