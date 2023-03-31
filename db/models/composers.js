@@ -43,6 +43,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      fullname: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       koreanFullname: {
         type: DataTypes.STRING,
         allowNull: false,
