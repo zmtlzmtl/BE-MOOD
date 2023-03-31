@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "musicId",
         foreignKey: "musicId",
       });
+      this.belongsTo(models.Composers, {
+        sourceKey: "composer",
+        foreignKey: "composer",
+      });
     }
   }
   Musics.init(
