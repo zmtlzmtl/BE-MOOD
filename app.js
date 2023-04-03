@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const express = require("express");
 const http = require("http");
+const helmet = require("helmet");
 const createSocket = require("./socket");
 const router = require("./api/routes");
 
@@ -14,6 +15,24 @@ const logger = require("./db/config/logger");
 const morgan = require("morgan");
 app.use(
   morgan(":method :status :url :response-time ms", { stream: logger.stream }) //데이터의 통로 stream
+);
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'"],
+        imgSrc: ["'self'"],
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'"],
+      },
+    },
+    xContentTypeOptions: true,
+    xFrameOptions: "DENY",
+    referrerPolicy: "same-origin",
+  })
 );
 
 app.use(
