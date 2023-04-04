@@ -182,7 +182,9 @@ class MusicService {
     const composerImage = await this.composerRepository.getComposer({
       composer: musicData.dataValues.composer,
     });
-    musicData.dataValues.imageUrl = composerImage.dataValues.imageUrl;
+    musicData.dataValues.imageUrl =
+      "https://d13uh5mnneeyhq.cloudfront.net/" +
+      composerImage.dataValues.imageUrl;
     return { musicData, message };
   };
 

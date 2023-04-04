@@ -51,7 +51,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api", router);
 
 app.use((error, req, res, next) => {
-  console.error(error);
+  logger.error(error);
   return res
     .status(error.code || 500)
     .json({ message: error.message || "서버 에러." });
