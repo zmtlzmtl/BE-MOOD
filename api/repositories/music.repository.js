@@ -465,6 +465,7 @@ class MusicRepository {
     const streaming = await Streamings.create({ userId, musicId });
     return streaming;
   };
+
   tagMusicId = async ({ musicId, tag }) => {
     console.log(tag);
     const tagList = tag.split(",");
@@ -485,7 +486,7 @@ class MusicRepository {
     }
     return tagList;
   };
-  
+
   getChartData = async (cacheKey) => {
     try {
       const data = await redisClient.get(cacheKey);
