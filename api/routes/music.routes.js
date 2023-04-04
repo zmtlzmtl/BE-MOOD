@@ -9,8 +9,8 @@ const musicController = new MusicController();
 router.post("/music", multer({ storage }).any(), musicController.create);
 router.get("/music/search", musicController.findByKeyword);
 router.get("/music", statusMiddleWare, musicController.findAllByComposer);
-router.get("/mood/:x/:y", musicController.findAllByCoOrdinates);
-router.get("/survey/:x/:y", musicController.findAllByCoOrdinates);
+router.get("/music/mood/:x/:y", musicController.findAllByCoOrdinates);
+router.get("/music/survey/:x/:y", musicController.findAllByCoOrdinates);
 router.get("/music/likechart", statusMiddleWare, musicController.likeChart);
 router.get("/music/streamingchart", musicController.streamingChart);
 router.post(
