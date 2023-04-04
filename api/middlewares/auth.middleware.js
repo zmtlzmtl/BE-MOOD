@@ -3,7 +3,12 @@ const { Users } = require("../../db/models");
 
 module.exports = async (req, res, next) => {
   const { authorization } = req.headers;
+  // console.log("리퀘스트 쿠키", req.cookies);
+  // const authorization = req.cookies.accessToken;
+  // console.log("받아오는 토큰값", authorization);
   const [tokenType, token] = (authorization ?? "").split(" ");
+  // console.log("타입", tokenType);
+  // console.log("토큰", token);
 
   if (tokenType !== "Bearer" || !token) {
     return res.status(401).json({

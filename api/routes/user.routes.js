@@ -17,12 +17,16 @@ router.get("/user/userinfo", authMiddleWare, userController.userInfo);
 router.get("/user/likelist", authMiddleWare, userController.likeList);
 router.get("/user/scraplist", authMiddleWare, userController.scrapList);
 router.get("/user/reviewlist", authMiddleWare, userController.reviewList);
-router.get("/user/recommentlist", authMiddleWare, userController.recommentList);
 router.patch(
   "/user/uploadprofile",
   authMiddleWare,
   multer({ storage }).any(),
   userController.uploadProfile
+);
+router.patch(
+  "/user/changenickname",
+  authMiddleWare,
+  userController.changeNickname
 );
 router.delete("/user/delete", authMiddleWare, userController.deleteUser);
 
