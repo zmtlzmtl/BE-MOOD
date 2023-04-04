@@ -1,5 +1,6 @@
 const musicRepository = require("../repositories/music.repository");
 const LikeRepository = require("../repositories/like.repository");
+const ScrapRepository = require("../repositories/scrap.repository");
 const ComposerRepository = require("../repositories/composer.repository");
 const { makeError } = require("../error");
 const {
@@ -11,6 +12,7 @@ class MusicService {
     this.musicRepository = new musicRepository();
   }
   likeRepository = new LikeRepository();
+  scrapRepository = new ScrapRepository();
   composerRepository = new ComposerRepository();
 
   findOneByMusicId = async ({ musicId }) => {
@@ -34,15 +36,16 @@ class MusicService {
       });
     }
     for (let i = 0; i < music.music.length; i++) {
-      const Like = await this.likeRepository.findLike(
+      const like = await this.likeRepository.findLike(
         userId,
         music.music[i].musicId
       );
-      if (!Like) {
-        music.music[i].dataValues.likeStatus = false;
-      } else {
-        music.music[i].dataValues.likeStatus = true;
-      }
+      music.music[i].dataValues.likeStatus = !!like;
+      const scrap = await this.scrapRepository.findScrap(
+        userId,
+        music.music[i].musicId
+      );
+      music.music[i].dataValues.scrapStatus = !!scrap
     }
     return await cloudfrontfor(music);
   };
@@ -188,7 +191,7 @@ class MusicService {
     return { musicData, message };
   };
 
-  findByKeyword = async ({ keyword }) => {
+  findByKeyword = async ({ userId, keyword }) => {
     const music = await this.musicRepository.findByKeyword({ keyword });
     if (keyword.length === 0) {
       throw new makeError({
@@ -198,6 +201,13 @@ class MusicService {
     }
     if (music.composerSong.length === 0 && music.musicTitle.length === 0) {
       return { message: "해당하는 keyword가 없습니다." };
+    }
+    for (let i = 0; i < music.composerSong.length; i++) {
+      const musicId = music.composerSong[i].dataValues.musicId;
+      const like = await this.likeRepository.findLike(userId, musicId);
+      music.composerSong[i].dataValues.likeStatus = !!like;
+      const scrap = await this.scrapRepository.findScrap(userId, musicId);
+      music.composerSong[i].dataValues.scrapStatus = !!scrap;
     }
     return music;
   };
