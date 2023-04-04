@@ -207,6 +207,9 @@ class UserService {
       musicId.push(likeList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
+    if (musicList.length === 0) {
+      throw new makeError({ message: "좋아요한 목록이 없습니다.", code: 404 });
+    }
     return await cloudfrontfor(musicList);
   };
 
@@ -217,6 +220,9 @@ class UserService {
       musicId.push(scrapList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
+    if (musicList.length === 0) {
+      throw new makeError({ message: "스크랩한 목록이 없습니다.", code: 404 });
+    }
     return await cloudfrontfor(musicList);
   };
   reviewList = async (userId, page) => {
