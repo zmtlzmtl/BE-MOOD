@@ -202,28 +202,36 @@ class UserService {
 
   likeList = async (userId, page) => {
     const likeList = await this.userRepository.likeList(userId);
+    let message;
     const musicId = [];
     for (let i = 0; i < likeList.length; i++) {
       musicId.push(likeList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
     if (musicList.length === 0) {
-      throw new makeError({ message: "좋아요한 목록이 없습니다.", code: 404 });
+      message = "좋아요한 목록이 없습니다.";
+    } else {
+      message = "사용자가 좋아요한 음악조회를 성공했습니다.";
     }
-    return await cloudfrontfor(musicList);
+    await cloudfrontfor(musicList);
+    return { musicList, message };
   };
 
   scrapList = async (userId) => {
     const scrapList = await this.userRepository.scrapList(userId);
+    let message;
     const musicId = [];
     for (let i = 0; i < scrapList.length; i++) {
       musicId.push(scrapList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
     if (musicList.length === 0) {
-      throw new makeError({ message: "스크랩한 목록이 없습니다.", code: 404 });
+      message = "스크랩한 목록이 없습니다.";
+    } else {
+      message = "사용자가 스크랩한 음악조회를 성공했습니다.";
     }
-    return await cloudfrontfor(musicList);
+    await cloudfrontfor(musicList);
+    return { musicList, message };
   };
   reviewList = async (userId, page) => {
     const reviewData = await this.userRepository.findReview(userId);

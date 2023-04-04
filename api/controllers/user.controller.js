@@ -104,8 +104,8 @@ class UserController {
       const { page } = req.query;
       const likeList = await this.userService.likeList(userId, page);
       res.status(200).json({
-        message: "사용자가 좋아요한 음악조회를 성공했습니다.",
-        likeList,
+        message: likeList.message,
+        likeList: likeList.musicList,
       });
     } catch (error) {
       next(error);
@@ -119,8 +119,8 @@ class UserController {
       const scrapList = await this.userService.scrapList(userId, page);
       console.log(scrapList);
       res.status(200).json({
-        message: "사용자가 스크랩한 음악조회를 성공했습니다.",
-        scrapList,
+        message: scrapList.message,
+        scrapList: scrapList.musicList,
       });
     } catch (error) {
       next(error);
