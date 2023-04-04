@@ -55,8 +55,11 @@ class MusicController {
   };
   findAllByCoOrdinates = async (req, res, next) => {
     try {
-      const mood = await this.musicService.mood(req.params);
-      return res.status(200).json({ data: mood });
+      const { x, y } = req.params;
+      const mood = await this.musicService.mood({ x, y });
+      return res
+        .status(200)
+        .json({ music: mood.musicData, message: mood.message });
     } catch (err) {
       next(err);
     }
