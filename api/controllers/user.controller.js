@@ -200,7 +200,10 @@ class UserController {
         { expiresIn: "1h" }
       );
 
-      return res.status(200).json({ accessToken: newAccessToken });
+      return res.status(200).json({
+        message: "새로운 토큰이 발급되었습니다,",
+        accessToken: newAccessToken,
+      });
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
         return res
