@@ -59,7 +59,7 @@ class MusicController {
       const mood = await this.musicService.mood({ x, y });
       return res
         .status(200)
-        .json({ music: mood.musicData, message: mood.message });
+        .json({ message: mood.message, music: mood.musicData });
     } catch (err) {
       next(err);
     }
