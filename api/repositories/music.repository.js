@@ -73,7 +73,7 @@ class MusicRepository {
       where: composer,
     });
     let music = await Musics.findAll({
-      where: { composer: composer.composer.split(" ").slice(-1)},
+      where: { composer: composer.composer.split(" ").slice(-1) },
     });
     return { composerInfo, music };
   };
@@ -464,6 +464,25 @@ class MusicRepository {
     const streaming = await Streamings.create({ userId, musicId });
     return streaming;
   };
+  tagMusicId = async ({ musicId, tag }) => {
+    console.log(tag);
+    const tagList = tag.split(",");
+    for (const tag of tagList) {
+      const tags = await Tags.findOrCreate({
+        where: { tagName: tag.trim() },
+      });
+      const musicTags = await MusicTags.create({
+        musicId: musicId,
+        tagId: tags[0].tagId,
+      });
+      if (!musicTags) {
+        throw new makeError({
+          message: "태그 생성에 실패하였습니다.",
+          code: 400,
+        });
+      }
+    }
+    return tagList;
+  };
 }
-
 module.exports = MusicRepository;
