@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const express = require("express");
 const http = require("http");
+// const cookieParser = require("cookie-parser");
 const helmet = require("helmet");
 const createSocket = require("./socket");
 const router = require("./api/routes");
@@ -43,6 +44,7 @@ app.use(
   })
 );
 
+// app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

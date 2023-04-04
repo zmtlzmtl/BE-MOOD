@@ -8,21 +8,25 @@ const UserController = require("../controllers/user.controller");
 const userController = new UserController();
 
 router.post("/signup", validationMiddleWare.signUpCheck, userController.signUp);
+router.post("/signup/idcheck", userController.check);
+router.post("/signup/nicknamecheck", userController.check);
 router.post("/login", validationMiddleWare.loginCheck, userController.login);
-router.post("/idcheck", userController.check);
-router.post("/nicknamecheck", userController.check);
-router.post("/kakao/login", userController.kakaoLogin);
-router.post("/refresh", userController.refresh);
+router.post("/login/kakao", userController.kakaoLogin);
+router.post("/user/refresh", userController.refresh);
 router.get("/user/userinfo", authMiddleWare, userController.userInfo);
 router.get("/user/likelist", authMiddleWare, userController.likeList);
 router.get("/user/scraplist", authMiddleWare, userController.scrapList);
 router.get("/user/reviewlist", authMiddleWare, userController.reviewList);
-router.get("/user/recommentlist", authMiddleWare, userController.recommentList);
 router.patch(
   "/user/uploadprofile",
   authMiddleWare,
   multer({ storage }).any(),
   userController.uploadProfile
+);
+router.patch(
+  "/user/changenickname",
+  authMiddleWare,
+  userController.changeNickname
 );
 router.delete("/user/delete", authMiddleWare, userController.deleteUser);
 
