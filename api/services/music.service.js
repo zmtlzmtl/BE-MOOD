@@ -45,7 +45,7 @@ class MusicService {
         userId,
         music.music[i].musicId
       );
-      music.music[i].dataValues.scrapStatus = !!scrap
+      music.music[i].dataValues.scrapStatus = !!scrap;
     }
     return await cloudfrontfor(music);
   };
@@ -208,6 +208,13 @@ class MusicService {
       music.composerSong[i].dataValues.likeStatus = !!like;
       const scrap = await this.scrapRepository.findScrap(userId, musicId);
       music.composerSong[i].dataValues.scrapStatus = !!scrap;
+    }
+    for (let i = 0; i < music.musicTitle.length; i++) {
+      const musicId = music.musicTitle[i].dataValues.musicId;
+      const like = await this.likeRepository.findLike(userId, musicId);
+      music.musicTitle[i].dataValues.likeStatus = !!like;
+      const scrap = await this.scrapRepository.findScrap(userId, musicId);
+      music.musicTitle[i].dataValues.scrapStatus = !!scrap;
     }
     return music;
   };
