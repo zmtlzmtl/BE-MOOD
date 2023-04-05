@@ -41,7 +41,7 @@ class MusicService {
         music.music[i].musicId
       );
       music.music[i].dataValues.likeStatus = !!like;
-      const likeCount = await this.likeRepository.likeCount(
+      const likeCount = await this.likeRepository.countLike(
         userId,
         music.music[i].musicId
       );
@@ -209,7 +209,7 @@ class MusicService {
       const musicId = music.composerSong[i].dataValues.musicId;
       const like = await this.likeRepository.findLike(userId, musicId);
       music.composerSong[i].dataValues.likeStatus = !!like;
-      const likeCount = await this.likeRepository.countLike(userId.musicId);
+      const likeCount = await this.likeRepository.countLike(userId, musicId);
       music.composerSong[i].dataValues.likeCount = likeCount;
       const scrap = await this.scrapRepository.findScrap(userId, musicId);
       music.composerSong[i].dataValues.scrapStatus = !!scrap;
@@ -218,7 +218,7 @@ class MusicService {
       const musicId = music.musicTitle[i].dataValues.musicId;
       const like = await this.likeRepository.findLike(userId, musicId);
       music.musicTitle[i].dataValues.likeStatus = !!like;
-      const likeCount = await this.likeRepository.countLike(userId.musicId);
+      const likeCount = await this.likeRepository.countLike(userId, musicId);
       music.musicTitle[i].dataValues.likeCount = likeCount;
       const scrap = await this.scrapRepository.findScrap(userId, musicId);
       music.musicTitle[i].dataValues.scrapStatus = !!scrap;
