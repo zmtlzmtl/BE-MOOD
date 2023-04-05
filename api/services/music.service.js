@@ -189,11 +189,7 @@ class MusicService {
     const composerImage = await this.composerRepository.getComposer({
       composer: musicData.dataValues.composer,
     });
-    if (!composerImage) {
-      musicData.dataValues.imageUrl = null;
-    } else {
-      musicData.dataValues.imageUrl = composerImage.dataValues.imageUrl;
-    }
+    musicData.dataValues.imageUrl = composerImage.dataValues.imageUrl;
     return { musicData, message };
   };
 
@@ -254,11 +250,7 @@ class MusicService {
           const composer = await this.composerRepository.getComposer({
             composer: item.dataValues.composer,
           });
-          if (!composer) {
-            item.dataValues.imageUrl = null;
-          } else {
-            item.dataValues.imageUrl = composer.dataValues.imageUrl;
-          }
+          item.dataValues.imageUrl = composer.dataValues.imageUrl;
         })
       );
 
@@ -274,11 +266,7 @@ class MusicService {
       const composer = await this.composerRepository.getComposer({
         composer: streamingChart[i].dataValues.composer,
       });
-      if (!composer) {
-        streamingChart[i].dataValues.imageUrl = null;
-      } else {
-        streamingChart[i].dataValues.imageUrl = composer.dataValues.imageUrl;
-      }
+      streamingChart[i].dataValues.imageUrl = composer.dataValues.imageUrl;
     }
     return cloudfrontfor(streamingChart);
   };
