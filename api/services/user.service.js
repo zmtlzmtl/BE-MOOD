@@ -214,7 +214,7 @@ class UserService {
     };
   };
 
-  scrapList = async (userId) => {
+  scrapList = async (userId, page) => {
     const scrapList = await this.userRepository.scrapList(userId);
     const musicId = [];
     for (let i = 0; i < scrapList.length; i++) {
