@@ -87,11 +87,19 @@ class MusicRepository {
     };
     return s3.upload(param).promise();
   };
-  //ㅡㅡㅡㅡㅡ교점 없음
+
   findOneByStatus = async (status) => {
     const mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status },
+      // include: [
+      //   {
+      //     model: Composers,
+      //     as: "Composer",
+      //     targetKey: "composer",
+      //     attributes: ["imageUrl"],
+      //   },
+      // ],
     });
     return mood;
   };

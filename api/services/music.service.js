@@ -1,5 +1,7 @@
 const musicRepository = require("../repositories/music.repository");
 const LikeRepository = require("../repositories/like.repository");
+const ScrapRepository = require("../repositories/scrap.repository");
+const ComposerRepository = require("../repositories/composer.repository");
 const { makeError } = require("../error");
 const {
   cloudfront,
@@ -10,6 +12,8 @@ class MusicService {
     this.musicRepository = new musicRepository();
   }
   likeRepository = new LikeRepository();
+  scrapRepository = new ScrapRepository();
+  composerRepository = new ComposerRepository();
 
   findOneByMusicId = async ({ musicId }) => {
     let music = await this.musicRepository.findOneByMusicId({ musicId });
@@ -32,15 +36,16 @@ class MusicService {
       });
     }
     for (let i = 0; i < music.music.length; i++) {
-      const Like = await this.likeRepository.findLike(
+      const like = await this.likeRepository.findLike(
         userId,
         music.music[i].musicId
       );
-      if (!Like) {
-        music.music[i].dataValues.likeStatus = false;
-      } else {
-        music.music[i].dataValues.likeStatus = true;
-      }
+      music.music[i].dataValues.likeStatus = !!like;
+      const scrap = await this.scrapRepository.findScrap(
+        userId,
+        music.music[i].musicId
+      );
+      music.music[i].dataValues.scrapStatus = !!scrap;
     }
     return await cloudfrontfor(music);
   };
@@ -176,10 +181,17 @@ class MusicService {
     }
 
     const musicData = await this.musicRepository.findOneByStatus(status);
+    await cloudfront(musicData);
+    const composerImage = await this.composerRepository.getComposer({
+      composer: musicData.dataValues.composer,
+    });
+    musicData.dataValues.imageUrl =
+      "https://d13uh5mnneeyhq.cloudfront.net/" +
+      composerImage.dataValues.imageUrl;
     return { musicData, message };
   };
 
-  findByKeyword = async ({ keyword }) => {
+  findByKeyword = async ({ userId, keyword }) => {
     const music = await this.musicRepository.findByKeyword({ keyword });
     if (keyword.length === 0) {
       throw new makeError({
@@ -190,6 +202,20 @@ class MusicService {
     if (music.composerSong.length === 0 && music.musicTitle.length === 0) {
       return { message: "해당하는 keyword가 없습니다." };
     }
+    for (let i = 0; i < music.composerSong.length; i++) {
+      const musicId = music.composerSong[i].dataValues.musicId;
+      const like = await this.likeRepository.findLike(userId, musicId);
+      music.composerSong[i].dataValues.likeStatus = !!like;
+      const scrap = await this.scrapRepository.findScrap(userId, musicId);
+      music.composerSong[i].dataValues.scrapStatus = !!scrap;
+    }
+    for (let i = 0; i < music.musicTitle.length; i++) {
+      const musicId = music.musicTitle[i].dataValues.musicId;
+      const like = await this.likeRepository.findLike(userId, musicId);
+      music.musicTitle[i].dataValues.likeStatus = !!like;
+      const scrap = await this.scrapRepository.findScrap(userId, musicId);
+      music.musicTitle[i].dataValues.scrapStatus = !!scrap;
+    }
     return music;
   };
 
@@ -197,7 +223,6 @@ class MusicService {
     const cacheKey = "likeChart";
 
     const cachedResult = await this.musicRepository.getChartData(cacheKey);
-
     if (cachedResult) {
       // 캐시에 데이터가 있으면 반환 전에 likeStatus를 업데이트
       await Promise.all(
@@ -214,27 +239,34 @@ class MusicService {
         likeChart.map(async (item) => {
           const Like = await this.likeRepository.findLike(userId, item.musicId);
           item.dataValues.likeStatus = !!Like;
+          const composer = await this.composerRepository.getComposer({
+            composer: item.dataValues.composer,
+          });
+          if (!composer) {
+            item.dataValues.imageUrl = null;
+          } else {
+            item.dataValues.imageUrl =
+              "https://d13uh5mnneeyhq.cloudfront.net/" +
+              composer.dataValues.imageUrl;
+          }
         })
       );
 
       const processedLikeChart = cloudfrontfor(likeChart);
       await this.musicRepository.setCache(processedLikeChart, cacheKey);
-
       return processedLikeChart;
     }
   };
 
-  updateLikeStatus = async (chart, userId) => {
-    await Promise.all(
-      chart.map(async (item) => {
-        const Like = await this.likeRepository.findLike(userId, item.musicId);
-        item.dataValues.likeStatus = !!Like;
-      })
-    );
-  };
-
   streamingChart = async () => {
     const streamingChart = await this.musicRepository.streamingChart();
+    for (let i = 0; i < streamingChart.length; i++) {
+      const composer = await this.composerRepository.getComposer({
+        composer: streamingChart[i].dataValues.composer,
+      });
+      streamingChart[i].dataValues.imageUrl =
+        "https://d13uh5mnneeyhq.cloudfront.net/" + composer.dataValues.imageUrl;
+    }
     return cloudfrontfor(streamingChart);
   };
 

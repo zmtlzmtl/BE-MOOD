@@ -66,8 +66,10 @@ class MusicController {
   };
   findByKeyword = async (req, res, next) => {
     try {
+      const { userId } = res.locals.user;
       const { keyword } = req.query;
       const project = await this.musicService.findByKeyword({
+        userId,
         keyword,
       });
       return res.status(200).json({ data: project });

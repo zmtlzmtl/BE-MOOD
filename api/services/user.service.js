@@ -207,7 +207,11 @@ class UserService {
       musicId.push(likeList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
-    return await cloudfrontfor(musicList);
+    await cloudfrontfor(musicList.musicList);
+    return {
+      musicList: musicList.musicList,
+      musicCount: musicList.musicCount,
+    };
   };
 
   scrapList = async (userId) => {
@@ -217,7 +221,11 @@ class UserService {
       musicId.push(scrapList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
-    return await cloudfrontfor(musicList);
+    await cloudfrontfor(musicList.musicList);
+    return {
+      musicList: musicList.musicList,
+      musicCount: musicList.musicCount,
+    };
   };
   reviewList = async (userId, page) => {
     const reviewData = await this.userRepository.findReview(userId);
@@ -236,7 +244,7 @@ class UserService {
       (currentPage - 1) * itemsPerPage,
       currentPage * itemsPerPage
     );
-    return paginatedData;
+    return { data: paginatedData, count: combinedData.length };
   };
 
   uploadImage = async (file) => {
