@@ -10,20 +10,16 @@ class MusicController {
     try {
       let file = req.files[0];
       let data = await this.musicRepository.s3Upload(file);
-      let Url = data.Location;
-      let fileN = data.Key;
-      let { musicTitle, musicContent, status, composer, tag, condition } =
+      let fileName = data.Key;
+      let { musicTitle, musicContent, status, composer, tag } =
         req.body;
-      let music = await this.musicRepository.create({
+      let music = await this.musicService.create({
         musicTitle,
         musicContent,
         status,
         composer,
         tag,
-        userId: 1,
-        musicUrl: Url,
-        fileName: fileN,
-        condition,
+        fileName,
       });
       return res.status(200).json({ music, msg: "생성 완료" });
     } catch (err) {
