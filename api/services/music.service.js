@@ -189,7 +189,11 @@ class MusicService {
     const composerImage = await this.composerRepository.getComposer({
       composer: musicData.dataValues.composer,
     });
-    musicData.dataValues.imageUrl = composerImage.dataValues.imageUrl;
+    if (!composerImage) {
+      musicData.dataValues.imageUrl = null;
+    } else {
+      musicData.dataValues.imageUrl = composerImage.dataValues.imageUrl;
+    }
     return { musicData, message };
   };
 
