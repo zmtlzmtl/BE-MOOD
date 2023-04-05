@@ -95,12 +95,20 @@ class UserRepository {
   findMusic = async (musicId, page) => {
     const musicList = await Musics.findAll({
       where: { musicId },
-      attributes: ["musicTitle", "composer", "musicUrl", "musicId", "fileName"],
+      attributes: [
+        "musicTitle",
+        "musicContent",
+        "composer",
+        "musicUrl",
+        "musicId",
+        "fileName",
+      ],
       limit: 10,
       offset: (page - 1) * 10,
       order: [["musicId", "DESC"]],
     });
-    return musicList;
+    const musicCount = await Musics.count({ where: { musicId } });
+    return { musicList, musicCount };
   };
 
   uploadProfile = async (userId, fileName) => {

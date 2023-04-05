@@ -105,7 +105,8 @@ class UserController {
       const likeList = await this.userService.likeList(userId, page);
       res.status(200).json({
         message: "사용자가 좋아요한 음악조회를 성공했습니다.",
-        likeList,
+        likeCount: likeList.musicCount,
+        likeList: likeList.musicList,
       });
     } catch (error) {
       next(error);
@@ -120,7 +121,8 @@ class UserController {
       console.log(scrapList);
       res.status(200).json({
         message: "사용자가 스크랩한 음악조회를 성공했습니다.",
-        scrapList,
+        scrapCount: scrapList.scrapCount,
+        scrapList: scrapList.musicList,
       });
     } catch (error) {
       next(error);
@@ -132,7 +134,11 @@ class UserController {
       const { userId } = res.locals.user;
       const { page } = req.query;
       const data = await this.userService.reviewList(userId, page);
-      res.status(200).json({ message: "리뷰 조회 성공", reviewList: data });
+      res.status(200).json({
+        message: "리뷰 조회 성공",
+        reviewCount: data.count,
+        reviewList: data.data,
+      });
     } catch (error) {
       next(error);
     }
