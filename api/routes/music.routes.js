@@ -19,5 +19,6 @@ router.post(
   musicController.sendStreaming
 );
 router.get("/music/:musicId", musicController.findOneByMusicId);
+router.patch("/music/:musicId/tag", musicController.tagMusicId)
 
 module.exports = router;

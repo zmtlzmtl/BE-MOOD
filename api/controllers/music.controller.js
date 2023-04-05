@@ -113,6 +113,16 @@ class MusicController {
       next(error);
     }
   };
+  tagMusicId = async (req, res, next) => {
+    try {
+      const { musicId } = req.params;
+      const { tag } = req.body;
+      await this.musicRepository.tagMusicId({ musicId, tag });
+      res.status(201).json({ message: "태그 변경" });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = MusicController;

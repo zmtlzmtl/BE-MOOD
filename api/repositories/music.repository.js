@@ -220,6 +220,27 @@ class MusicRepository {
     return streaming;
   };
 
+  tagMusicId = async ({ musicId, tag }) => {
+    console.log(tag);
+    const tagList = tag.split(",");
+    for (const tag of tagList) {
+      const tags = await Tags.findOrCreate({
+        where: { tagName: tag.trim() },
+      });
+      const musicTags = await MusicTags.create({
+        musicId: musicId,
+        tagId: tags[0].tagId,
+      });
+      if (!musicTags) {
+        throw new makeError({
+          message: "태그 생성에 실패하였습니다.",
+          code: 400,
+        });
+      }
+    }
+    return tagList;
+  };
+
   getChartData = async (cacheKey) => {
     try {
       const data = await redisClient.get(cacheKey);
