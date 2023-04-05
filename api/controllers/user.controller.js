@@ -118,10 +118,9 @@ class UserController {
       const { userId } = res.locals.user;
       const { page } = req.query;
       const scrapList = await this.userService.scrapList(userId, page);
-      console.log(scrapList);
       res.status(200).json({
         message: "사용자가 스크랩한 음악조회를 성공했습니다.",
-        scrapCount: scrapList.scrapCount,
+        scrapCount: scrapList.musicCount,
         scrapList: scrapList.musicList,
       });
     } catch (error) {
