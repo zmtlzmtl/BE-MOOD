@@ -15,6 +15,25 @@ class MusicService {
   scrapRepository = new ScrapRepository();
   composerRepository = new ComposerRepository();
 
+  create = async ({
+    musicTitle,
+    musicContent,
+    status,
+    composer,
+    tag,
+    fileName,
+  }) => {
+    const musicUrl = "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
+    const music = await this.musicRepository.create({
+      musicTitle,
+      musicContent,
+      status,
+      composer,
+      tag,
+      musicUrl,
+    });
+    return music;
+  };
   findOneByMusicId = async ({ musicId }) => {
     let music = await this.musicRepository.findOneByMusicId({ musicId });
     if (music == null) {
@@ -41,13 +60,17 @@ class MusicService {
         music.music[i].musicId
       );
       music.music[i].dataValues.likeStatus = !!like;
+      const likeCount = await this.likeRepository.countLike(
+        music.music[i].musicId
+      );
+      music.music[i].dataValues.likeCount = likeCount;
       const scrap = await this.scrapRepository.findScrap(
         userId,
         music.music[i].musicId
       );
       music.music[i].dataValues.scrapStatus = !!scrap;
     }
-    return await cloudfrontfor(music);
+    return music;
   };
   mood = async ({ x, y }) => {
     let status;
@@ -181,13 +204,11 @@ class MusicService {
     }
 
     const musicData = await this.musicRepository.findOneByStatus(status);
-    await cloudfront(musicData);
+
     const composerImage = await this.composerRepository.getComposer({
       composer: musicData.dataValues.composer,
     });
-    musicData.dataValues.imageUrl =
-      "https://d13uh5mnneeyhq.cloudfront.net/" +
-      composerImage.dataValues.imageUrl;
+    musicData.dataValues.imageUrl = composerImage.dataValues.imageUrl;
     return { musicData, message };
   };
 
@@ -202,20 +223,26 @@ class MusicService {
     if (music.composerSong.length === 0 && music.musicTitle.length === 0) {
       return { message: "해당하는 keyword가 없습니다." };
     }
-    for (let i = 0; i < music.composerSong.length; i++) {
-      const musicId = music.composerSong[i].dataValues.musicId;
-      const like = await this.likeRepository.findLike(userId, musicId);
-      music.composerSong[i].dataValues.likeStatus = !!like;
-      const scrap = await this.scrapRepository.findScrap(userId, musicId);
-      music.composerSong[i].dataValues.scrapStatus = !!scrap;
-    }
-    for (let i = 0; i < music.musicTitle.length; i++) {
-      const musicId = music.musicTitle[i].dataValues.musicId;
-      const like = await this.likeRepository.findLike(userId, musicId);
-      music.musicTitle[i].dataValues.likeStatus = !!like;
-      const scrap = await this.scrapRepository.findScrap(userId, musicId);
-      music.musicTitle[i].dataValues.scrapStatus = !!scrap;
-    }
+    await Promise.all(
+      music.composerSong.map(async (item) => {
+        const musicId = item.dataValues.musicId;
+        const like = await this.likeRepository.findLike(userId, musicId);
+        item.dataValues.likeStatus = !!like;
+        const likeCount = await this.likeRepository.countLike(musicId);
+        item.dataValues.likeCount = likeCount;
+        const scrap = await this.scrapRepository.findScrap(userId, musicId);
+        item.dataValues.scrapStatus = !!scrap;
+      }),
+      music.musicTitle.map(async (item) => {
+        const musicId = item.dataValues.musicId;
+        const like = await this.likeRepository.findLike(userId, musicId);
+        item.dataValues.likeStatus = !!like;
+        const likeCount = await this.likeRepository.countLike(musicId);
+        item.dataValues.likeCount = likeCount;
+        const scrap = await this.scrapRepository.findScrap(userId, musicId);
+        item.dataValues.scrapStatus = !!scrap;
+      })
+    );
     return music;
   };
 
@@ -242,19 +269,12 @@ class MusicService {
           const composer = await this.composerRepository.getComposer({
             composer: item.dataValues.composer,
           });
-          if (!composer) {
-            item.dataValues.imageUrl = null;
-          } else {
-            item.dataValues.imageUrl =
-              "https://d13uh5mnneeyhq.cloudfront.net/" +
-              composer.dataValues.imageUrl;
-          }
+          item.dataValues.imageUrl = composer.dataValues.imageUrl;
         })
       );
 
-      const processedLikeChart = cloudfrontfor(likeChart);
-      await this.musicRepository.setCache(processedLikeChart, cacheKey);
-      return processedLikeChart;
+      await this.musicRepository.setCache(likeChart, cacheKey);
+      return likeChart;
     }
   };
 
@@ -264,10 +284,9 @@ class MusicService {
       const composer = await this.composerRepository.getComposer({
         composer: streamingChart[i].dataValues.composer,
       });
-      streamingChart[i].dataValues.imageUrl =
-        "https://d13uh5mnneeyhq.cloudfront.net/" + composer.dataValues.imageUrl;
+      streamingChart[i].dataValues.imageUrl = composer.dataValues.imageUrl;
     }
-    return cloudfrontfor(streamingChart);
+    return streamingChart;
   };
 
   sendStreaming = async (userId, musicId) => {

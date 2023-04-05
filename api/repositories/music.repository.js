@@ -19,21 +19,16 @@ class MusicRepository {
     musicContent,
     status,
     composer,
-    musicUrl,
-    fileName,
     tag,
-    condition,
+    musicUrl,
   }) => {
     let music = await Musics.create({
       musicTitle,
       musicContent,
       status,
       composer,
-      userId: 1,
-      musicUrl,
-      fileName,
       tag,
-      condition,
+      musicUrl,
     });
     if (tag) {
       const tagList = tag.split(",");
