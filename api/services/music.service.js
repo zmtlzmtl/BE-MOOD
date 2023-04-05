@@ -29,9 +29,13 @@ class MusicService {
       musicContent,
       status,
       composer,
-      tag,
       musicUrl,
     });
+    const musicId = music.musicId;
+    const tagList = tag.split(",");
+    for (const tag of tagList) {
+      await this.musicRepository.createTag({ musicId, tag });
+    }
     return music;
   };
   findOneByMusicId = async ({ musicId }) => {

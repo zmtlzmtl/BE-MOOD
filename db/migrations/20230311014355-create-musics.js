@@ -38,14 +38,6 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      fileName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      tag: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
     });
   },
   async down(queryInterface, Sequelize) {
