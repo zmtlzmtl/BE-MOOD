@@ -268,7 +268,11 @@ class MusicService {
       const composer = await this.composerRepository.getComposer({
         composer: streamingChart[i].dataValues.composer,
       });
-      streamingChart[i].dataValues.imageUrl = composer.dataValues.imageUrl;
+      if (!composer) {
+        streamingChart[i].dataValues.imageUrl = null;
+      } else {
+        streamingChart[i].dataValues.imageUrl = composer.dataValues.imageUrl;
+      }
     }
     return cloudfrontfor(streamingChart);
   };
