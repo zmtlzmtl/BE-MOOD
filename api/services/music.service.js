@@ -29,9 +29,13 @@ class MusicService {
       musicContent,
       status,
       composer,
-      tag,
       musicUrl,
     });
+    const musicId = music.musicId;
+    const tagList = tag.split(",");
+    for (const tag of tagList) {
+      await this.musicRepository.createTag({ musicId, tag });
+    }
     return music;
   };
   findOneByMusicId = async ({ musicId }) => {
@@ -42,8 +46,6 @@ class MusicService {
         code: 400,
       });
     }
-    let fileName = music.fileName;
-    music.musicUrl = "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
     return music;
   };
   findAllByComposer = async ({ userId, composer }) => {

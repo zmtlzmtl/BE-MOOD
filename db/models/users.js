@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: "userId",
         foreignKey: "userId",
       });
-
+      this.hasMany(models.ReComments, {
+        sourceKey: "userId",
+        foreignKey: "userId",
+      });
       this.hasOne(models.UserInfos, {
         sourceKey: "userId",
         foreignKey: "userId",

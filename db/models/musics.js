@@ -63,14 +63,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      fileName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      tag: {
-        type: DataTypes.JSON,
-        allowNull: true,
-      },
     },
     {
       sequelize,

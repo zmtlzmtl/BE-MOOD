@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       nickname: {
-        //소셜로그인이 어떨지 모르겠네 migration도
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,

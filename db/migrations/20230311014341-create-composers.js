@@ -3,15 +3,10 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Composers", {
-      composerId: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
       composer: {
         type: Sequelize.STRING,
         allowNull: false,
+        primaryKey: true,
       },
       describe: {
         type: Sequelize.STRING,

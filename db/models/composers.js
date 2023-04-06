@@ -17,15 +17,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Composers.init(
     {
-      composerId: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-      },
       composer: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true,
       },
       describe: {
         type: DataTypes.STRING,

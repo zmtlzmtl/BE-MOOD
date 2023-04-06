@@ -7,8 +7,9 @@ const ReCommentRouter = require("./recomment.routes");
 const Composer = require("./composer.routes")
 const LikeRouter = require("./like.route");
 const ScrapRouter = require("./scrap.route");
+const MailRouter = require("./mail.routes")
 
-router.use("/", UserRouter);
+router.use("/", UserRouter, MailRouter);
 router.use("/review", ReCommentRouter);
 router.use("/music", [ScrapRouter, LikeRouter, ReviewRouter]);
 router.use("/", MusicRouter, Composer);

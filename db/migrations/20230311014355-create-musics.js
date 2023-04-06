@@ -21,10 +21,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      tag: {
-        type: Sequelize.JSON,
-        allowNull: true,
-      },
       status: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -37,14 +33,6 @@ module.exports = {
           key: "composer",
         },
         onDelete: "CASCADE",
-      },
-      fileName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      tag: {
-        type: Sequelize.STRING,
-        allowNull: true,
       },
     });
   },
