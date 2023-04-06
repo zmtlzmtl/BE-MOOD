@@ -131,7 +131,6 @@ class MusicRepository {
         "musicTitle",
         "musicContent",
         "musicUrl",
-        "tag",
       ],
     });
     return { composerInfo, composerSong, musicTitle };

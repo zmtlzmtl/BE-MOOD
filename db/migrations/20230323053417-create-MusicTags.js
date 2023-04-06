@@ -12,6 +12,11 @@ module.exports = {
       musicId: {
         allowNull: false,
         type: Sequelize.INTEGER,
+        references: {
+          model: "Musics",
+          key: "musicId",
+        },
+        onDelete: "CASCADE",
       },
       tagId: {
         allowNull: false,
