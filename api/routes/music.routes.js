@@ -7,7 +7,7 @@ const MusicController = require("../controllers/music.controller");
 const musicController = new MusicController();
 
 router.post("/music", multer({ storage }).any(), musicController.create);
-router.get("/music/search",statusMiddleWare, musicController.findByKeyword);
+router.get("/music/search", statusMiddleWare, musicController.findByKeyword);
 router.get("/music", statusMiddleWare, musicController.findAllByComposer);
 router.get("/music/mood/:x/:y", musicController.findAllByCoOrdinates);
 router.get("/music/survey/:x/:y", musicController.findAllByCoOrdinates);
@@ -19,6 +19,6 @@ router.post(
   musicController.sendStreaming
 );
 router.get("/music/:musicId", musicController.findOneByMusicId);
-router.patch("/music/:musicId/tag", musicController.tagMusicId)
+router.patch("/music/:musicId/tag", musicController.tagMusicId);
 
 module.exports = router;

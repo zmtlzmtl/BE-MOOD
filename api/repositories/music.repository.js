@@ -25,14 +25,14 @@ class MusicRepository {
     return music;
   };
   createTag = async ({ musicId, tag }) => {
-      const tags = await Tags.findOrCreate({
-        where: { tagName: tag.trim() },
-      });
-      await MusicTags.create({
-        musicId,
-        tagId: tags[0].tagId,
-      });
-    }
+    const tags = await Tags.findOrCreate({
+      where: { tagName: tag.trim() },
+    });
+    await MusicTags.create({
+      musicId,
+      tagId: tags[0].tagId,
+    });
+  };
   findOneByMusicId = async ({ musicId }) => {
     let music = await Musics.findOne({
       where: { musicId },

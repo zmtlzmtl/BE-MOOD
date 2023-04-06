@@ -46,8 +46,6 @@ class MusicService {
         code: 400,
       });
     }
-    let fileName = music.fileName;
-    music.musicUrl = "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
     return music;
   };
   findAllByComposer = async ({ userId, composer }) => {
