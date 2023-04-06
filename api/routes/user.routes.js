@@ -6,6 +6,8 @@ const authMiddleWare = require("../middlewares/auth.middleware");
 const validationMiddleWare = require("../middlewares/validation.middleware");
 const UserController = require("../controllers/user.controller");
 const userController = new UserController();
+const MailController = require("../controllers/mail.controller");
+const mailController = new MailController();
 
 router.post("/signup", validationMiddleWare.signUpCheck, userController.signUp);
 router.post("/signup/idcheck", userController.check);
@@ -29,5 +31,6 @@ router.patch(
   userController.changeNickname
 );
 router.delete("/user/delete", authMiddleWare, userController.deleteUser);
+router.get("/user/email", mailController.mailCheck);
 
 module.exports = router;
