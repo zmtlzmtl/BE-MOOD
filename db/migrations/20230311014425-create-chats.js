@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
       },
-      nickname: { //소셜로그인이 어떨지 모르겠네 model도
+      nickname: {
         type: Sequelize.STRING,
       },
       message: {

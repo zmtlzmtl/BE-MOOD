@@ -101,7 +101,6 @@ class UserRepository {
         "composer",
         "musicUrl",
         "musicId",
-        "fileName",
       ],
       limit: 10,
       offset: (page - 1) * 10,

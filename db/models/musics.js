@@ -9,10 +9,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.Users, {
-        targetKey: "userId",
-        foreignKey: "userId",
-      });
       this.hasMany(models.Reviews, {
         sourceKey: "musicId",
         foreignKey: "musicId",
@@ -47,10 +43,6 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      userId: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-      },
       musicTitle: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -70,14 +62,6 @@ module.exports = (sequelize, DataTypes) => {
       composer: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      fileName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      tag: {
-        type: DataTypes.JSON,
-        allowNull: true,
       },
     },
     {

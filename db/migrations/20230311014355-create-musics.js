@@ -9,15 +9,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Users",
-          key: "userId",
-        },
-        onDelete: "CASCADE",
-      },
       musicTitle: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -30,10 +21,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      tag: {
-        type: Sequelize.JSON,
-        allowNull: true,
-      },
       status: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -41,14 +28,11 @@ module.exports = {
       composer: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      fileName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      tag: {
-        type: Sequelize.STRING,
-        allowNull: true,
+        references: {
+          model: "Composers",
+          key: "composer",
+        },
+        onDelete: "CASCADE",
       },
     });
   },

@@ -14,46 +14,24 @@ const redisClient = require("../../db/config/redisClient");
 
 class MusicRepository {
   constructor() {}
-  create = async ({
-    musicTitle,
-    musicContent,
-    status,
-    composer,
-    musicUrl,
-    fileName,
-    tag,
-    condition,
-  }) => {
+  create = async ({ musicTitle, musicContent, status, composer, musicUrl }) => {
     let music = await Musics.create({
       musicTitle,
       musicContent,
       status,
       composer,
-      userId: 1,
       musicUrl,
-      fileName,
-      tag,
-      condition,
     });
-    if (tag) {
-      const tagList = tag.split(",");
-      for (const tag of tagList) {
-        const tags = await Tags.findOrCreate({
-          where: { tagName: tag.trim() },
-        });
-        const musicTags = await MusicTags.create({
-          musicId: music.musicId,
-          tagId: tags[0].tagId,
-        });
-        if (!musicTags) {
-          throw new makeError({
-            message: "태그 생성에 실패하였습니다.",
-            code: 400,
-          });
-        }
-      }
-    }
     return music;
+  };
+  createTag = async ({ musicId, tag }) => {
+    const tags = await Tags.findOrCreate({
+      where: { tagName: tag.trim() },
+    });
+    await MusicTags.create({
+      musicId,
+      tagId: tags[0].tagId,
+    });
   };
   findOneByMusicId = async ({ musicId }) => {
     let music = await Musics.findOne({
@@ -64,7 +42,6 @@ class MusicRepository {
         "composer",
         "musicUrl",
         "musicId",
-        "fileName",
       ],
     });
     return music;
@@ -124,7 +101,6 @@ class MusicRepository {
         "composer",
         "musicTitle",
         "musicContent",
-        "fileName",
         "musicUrl",
       ],
     });
@@ -154,9 +130,7 @@ class MusicRepository {
         "composer",
         "musicTitle",
         "musicContent",
-        "fileName",
         "musicUrl",
-        "tag",
       ],
     });
     return { composerInfo, composerSong, musicTitle };
@@ -169,7 +143,6 @@ class MusicRepository {
         "musicTitle",
         "composer",
         "musicUrl",
-        "fileName",
         [Sequelize.fn("COUNT", Sequelize.col("Likes.musicId")), "likesCount"],
       ],
       include: [
@@ -194,7 +167,6 @@ class MusicRepository {
         "musicTitle",
         "composer",
         "musicUrl",
-        "fileName",
         [
           Sequelize.fn("COUNT", Sequelize.col("Streamings.musicId")),
           "streamingCount",
@@ -221,7 +193,6 @@ class MusicRepository {
   };
 
   tagMusicId = async ({ musicId, tag }) => {
-    console.log(tag);
     const tagList = tag.split(",");
     for (const tag of tagList) {
       const tags = await Tags.findOrCreate({

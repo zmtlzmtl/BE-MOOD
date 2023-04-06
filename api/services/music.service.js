@@ -15,6 +15,29 @@ class MusicService {
   scrapRepository = new ScrapRepository();
   composerRepository = new ComposerRepository();
 
+  create = async ({
+    musicTitle,
+    musicContent,
+    status,
+    composer,
+    tag,
+    fileName,
+  }) => {
+    const musicUrl = "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
+    const music = await this.musicRepository.create({
+      musicTitle,
+      musicContent,
+      status,
+      composer,
+      musicUrl,
+    });
+    const musicId = music.musicId;
+    const tagList = tag.split(",");
+    for (const tag of tagList) {
+      await this.musicRepository.createTag({ musicId, tag });
+    }
+    return music;
+  };
   findOneByMusicId = async ({ musicId }) => {
     let music = await this.musicRepository.findOneByMusicId({ musicId });
     if (music == null) {
@@ -23,8 +46,6 @@ class MusicService {
         code: 400,
       });
     }
-    let fileName = music.fileName;
-    music.musicUrl = "https://d13uh5mnneeyhq.cloudfront.net/" + fileName;
     return music;
   };
   findAllByComposer = async ({ userId, composer }) => {
@@ -51,7 +72,7 @@ class MusicService {
       );
       music.music[i].dataValues.scrapStatus = !!scrap;
     }
-    return await cloudfrontfor(music);
+    return music;
   };
   mood = async ({ x, y }) => {
     let status;
@@ -185,7 +206,7 @@ class MusicService {
     }
 
     const musicData = await this.musicRepository.findOneByStatus(status);
-    await cloudfront(musicData);
+
     const composerImage = await this.composerRepository.getComposer({
       composer: musicData.dataValues.composer,
     });
@@ -254,9 +275,8 @@ class MusicService {
         })
       );
 
-      const processedLikeChart = cloudfrontfor(likeChart);
-      await this.musicRepository.setCache(processedLikeChart, cacheKey);
-      return processedLikeChart;
+      await this.musicRepository.setCache(likeChart, cacheKey);
+      return likeChart;
     }
   };
 
@@ -268,7 +288,7 @@ class MusicService {
       });
       streamingChart[i].dataValues.imageUrl = composer.dataValues.imageUrl;
     }
-    return cloudfrontfor(streamingChart);
+    return streamingChart;
   };
 
   sendStreaming = async (userId, musicId) => {
