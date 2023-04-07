@@ -51,6 +51,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api", router);
 
 app.use((error, req, res, next) => {
+  logger.error(error);
   console.error(error);
   return res
     .status(error.code || 500)
