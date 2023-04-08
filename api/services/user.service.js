@@ -223,8 +223,8 @@ class UserService {
     const musicList = await this.userRepository.findMusic(musicId, page);
     for (let i = 0; i < musicList.musicList.length; i++) {
       const musicId = musicList.musicList[i].dataValues.musicId;
-      const likeStatus = await this.likeRepository.findLike(userId, musicId);
-      musicList.musicList[i].dataValues.likeStatus = !!likeStatus;
+      const scrapStatus = await this.scrapRepository.findScrap(userId, musicId);
+      musicList.musicList[i].dataValues.scrapStatus = !!scrapStatus;
     }
     return {
       musicList: musicList.musicList,
@@ -241,8 +241,8 @@ class UserService {
     const musicList = await this.userRepository.findMusic(musicId, page);
     for (let i = 0; i < musicList.musicList.length; i++) {
       const musicId = musicList.musicList[i].dataValues.musicId;
-      const scrapStatus = await this.scrapRepository.findScrap(userId, musicId);
-      musicList.musicList[i].dataValues.scrapStatus = !!scrapStatus;
+      const likeStatus = await this.likeRepository.findLike(userId, musicId);
+      musicList.musicList[i].dataValues.likeStatus = !!likeStatus;
     }
     return {
       musicList: musicList.musicList,
