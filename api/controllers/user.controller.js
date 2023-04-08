@@ -171,7 +171,8 @@ class UserController {
   deleteUser = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
-      await this.userService.deleteUser(userId);
+      const { password } = req.body;
+      await this.userService.deleteUser(userId, password);
       res.status(200).json({ message: "회원탈퇴에 성공하였습니다" });
     } catch (error) {
       next(error);
@@ -186,24 +187,10 @@ class UserController {
     }
 
     try {
-      const decodedToken = jwt.verify(
-        refreshToken,
-        process.env.REFRESH_SECRET_KEY
+      const userId = await this.userService.findUserIdAndCheckUser(
+        refreshToken
       );
-      const userId = decodedToken.userId;
-
-      const user = await this.userService.findUser(userId);
-      if (!user) {
-        return res
-          .status(401)
-          .json({ message: "토큰에 해당하는 사용자가 존재하지 않습니다." });
-      }
-
-      const newAccessToken = jwt.sign(
-        { userId: userId },
-        process.env.ACCESS_SECRET_KEY,
-        { expiresIn: "1h" }
-      );
+      const newAccessToken = await this.userService.makeNewAccessToken(userId);
 
       return res.status(200).json({
         message: "새로운 토큰이 발급되었습니다,",

@@ -39,6 +39,16 @@ class UserRepository {
     return nickNameCheck;
   };
 
+  findById = async (id) => {
+    const user = await Users.findOne({where:{id}})
+    return user
+  }
+
+  findByNickname = async(nickname) => {
+    const user = await Users.findOne({where:{nickname}})
+    return user
+  }
+
   findByEmail = async (email) => {
     const user = await Users.findOne({
       where: {

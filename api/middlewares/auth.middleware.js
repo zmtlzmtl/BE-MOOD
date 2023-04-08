@@ -33,7 +33,7 @@ module.exports = async (req, res, next) => {
     res.clearCookie("authorization"); // 인증에 실패 할 경우 쿠키 삭제
 
     if (error instanceof jwt.TokenExpiredError) {
-      return res.status(401).json({
+      return res.status(419).json({
         message: "엑세스 토큰이 만료되었습니다.",
       });
     } else {
