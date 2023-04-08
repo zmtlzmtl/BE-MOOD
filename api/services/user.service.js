@@ -1,14 +1,17 @@
 const UserRepository = require("../repositories/user.repository");
 const MusicRepository = require("../repositories/music.repository");
+const LikeRepository = require("../repositories/like.repository");
+const ScrapRepository = require("../repositories/scrap.repository");
 const bcrypt = require("bcrypt");
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const { cloudfrontfor } = require("../middlewares/cloudfront.middleware");
 const { makeError } = require("../error");
 
 class UserService {
   userRepository = new UserRepository();
   musicRepository = new MusicRepository();
+  likeRepository = new LikeRepository();
+  scrapRepository = new ScrapRepository();
 
   signUp = async (id, password, confirm, email, nickname) => {
     if (password !== confirm || !confirm) {
@@ -17,7 +20,26 @@ class UserService {
         code: 400,
       });
     }
-    const findEmail = await this.userRepository.findByEmail(email);
+
+    const [findId, findNickname, findEmail] = await Promise.all([
+      this.userRepository.findById(id),
+      this.userRepository.findByNickname(nickname),
+      this.userRepository.findByEmail(email),
+    ]);
+
+    if (findId) {
+      throw new makeError({
+        message: "해당 ID는 사용할수 없습니다.",
+        code: 400,
+      });
+    }
+
+    if (findNickname) {
+      throw new makeError({
+        message: "해당 nickname은 사용할수 없습니다.",
+        code: 400,
+      });
+    }
     if (findEmail) {
       throw new makeError({
         message: "해당 E-mail은 사용할수 없습니다.",
@@ -25,7 +47,7 @@ class UserService {
       });
     }
 
-    const hashedPw = await bcrypt.hash(password, 10);
+    const hashedPw = bcrypt.hash(password, process.env.HASH_KEY);
     const user = await this.userRepository.signUp(
       id,
       hashedPw,
@@ -199,7 +221,11 @@ class UserService {
       musicId.push(likeList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
-    await cloudfrontfor(musicList.musicList);
+    for (let i = 0; i < musicList.musicList.length; i++) {
+      const musicId = musicList.musicList[i].dataValues.musicId;
+      const scrapStatus = await this.scrapRepository.findScrap(userId, musicId);
+      musicList.musicList[i].dataValues.scrapStatus = !!scrapStatus;
+    }
     return {
       musicList: musicList.musicList,
       musicCount: musicList.musicCount,
@@ -213,7 +239,11 @@ class UserService {
       musicId.push(scrapList[i].musicId);
     }
     const musicList = await this.userRepository.findMusic(musicId, page);
-    await cloudfrontfor(musicList.musicList);
+    for (let i = 0; i < musicList.musicList.length; i++) {
+      const musicId = musicList.musicList[i].dataValues.musicId;
+      const likeStatus = await this.likeRepository.findLike(userId, musicId);
+      musicList.musicList[i].dataValues.likeStatus = !!likeStatus;
+    }
     return {
       musicList: musicList.musicList,
       musicCount: musicList.musicCount,
@@ -253,14 +283,38 @@ class UserService {
     return;
   };
 
-  deleteUser = async (userId) => {
+  deleteUser = async (userId, password) => {
+    const login = await this.userRepository.login(id);
+    const isPasswordCorrect = await bcrypt.compare(password, login.password);
+    if (!isPasswordCorrect) {
+      throw new makeError({
+        message: "비밀번호가 일치하지 않습니다.",
+        code: 400,
+      });
+    }
     await this.userRepository.deleteUser(userId);
     return;
   };
 
-  findUser = async (userId) => {
-    const user = await this.userRepository.findUser(userId);
-    return user;
+  findUserIdAndCheckUser = async (refreshToken) => {
+    const User = jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY);
+    const finsUser = await this.userRepository.findUser(User.userId);
+    if (!finsUser) {
+      throw new makeError({
+        message: "토큰에 해당하는 사용자가 존재하지 않습니다.",
+        code: 401,
+      });
+    }
+    return User.userId;
+  };
+
+  makeNewAccessToken = async (userId) => {
+    const accessToken = jwt.sign(
+      { userId: userId },
+      process.env.ACCESS_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+    return accessToken;
   };
 
   changeNickname = async (userId, nickname) => {

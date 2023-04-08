@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
       res.locals.user = user;
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
-        res.status(403).send("엑세스 토큰이 만료되었습니다.");
+        res.status(419).send("엑세스 토큰이 만료되었습니다.");
         return;
       } else if (error instanceof jwt.JsonWebTokenError) {
         // JWT 형식이 아닌 경우 처리

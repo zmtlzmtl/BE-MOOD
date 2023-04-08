@@ -6,8 +6,11 @@ const { combine, timestamp, label, printf } = format;
 //* 로그 파일 저장 경로 → 루트 경로/logs 폴더
 const logDir = `${process.cwd()}/logs`;
 //* log 출력 포맷 정의 함수를 받아와 어떤 형태로 리턴해 줄것인지
-const logFormat = printf(({ level, message, label, timestamp }) => {
-  return `${timestamp} [${label}] ${level}: ${message}`; // 날짜 [시스템이름] 로그레벨 메세지
+const logFormat = printf(({ level, message, label, timestamp, stack }) => {
+  if (level === 'error' && stack) {
+    return `${timestamp} [${label}] ${level}: ${message}\n${stack}`; // date [systemname] loglevel message\nstack trace
+  }
+  return `${timestamp} [${label}] ${level}: ${message}`; // date [systemname] loglevel message
 });
 // Log level
 // error :0, warn :1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6
