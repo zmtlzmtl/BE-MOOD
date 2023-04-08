@@ -76,7 +76,7 @@ module.exports = (server) => {
           nickname: socket.nickname,
           message: data.message,
         });
-        socket.emit("receiveMessage", data); // 상대방한테
+        socket.emit("receiveMessage", data); // 상대방에게
         socket.to(socket.roomId).emit("receiveMessage", data); // 나한테
       });
       socket.on("disconnect", function () {
