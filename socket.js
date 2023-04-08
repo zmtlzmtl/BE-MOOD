@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { Users, Chats } = require("./db/models");
+const { Users, Userinfos, Chats } = require("./db/models");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -52,18 +52,24 @@ module.exports = (server) => {
         try {
           const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
           const userId = decodedToken.userId;
-          const user = await Users.findOne({ where: { userId: userId } });
-          socket.nickname = user.nickname;
-          if (!user) {
+          if (!userId) {
             return socket.emit(
               "onUser",
               "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
             );
-          } else if (!socket.nickname) return;
-          else {
-            socket.emit("onUser", socket.nickname);
-            socket.to(socket.roomId).emit("onUser", socket.nickname);
           }
+          const user = await Users.findOne({
+            where: { userId: userId },
+            include: [{ model: Userinfos, attributes: [profileUrl] }],
+          });
+          let image = user.Userinfos.profileUrl;
+          socket.nickname = user.nickname;
+
+          if (!image) {
+            image = "https://d13uh5mnneeyhq.cloudfront.net/beethoven.png";
+          }
+          socket.emit("onUser", socket.nickname);
+          socket.to(socket.roomId).emit("onUser", socket.nickname, image);
         } catch (err) {
           logger.error(err);
           socket.emit("onUser", err);
