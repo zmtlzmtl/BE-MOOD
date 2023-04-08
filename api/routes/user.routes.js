@@ -29,5 +29,6 @@ router.patch(
   userController.changeNickname
 );
 router.delete("/user/delete", authMiddleWare, userController.deleteUser);
+router.get("/user/email", userController.mailCheck);
 
 module.exports = router;
