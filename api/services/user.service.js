@@ -73,9 +73,7 @@ class UserService {
     const accessToken = jwt.sign(
       { userId: login.userId },
       process.env.ACCESS_SECRET_KEY,
-      {
-        expiresIn: "1h",
-      }
+      { expiresIn: "1h" }
     );
     const refreshToken = jwt.sign(
       { userId: login.userId },
@@ -296,8 +294,8 @@ class UserService {
     return;
   };
 
-  findUserIdAndCheckUser = async (refreshToken) => {
-    const User = jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY);
+  findUserIdAndCheckUser = async (token) => {
+    const User = jwt.verify(token, process.env.REFRESH_SECRET_KEY);
     const finsUser = await this.userRepository.findUser(User.userId);
     if (!finsUser) {
       throw new makeError({
