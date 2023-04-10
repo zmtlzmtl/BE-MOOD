@@ -64,10 +64,6 @@ class MusicService {
         music.music[i].musicId
       );
       music.music[i].dataValues.likeStatus = !!like;
-      const likeCount = await this.likeRepository.countLike(
-        music.music[i].musicId
-      );
-      music.music[i].dataValues.likeCount = likeCount;
       const scrap = await this.scrapRepository.findScrap(
         userId,
         music.music[i].musicId
