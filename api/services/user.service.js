@@ -47,7 +47,7 @@ class UserService {
       });
     }
 
-    const hashedPw = bcrypt.hash(password, process.env.HASH_KEY);
+    const hashedPw = await bcrypt.hash(password, Number(process.env.HASH_KEY));
     const user = await this.userRepository.signUp(
       id,
       hashedPw,
