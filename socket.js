@@ -52,24 +52,17 @@ module.exports = (server) => {
         try {
           const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
           const userId = decodedToken.userId;
-          if (!userId) {
-            return socket.emit(
-              "onUser",
-              "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
-            );
-          }
           const user = await Users.findOne({
             where: { userId: userId },
-            include: [{ model: Userinfos, attributes: [profileUrl] }],
+            include: [{ model: Userinfos, attributes: [] }],
+            attributes: [Sequelize.col("Userinfos.profileUrl"), "profileUrl"],
           });
-          let image = user.Userinfos.profileUrl;
+          socket.image = user.profileUrl;
           socket.nickname = user.nickname;
-
-          if (!image) {
-            image = "https://d13uh5mnneeyhq.cloudfront.net/beethoven.png";
-          }
-          socket.emit("onUser", socket.nickname);
-          socket.to(socket.roomId).emit("onUser", socket.nickname, image);
+          socket.emit("onUser", socket.nickname, socket.image);
+          socket
+            .to(socket.roomId)
+            .emit("onUser", socket.nickname, socket.image);
         } catch (err) {
           logger.error(err);
           socket.emit("onUser", err);
