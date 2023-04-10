@@ -164,6 +164,9 @@ class UserService {
 
   makeTokenAndUserInfo = async (userData) => {
     const email = userData.email;
+    if (!email) {
+      throw new makeError({ message: "이메일은 필수값입니다.", code: 400 });
+    }
     const nickname = userData.nickname;
     const profile_image = userData.profile_image;
 
