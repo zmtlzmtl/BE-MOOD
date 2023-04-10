@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { Users, Userinfos, Chats } = require("./db/models");
+const { Users, Chats } = require("./db/models");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -31,10 +31,6 @@ module.exports = (server) => {
         socket.to(socket.roomId).emit("userList", nicknames);
       });
       socket.on("scroll", async function (index) {
-        if (!socket.roomId) {
-          console.log("룸 요청이 들어오지 않았습니다.");
-          return;
-        }
         if (index >= 2) {
           const chats = await Chats.findAll({
             where: { roomId: socket.roomId },
@@ -52,17 +48,18 @@ module.exports = (server) => {
         try {
           const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
           const userId = decodedToken.userId;
-          const user = await Users.findOne({
-            where: { userId: userId },
-            include: [{ model: Userinfos, attributes: [] }],
-            attributes: [Sequelize.col("Userinfos.profileUrl"), "profileUrl"],
-          });
-          socket.image = user.profileUrl;
+          const user = await Users.findOne({ where: { userId: userId } });
           socket.nickname = user.nickname;
-          socket.emit("onUser", socket.nickname, socket.image);
-          socket
-            .to(socket.roomId)
-            .emit("onUser", socket.nickname, socket.image);
+          if (!user) {
+            return socket.emit(
+              "onUser",
+              "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
+            );
+          } else if (!socket.nickname) return;
+          else {
+            socket.emit("onUser", socket.nickname);
+            socket.to(socket.roomId).emit("onUser", socket.nickname);
+          }
         } catch (err) {
           logger.error(err);
           socket.emit("onUser", err);
@@ -75,7 +72,7 @@ module.exports = (server) => {
           nickname: socket.nickname,
           message: data.message,
         });
-        socket.emit("receiveMessage", data); // 상대방에게
+        socket.emit("receiveMessage", data); // 상대방한테
         socket.to(socket.roomId).emit("receiveMessage", data); // 나한테
       });
       socket.on("disconnect", function () {
