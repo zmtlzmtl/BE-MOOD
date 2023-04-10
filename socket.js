@@ -47,11 +47,7 @@ module.exports = (server) => {
       });
       socket.on("newUser", async (token) => {
         try {
-          const decodedToken = jwt.verify(
-            token,
-            process.env.ACCESS_SECRET_KEY,
-            { ignoreExpiration: true }
-          );
+          const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
           const userId = decodedToken.userId;
           const user = await Users.findOne({
             where: { userId: userId },
@@ -69,19 +65,35 @@ module.exports = (server) => {
           socket.emit("onUser", data);
           socket.to(socket.roomId).emit("onUser", data);
         } catch (err) {
+          socket.emit("error", {
+            message: "엑세스 토큰이 만료되었습니다.",
+            code: 419,
+          });
           logger.error(err);
           socket.emit("onUser", err);
         }
       });
       socket.on("sendMessage", function (data) {
-        data.nickname = socket.nickname;
-        Chats.create({
-          roomId: socket.roomId,
-          nickname: socket.nickname,
-          message: data.message,
-        });
-        socket.emit("receiveMessage", data); // 상대방한테
-        socket.to(socket.roomId).emit("receiveMessage", data); // 나한테
+        try {
+          jwt.verify(data.token, process.env.ACCESS_SECRET_KEY);
+          data.nickname = socket.nickname;
+          Chats.create({
+            roomId: socket.roomId,
+            nickname: socket.nickname,
+            message: data.message,
+          });
+          socket.emit("receiveMessage", data); // 상대방한테
+          socket.to(socket.roomId).emit("receiveMessage", data); // 나한테
+        } catch (err) {
+          if (err instanceof jwt.TokenExpiredError) {
+            socket.emit("error", {
+              message: "엑세스 토큰이 만료되었습니다.",
+              code: 419,
+            });
+            logger.error(err);
+            socket.emit("onUser", err);
+          }
+        }
       });
       socket.on("disconnect", function () {
         socket.emit("offUser", socket.nickname);
