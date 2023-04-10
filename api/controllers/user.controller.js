@@ -31,16 +31,6 @@ class UserController {
       const user = await this.userService.login(id, password);
       const { nickname, accessToken, refreshToken } = user;
 
-      // res.cookie("accessToken", `Bearer ${accessToken}`, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === "production",
-      //   sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-      // });
-      // res.cookie("refreshToken", `Bearer ${refreshToken}`, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === "production",
-      //   sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-      // });
       res.status(200).json({
         message: "로그인에 성공하였습니다.",
         accessToken,
@@ -182,16 +172,18 @@ class UserController {
   };
 
   refresh = async (req, res, next) => {
-    const { refreshToken } = req.body;
+    const { authorization } = req.headers;
+    const [tokenType, token] = (authorization ?? "").split(" ");
 
-    if (!refreshToken) {
-      return res.status(400).json({ message: "리프레시 토큰이 없습니다." });
+    if (tokenType !== "Bearer" || !token) {
+      return res.status(401).json({
+        message:
+          "리프래시 토큰 타입이 일치하지 않거나, 토큰이 존재하지 않습니다.",
+      });
     }
 
     try {
-      const userId = await this.userService.findUserIdAndCheckUser(
-        refreshToken
-      );
+      const userId = await this.userService.findUserIdAndCheckUser(token);
       const newAccessToken = await this.userService.makeNewAccessToken(userId);
 
       return res.status(200).json({
