@@ -46,7 +46,11 @@ module.exports = (server) => {
       });
       socket.on("newUser", async (token) => {
         try {
-          const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
+          const decodedToken = jwt.verify(
+            token,
+            process.env.ACCESS_SECRET_KEY,
+            { ignoreExpiration: true }
+          );
           const userId = decodedToken.userId;
           const user = await Users.findOne({ where: { userId: userId } });
           socket.nickname = user.nickname;
