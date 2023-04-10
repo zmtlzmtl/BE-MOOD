@@ -108,7 +108,16 @@ class MusicRepository {
         "musicTitle",
         "musicContent",
         "musicUrl",
+        [Sequelize.fn("COUNT", Sequelize.col("Likes.musicId")), "likesCount"],
       ],
+      include: [
+        {
+          model: Likes,
+          attributes: [],
+          duplicating: false,
+        },
+      ],
+      group: ["Musics.musicId"],
     });
 
     const musicTitle = await Musics.findAll({
@@ -122,6 +131,11 @@ class MusicRepository {
             },
           ],
           attributes: [],
+        },
+        {
+          model: Likes,
+          attributes: [],
+          duplicating: false,
         },
       ],
       order: [["musicTitle", "DESC"]],
@@ -137,7 +151,9 @@ class MusicRepository {
         "musicTitle",
         "musicContent",
         "musicUrl",
+        [Sequelize.fn("COUNT", Sequelize.col("Likes.musicId")), "likesCount"],
       ],
+      group: ["Musics.musicId"],
     });
     return { composerInfo, composerSong, musicTitle };
   };

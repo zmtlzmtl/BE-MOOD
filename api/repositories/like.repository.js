@@ -5,10 +5,6 @@ class LikeRepository {
     const findLike = await Likes.findOne({ where: { userId, musicId } });
     return findLike;
   };
-  countLike = async (musicId) => {
-    const likeCount = await Likes.count({ where: { musicId } });
-    return likeCount;
-  };
   makeLike = async (userId, musicId) => {
     await Likes.create({ userId, musicId });
     return;
