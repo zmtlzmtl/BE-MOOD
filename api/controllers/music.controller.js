@@ -50,8 +50,12 @@ class MusicController {
   };
   findAllByCoOrdinates = async (req, res, next) => {
     try {
+      if (!res.locals.user || typeof res.locals.user.userId !== "number") {
+        res.locals.user = { userId: null };
+      }
+      const { userId } = res.locals.user;
       const { x, y } = req.params;
-      const mood = await this.musicService.mood({ x, y });
+      const mood = await this.musicService.mood({ userId, x, y });
       return res
         .status(200)
         .json({ message: mood.message, music: mood.musicData });
