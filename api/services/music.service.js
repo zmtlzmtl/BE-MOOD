@@ -1,6 +1,7 @@
 const musicRepository = require("../repositories/music.repository");
 const LikeRepository = require("../repositories/like.repository");
 const ScrapRepository = require("../repositories/scrap.repository");
+const UserRepository = require("../repositories/user.repository");
 const ComposerRepository = require("../repositories/composer.repository");
 const { makeError } = require("../error");
 const {
@@ -14,6 +15,7 @@ class MusicService {
   likeRepository = new LikeRepository();
   scrapRepository = new ScrapRepository();
   composerRepository = new ComposerRepository();
+  userRepository = new UserRepository();
 
   create = async ({
     musicTitle,
@@ -74,7 +76,7 @@ class MusicService {
     }
     return music;
   };
-  mood = async ({ x, y }) => {
+  mood = async ({ userId, x, y }) => {
     let status;
     let message;
     if (x >= 0 && x <= 25 && y >= 0 && y <= 25) {
@@ -204,14 +206,16 @@ class MusicService {
       status = 4;
       message = "당신은 기쁨을 느끼고 계시네요!";
     }
-
-    const musicData = await this.musicRepository.findOneByStatus(status);
-
-    const composerImage = await this.composerRepository.getComposer({
-      composer: musicData.dataValues.composer,
-    });
-    musicData.dataValues.imageUrl = composerImage.dataValues.imageUrl;
-    return { musicData, message };
+    if (!userId) {
+      const musicData = await this.musicRepository.findOneByStatus(status);
+      return { musicData, message };
+    } else {
+      const musicData = await this.musicRepository.findOneByStatus(status);
+      const date = `${new Date().getMonth() + 1}월${new Date().getDate()}일`;
+      const newMassage = `${date}` + message;
+      await this.userRepository.updateUserStatus(userId, newMassage);
+      return { musicData, message };
+    }
   };
 
   findByKeyword = async ({ userId, keyword }) => {
@@ -268,10 +272,6 @@ class MusicService {
         likeChart.map(async (item) => {
           const Like = await this.likeRepository.findLike(userId, item.musicId);
           item.dataValues.likeStatus = !!Like;
-          const composer = await this.composerRepository.getComposer({
-            composer: item.dataValues.composer,
-          });
-          item.dataValues.imageUrl = composer.dataValues.imageUrl;
         })
       );
 
@@ -282,12 +282,6 @@ class MusicService {
 
   streamingChart = async () => {
     const streamingChart = await this.musicRepository.streamingChart();
-    for (let i = 0; i < streamingChart.length; i++) {
-      const composer = await this.composerRepository.getComposer({
-        composer: streamingChart[i].dataValues.composer,
-      });
-      streamingChart[i].dataValues.imageUrl = composer.dataValues.imageUrl;
-    }
     return streamingChart;
   };
 

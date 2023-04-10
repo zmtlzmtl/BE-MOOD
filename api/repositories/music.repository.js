@@ -69,14 +69,20 @@ class MusicRepository {
     const mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
       where: { status },
-      // include: [
-      //   {
-      //     model: Composers,
-      //     as: "Composer",
-      //     targetKey: "composer",
-      //     attributes: ["imageUrl"],
-      //   },
-      // ],
+      attributes: [
+        "musicId",
+        "musicTitle",
+        "musicContent",
+        "musicUrl",
+        "composer",
+        [Sequelize.col("Composer.imageUrl"), "imageUrl"],
+      ],
+      include: [
+        {
+          model: Composers,
+          attributes: [],
+        },
+      ],
     });
     return mood;
   };
@@ -144,12 +150,17 @@ class MusicRepository {
         "composer",
         "musicUrl",
         [Sequelize.fn("COUNT", Sequelize.col("Likes.musicId")), "likesCount"],
+        [Sequelize.col("Composer.imageUrl"), "imageUrl"],
       ],
       include: [
         {
           model: Likes,
           attributes: [],
           duplicating: false,
+        },
+        {
+          model: Composers,
+          attributes: [],
         },
       ],
       group: ["Musics.musicId"],
@@ -171,12 +182,17 @@ class MusicRepository {
           Sequelize.fn("COUNT", Sequelize.col("Streamings.musicId")),
           "streamingCount",
         ],
+        [Sequelize.col("Composer.imageUrl"), "imageUrl"],
       ],
       include: [
         {
           model: Streamings,
           attributes: [],
           duplicating: false,
+        },
+        {
+          model: Composers,
+          attributes: [],
         },
       ],
       group: ["Musics.musicId"],
