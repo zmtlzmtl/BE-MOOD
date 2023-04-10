@@ -54,7 +54,7 @@ module.exports = (server) => {
           const userId = decodedToken.userId;
           const user = await Users.findOne({
             where: { userId: userId },
-            include: [{ model: Userinfos, attributes: ["profileUrl"] }],
+            include: [{ model: Userinfos, attributes: [] }],
             attributes: [Sequelize.col("Userinfos.profileUrl"), "profileUrl"],
           });
           socket.image = user.profileUrl;
