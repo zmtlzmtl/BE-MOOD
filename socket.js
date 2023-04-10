@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
-const { Users, Chats } = require("./db/models");
+const { Users, UserInfos, Chats } = require("./db/models");
+const Sequelize = require("sequelize");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -52,18 +53,21 @@ module.exports = (server) => {
             { ignoreExpiration: true }
           );
           const userId = decodedToken.userId;
-          const user = await Users.findOne({ where: { userId: userId } });
+          const user = await Users.findOne({
+            where: { userId: userId },
+            attributes: [
+              "userId",
+              "nickname",
+              [Sequelize.col("UserInfo.profileUrl"), "profileUrl"],
+            ],
+            include: [{ model: UserInfos, attributes: [] }],
+            raw: true,
+          });
           socket.nickname = user.nickname;
-          if (!user) {
-            return socket.emit(
-              "onUser",
-              "message: 토큰에 해당하는 사용자가 존재하지 않습니다."
-            );
-          } else if (!socket.nickname) return;
-          else {
-            socket.emit("onUser", socket.nickname);
-            socket.to(socket.roomId).emit("onUser", socket.nickname);
-          }
+          socket.image = user.profileUrl;
+          const data = { nickname: socket.nickname, image: socket.image };
+          socket.emit("onUser", data);
+          socket.to(socket.roomId).emit("onUser", data);
         } catch (err) {
           logger.error(err);
           socket.emit("onUser", err);
