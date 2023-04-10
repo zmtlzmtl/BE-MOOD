@@ -207,7 +207,7 @@ class MusicService {
       return { musicData, message };
     } else {
       const musicData = await this.musicRepository.findOneByStatus(status);
-      const date = `${new Date().getMonth() + 1}월${new Date().getDate()}일`;
+      const date = `${new Date().getMonth() + 1}월${new Date().getDate()}일 `;
       const newMassage = `${date}` + message;
       await this.userRepository.updateUserStatus(userId, newMassage);
       return { musicData, message };
