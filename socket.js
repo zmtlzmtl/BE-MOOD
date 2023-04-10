@@ -32,17 +32,19 @@ module.exports = (server) => {
         socket.to(socket.roomId).emit("userList", nicknames);
       });
       socket.on("scroll", async function (index) {
-        if (index >= 2) {
-          const chats = await Chats.findAll({
-            where: { roomId: socket.roomId },
-            order: [["chatId", "DESC"]],
-            limit: 30,
-            offset: (index - 1) * 30,
-          });
-          const findRoomChats = chats.reverse();
-          return socket.emit("plusScroll", findRoomChats);
-        } else {
-          return;
+        if (socket.roomId) {
+          if (index >= 2) {
+            const chats = await Chats.findAll({
+              where: { roomId: socket.roomId },
+              order: [["chatId", "DESC"]],
+              limit: 30,
+              offset: (index - 1) * 30,
+            });
+            const findRoomChats = chats.reverse();
+            return socket.emit("plusScroll", findRoomChats);
+          } else {
+            return;
+          }
         }
       });
       socket.on("newUser", async (token) => {
