@@ -52,6 +52,22 @@ class MusicRepository {
     });
     let music = await Musics.findAll({
       where: { composer: composer.composer.split(" ").slice(-1) },
+      attributes: [
+        "musicTitle",
+        "musicContent",
+        "composer",
+        "musicUrl",
+        "musicId",
+        [Sequelize.fn("COUNT", Sequelize.col("Likes.musicId")), "likesCount"],
+      ],
+      include: [
+        {
+          model: Likes,
+          attributes: [],
+          duplicating: false,
+        },
+      ],
+      group: ["Musics.musicId"],
     });
     return { composerInfo, music };
   };
