@@ -14,6 +14,7 @@ class UserRepository {
     const makeUser = await Users.create({ id, password, email, nickname });
     await UserInfos.create({
       userId: makeUser.userId,
+      profileUrl: "https://d13uh5mnneeyhq.cloudfront.net/Heart_fill_white copy.png",
     });
     return makeUser;
   };
