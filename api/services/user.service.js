@@ -69,6 +69,7 @@ class UserService {
         code: 400,
       });
     }
+    const userInfo = await this.userRepository.userInfo(login.userId);
 
     const accessToken = jwt.sign(
       { userId: login.userId },
@@ -80,7 +81,12 @@ class UserService {
       process.env.REFRESH_SECRET_KEY,
       { expiresIn: "1d" }
     );
-    return { nickname: login.nickname, accessToken, refreshToken };
+    return {
+      nickname: login.nickname,
+      profileUrl: userInfo.profileUrl,
+      accessToken,
+      refreshToken,
+    };
   };
 
   idCheck = async (id) => {
@@ -285,7 +291,7 @@ class UserService {
   };
 
   deleteUser = async (userId, password) => {
-    const login = await this.userRepository.login(id);
+    const login = await this.userRepository.findUser(userId);
     const isPasswordCorrect = await bcrypt.compare(password, login.password);
     if (!isPasswordCorrect) {
       throw new makeError({
@@ -323,7 +329,11 @@ class UserService {
     if (user.nickname === nickname) {
       throw makeError({ message: "현재 닉네임과 같습니다.", code: 400 });
     }
-    await this.userRepository.changeNickname(userId, nickname);
+    await this.userRepository.changeNickname({
+      userId,
+      nickname,
+      beforeNickname: user.nickname,
+    });
     return;
   };
 }

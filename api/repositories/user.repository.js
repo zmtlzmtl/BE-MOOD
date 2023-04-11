@@ -3,6 +3,7 @@ const {
   UserInfos,
   Likes,
   Scraps,
+  Chats,
   Musics,
   Reviews,
   ReComments,
@@ -14,7 +15,8 @@ class UserRepository {
     const makeUser = await Users.create({ id, password, email, nickname });
     await UserInfos.create({
       userId: makeUser.userId,
-      profileUrl: "https://d13uh5mnneeyhq.cloudfront.net/Heart_fill_white copy.png",
+      profileUrl:
+        "https://d13uh5mnneeyhq.cloudfront.net/Heart_fill_white copy.png",
     });
     return makeUser;
   };
@@ -126,8 +128,9 @@ class UserRepository {
     return;
   };
 
-  changeNickname = async (userId, nickname) => {
+  changeNickname = async ({ userId, nickname, beforeNickname }) => {
     await Users.update({ nickname }, { where: { userId } });
+    await Chats.update({ nickname }, { where: { nickname: beforeNickname } });
     return;
   };
 

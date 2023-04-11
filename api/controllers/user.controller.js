@@ -29,13 +29,14 @@ class UserController {
     const { id, password } = req.body;
     try {
       const user = await this.userService.login(id, password);
-      const { nickname, accessToken, refreshToken } = user;
+      const { nickname, profileUrl, accessToken, refreshToken } = user;
 
       res.status(200).json({
         message: "로그인에 성공하였습니다.",
         accessToken,
         refreshToken,
         nickname,
+        profileUrl,
       });
     } catch (error) {
       next(error);
