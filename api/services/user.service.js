@@ -74,7 +74,7 @@ class UserService {
     const accessToken = jwt.sign(
       { userId: login.userId },
       process.env.ACCESS_SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "3s" }
     );
     const refreshToken = jwt.sign(
       { userId: login.userId },
@@ -212,6 +212,7 @@ class UserService {
       access_token: access_token,
       refresh_token: refresh_token,
       nickname: user.nickname,
+      profileUrl: user.profileUrl,
     };
   };
 

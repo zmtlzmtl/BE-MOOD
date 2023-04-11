@@ -19,7 +19,7 @@ class ReviewRepository {
           attributes: ["nickname"],
         },
       ],
-      order: [["createdAt", "ASC"]],
+      order: [["createdAt", "DESC"]],
     });
     return result;
   };
