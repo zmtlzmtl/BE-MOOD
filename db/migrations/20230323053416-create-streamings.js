@@ -16,7 +16,7 @@ module.exports = {
           model: "Users",
           key: "userId",
         },
-        onDelete: "NO ACTION",
+        onDelete: "CASCADE",
       },
       musicId: {
         allowNull: false,
