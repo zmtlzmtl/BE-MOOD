@@ -64,14 +64,15 @@ class UserController {
       const { code } = req.body;
       const authToken = await this.userService.getKakaoTokens(code);
       const userData = await this.userService.getUserInfo(authToken);
-      const { access_token, refresh_token, nickname } =
+      const { access_token, refresh_token, nickname, profileUrl } =
         await this.userService.makeTokenAndUserInfo(userData);
 
       res.status(200).send({
         message: "카카오 로그인 성공",
-        access_token: access_token,
-        refresh_token: refresh_token,
+        accessToken: access_token,
+        refreshToken: refresh_token,
         nickname,
+        profileUrl,
       });
     } catch (error) {
       next(error);

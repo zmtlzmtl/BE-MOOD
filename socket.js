@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { Users, UserInfos, Chats } = require("./db/models");
+const { Users, UserInfos, Chats, Rooms } = require("./db/models");
 const Sequelize = require("sequelize");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -18,18 +18,13 @@ module.exports = (server) => {
       socket.on("roomId", async function (roomId) {
         socket.roomId = roomId;
         socket.join(roomId);
-        // roomId가 등록되고 나서 findRoomChats를 실행합니다.
         const chats = await Chats.findAll({
           where: { roomId: socket.roomId },
           order: [["chatId", "DESC"]],
           limit: 30,
         });
         const findRoomChats = chats.reverse();
-        const roomSockets = await io.in(socket.roomId).fetchSockets();
-        const nicknames = roomSockets.map((socket) => socket.nickname);
         socket.emit("receive", findRoomChats);
-        socket.emit("userList", nicknames);
-        socket.to(socket.roomId).emit("userList", nicknames);
       });
       socket.on("scroll", async function (index) {
         if (socket.roomId) {
@@ -63,9 +58,20 @@ module.exports = (server) => {
           });
           socket.nickname = user.nickname;
           socket.image = user.profileUrl;
-          const data = { nickname: socket.nickname, image: socket.image };
-          socket.emit("onUser", data);
-          socket.to(socket.roomId).emit("onUser", data);
+          await Rooms.create({
+            roomId: socket.roomId,
+            nickname: socket.nickname,
+            profileUrl: socket.image,
+          });
+          const profile = await Rooms.findAll({
+            where: { roomId: socket.roomId },
+            attributes: [
+              [Sequelize.fn("DISTINCT", Sequelize.col("nickname")), "nickname"],
+              "profileUrl",
+            ],
+          });
+          socket.emit("userList", profile);
+          socket.to(socket.roomId).emit("userList", profile);
         } catch (err) {
           socket.emit("error", {
             message: "엑세스 토큰이 만료되었습니다.",
@@ -75,11 +81,11 @@ module.exports = (server) => {
           socket.emit("onUser", err);
         }
       });
-      socket.on("sendMessage", function (data) {
+      socket.on("sendMessage", async (data) => {
         try {
           jwt.verify(data.token, process.env.ACCESS_SECRET_KEY);
           data.nickname = socket.nickname;
-          Chats.create({
+          await Chats.create({
             roomId: socket.roomId,
             nickname: socket.nickname,
             message: data.message,
@@ -97,9 +103,28 @@ module.exports = (server) => {
           }
         }
       });
-      socket.on("disconnect", function () {
-        socket.emit("offUser", socket.nickname);
-        socket.to(socket.roomId).emit("offUser", socket.nickname);
+      socket.on("getout", async (token) => {
+        try {
+          const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
+          const userId = decodedToken.userId;
+          const user = await Users.findOne({
+            where: { userId: userId },
+          });
+          if (user.nickname) {
+            await Rooms.destroy({ where: { nickname: user.nickname } });
+          }
+          socket.emit("offUser", user.nickname);
+          socket.to(socket.roomId).emit("offUser", user.nickname);
+        } catch (err) {
+          if (err instanceof jwt.TokenExpiredError) {
+            socket.emit("error", {
+              message: "엑세스 토큰이 만료되었습니다.",
+              code: 419,
+            });
+            logger.error(err);
+            socket.emit("onUser", err);
+          }
+        }
       });
     } catch (err) {
       logger.error(err);
