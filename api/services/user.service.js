@@ -175,19 +175,18 @@ class UserService {
     }
     const nickname = userData.nickname;
     const profile_image = userData.profile_image;
+    let user;
 
     const findUser = await this.userRepository.findByEmail(email);
-
     if (!findUser) {
-      await this.userRepository.autoSocialSignup(
+      user = await this.userRepository.autoSocialSignup(
         email,
         nickname,
         profile_image
       );
+    } else {
+      user = await this.userRepository.userInfo(findUser.userId);
     }
-
-    const user = await this.userRepository.findByEmail(email);
-
     const access_token = jwt.sign(
       {
         userId: user.userId,
@@ -207,7 +206,6 @@ class UserService {
         expiresIn: "1d",
       }
     );
-
     return {
       access_token: access_token,
       refresh_token: refresh_token,

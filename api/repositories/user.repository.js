@@ -76,10 +76,10 @@ class UserRepository {
     });
 
     return {
-      user_id: auto_signup_kakao_user.user_id,
+      userId: auto_signup_kakao_user.user_id,
       email: auto_signup_kakao_user.email,
       nickname: auto_signup_kakao_user.nickname,
-      profile_image: auto_signup_kakao_user_image.src,
+      profileUrl: auto_signup_kakao_user_image.profileUrl,
     };
   };
 
