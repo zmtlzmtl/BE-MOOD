@@ -235,6 +235,7 @@ class UserController {
   mailSavePassword = async (req, res, next) => {
     try {
       const { email } = req.body;
+      console.log(email)
       const password = Math.floor(Math.random() * 1000000); // 6자리 랜덤한 비밀번호 생성
       await this.userService.savePassword({ email, password });
       let mailOptions = {
