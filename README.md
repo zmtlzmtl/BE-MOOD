@@ -18,6 +18,7 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 
 ### ⏳ 프로젝트 타임라인
 
+- 3월 10일 실전 프로젝트 시작 4월 21일 최종 발표
 - 4월 12일 배포 & 마케팅 & UT 시작
 
 <hr/>
@@ -81,8 +82,10 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 ![Amazon CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-Latest-orange)
 ![Amazon CodeDeploy](https://img.shields.io/badge/Amazon%20CodeDeploy-Latest-orange)
 <br>
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+<br>
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
-![sequelize](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Sequelize](https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
 <br>
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 <br>
