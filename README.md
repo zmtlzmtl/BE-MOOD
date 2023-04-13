@@ -77,9 +77,9 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 <br>
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
-![Amazon S3](https://img.shields.io/badge/Amazon%20S3-Latest-orange)]
+![Amazon S3](https://img.shields.io/badge/Amazon%20S3-Latest-orange)
 ![Amazon CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-Latest-orange)
-![AWS CodeDeploy](https://img.shields.io/badge/AWS%20CodeDeploy-Latest-orange)]
+![AWS CodeDeploy](https://img.shields.io/badge/AWS%20CodeDeploy-Latest-orange)
 <br>
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
 ![Sequelize](https://img.shields.io/badge/Sequelize-6.6.5-blue.svg)
