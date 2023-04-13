@@ -124,6 +124,21 @@ class UserRepository {
     return { musicList, musicCount };
   };
 
+  myMusic = async (musicId) => {
+    const musicList = await Musics.findAll({
+      where: { musicId },
+      attributes: [
+        "musicTitle",
+        "musicContent",
+        "composer",
+        "musicUrl",
+        "musicId",
+      ],
+      order: [["musicId", "DESC"]],
+    });
+    return musicList;
+  };
+
   uploadProfile = async (userId, fileName) => {
     await UserInfos.update({ profileUrl: fileName }, { where: { userId } });
     return;
