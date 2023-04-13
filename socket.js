@@ -100,6 +100,13 @@ module.exports = (server) => {
         try {
           jwt.verify(data.token, process.env.ACCESS_SECRET_KEY);
           data.nickname = socket.nickname;
+          if (!data.message || !data.message.trim()) {
+            socket.emit("error", {
+              message: "메시지가 비어 있거나 공백 문자만 포함되어 있습니다.",
+              code: 400,
+            });
+            return;
+          }
           await Chats.create({
             roomId: socket.roomId,
             nickname: socket.nickname,
