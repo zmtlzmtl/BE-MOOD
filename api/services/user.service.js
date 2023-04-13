@@ -335,6 +335,26 @@ class UserService {
     });
     return;
   };
+  savePassword = async ({ email, password }) => {
+    const hashedPw = await bcrypt.hash(
+      String(password),
+      Number(process.env.HASH_KEY)
+    );
+    await this.userRepository.savePassword({ email, hashedPw });
+    return;
+  };
+  mailCheck = async ({ email, password }) => {
+    const check = await this.userRepository.mailCheck({ email });
+    const isPasswordCorrect = await bcrypt.compare(password, check.password);
+    if (isPasswordCorrect) {
+      return { message: "이메일 인증이 확인되었습니다." };
+    } else {
+      throw new makeError({
+        message: "이메일 인증에 실패하였습니다.",
+        code: 401,
+      });
+    }
+  };
 }
 
 module.exports = UserService;

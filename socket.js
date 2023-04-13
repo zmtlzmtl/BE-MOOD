@@ -44,6 +44,7 @@ module.exports = (server) => {
       });
       socket.on("newUser", async (token) => {
         try {
+          if (token) {
           const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
           const userId = decodedToken.userId;
           const user = await Users.findOne({
@@ -58,11 +59,13 @@ module.exports = (server) => {
           });
           socket.nickname = user.nickname;
           socket.image = user.profileUrl;
+
           await Rooms.create({
             roomId: socket.roomId,
             nickname: socket.nickname,
             profileUrl: socket.image,
           });
+
           const profile = await Rooms.findAll({
             where: { roomId: socket.roomId },
             attributes: [
@@ -72,6 +75,18 @@ module.exports = (server) => {
           });
           socket.emit("userList", profile);
           socket.to(socket.roomId).emit("userList", profile);
+          } else {
+            const profile = await Rooms.findAll({
+              where: { roomId: socket.roomId },
+              attributes: [
+                [Sequelize.fn("DISTINCT", Sequelize.col("nickname")), "nickname"],
+                "profileUrl",
+              ],
+            });
+            socket.emit("userList", profile);
+            socket.to(socket.roomId).emit("userList", profile);
+          }
+          
         } catch (err) {
           socket.emit("error", {
             message: "엑세스 토큰이 만료되었습니다.",
@@ -99,31 +114,20 @@ module.exports = (server) => {
               code: 419,
             });
             logger.error(err);
-            socket.emit("onUser", err);
+            socket.emit("sendMessage", err);
           }
         }
       });
-      socket.on("getout", async (token) => {
+      socket.on("disconnect", async () => {
         try {
-          const decodedToken = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
-          const userId = decodedToken.userId;
-          const user = await Users.findOne({
-            where: { userId: userId },
-          });
-          if (user.nickname) {
-            await Rooms.destroy({ where: { nickname: user.nickname } });
+          if (socket.nickname) {
+            await Rooms.destroy({ where: { nickname: socket.nickname } });
           }
-          socket.emit("offUser", user.nickname);
-          socket.to(socket.roomId).emit("offUser", user.nickname);
+          socket.emit("offUser", socket.nickname);
+          socket.to(socket.roomId).emit("offUser", socket.nickname);
         } catch (err) {
-          if (err instanceof jwt.TokenExpiredError) {
-            socket.emit("error", {
-              message: "엑세스 토큰이 만료되었습니다.",
-              code: 419,
-            });
-            logger.error(err);
-            socket.emit("onUser", err);
-          }
+          logger.error(err);
+          socket.emit("offUser", err);
         }
       });
     } catch (err) {
