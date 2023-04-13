@@ -35,6 +35,10 @@ router.delete(
   authMiddleWare,
   userController.deleteUser
 );
-router.get("/user/email", userController.mailCheck);
+router.get(
+  "/user/email",
+  validationMiddleWare.emailCheck,
+  userController.mailCheck
+);
 
 module.exports = router;
