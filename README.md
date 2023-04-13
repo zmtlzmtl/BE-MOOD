@@ -1,6 +1,3 @@
-# BE-MOOD
-
-
 # 👉[MOOD-CLASSIC WEB SITE][mood-link]
 
 [mood-link]: https://fe-mood.vercel.app/ 'Mood 바로가기'
@@ -26,10 +23,6 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 <hr/>
 
 ### ▶ 기능
-
-#### 😃 간단하고 안전한 회원가입
-
-- 카카오를 통한 소셜 로그인으로 간단하고 안전하게 회원가입 할 수 있어요!
 
 #### ✅ 영역별 감정 선택 
 
