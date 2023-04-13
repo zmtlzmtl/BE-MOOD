@@ -289,12 +289,11 @@ class UserService {
     return;
   };
 
-  deleteUser = async (userId, password) => {
+  deleteUser = async (userId, email) => {
     const login = await this.userRepository.findUser(userId);
-    const isPasswordCorrect = await bcrypt.compare(password, login.password);
-    if (!isPasswordCorrect) {
+    if (login.email !== email) {
       throw new makeError({
-        message: "비밀번호가 일치하지 않습니다.",
+        message: "이메일을 확인하세요.",
         code: 400,
       });
     }
@@ -327,6 +326,10 @@ class UserService {
     const user = await this.userRepository.findUser(userId);
     if (user.nickname === nickname) {
       throw makeError({ message: "현재 닉네임과 같습니다.", code: 400 });
+    }
+    const sameNickname = await this.userRepository.findByNickname(nickname);
+    if (sameNickname) {
+      throw makeError({ message: "중복된 닉네임이 있습니다.", code: 400 });
     }
     await this.userRepository.changeNickname({
       userId,

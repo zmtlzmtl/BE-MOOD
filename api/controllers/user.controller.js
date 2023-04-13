@@ -151,6 +151,11 @@ class UserController {
           .status(400)
           .json({ massage: "이미지 파일 형식만 업로드 가능합니다." });
       }
+      if (file.size > 5 * 1024 * 1024) {
+        res
+          .status(400)
+          .json({ message: "파일 크기는 5MB를 초과할 수 없습니다." });
+      }
       const data = await this.userService.uploadImage(file);
 
       const fileName = "https://d13uh5mnneeyhq.cloudfront.net/" + data.Key;
@@ -164,8 +169,8 @@ class UserController {
   deleteUser = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
-      const { password } = req.body;
-      await this.userService.deleteUser(userId, password);
+      const { email } = req.body;
+      await this.userService.deleteUser(userId, email);
       res.status(200).json({ message: "회원탈퇴에 성공하였습니다" });
     } catch (error) {
       next(error);
