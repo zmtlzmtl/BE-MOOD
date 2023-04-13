@@ -12,7 +12,7 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 
 ### 🏛 Architecture
 
-![architecture](https://user-images.githubusercontent.com/63998542/231694098-379160f9-22bf-42a0-b5b9-a2c6741fd157.png)
+![archibe](https://user-images.githubusercontent.com/63998542/231699355-40dd226d-252f-4ff6-8d59-831317103fd1.jpg)
 
 <hr/>
 
@@ -22,7 +22,8 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 
 <hr/>
 
-### ▶ 기능
+### 🎹 기능
+
 
 #### ✅ 영역별 감정 선택 
 
