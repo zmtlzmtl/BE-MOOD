@@ -66,11 +66,10 @@ class UserController {
       const userData = await this.userService.getUserInfo(authToken);
       const { access_token, refresh_token, nickname, profileUrl } =
         await this.userService.makeTokenAndUserInfo(userData);
-
-      res.status(200).send({
+      res.status(200).json({
         message: "카카오 로그인 성공",
-        accessToken: access_token,
-        refreshToken: refresh_token,
+        access_token: access_token,
+        refresh_token: refresh_token,
         nickname,
         profileUrl,
       });
