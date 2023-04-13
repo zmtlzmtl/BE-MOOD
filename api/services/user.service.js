@@ -337,6 +337,21 @@ class UserService {
     });
     return;
   };
+  savePassword = async ({ email, password }) => {
+    await this.userRepository.savePassword({ email, password });
+    return;
+  };
+  mailCheck = async ({ email, password }) => {
+    const check = await this.userRepository.mailCheck({ email, password });
+    if (check) {
+      return { message: "이메일 인증이 확인되었습니다." };
+    } else {
+      throw new makeError({
+        message: "이메일 인증에 실패하였습니다.",
+        code: 401,
+      });
+    }
+  };
 }
 
 module.exports = UserService;

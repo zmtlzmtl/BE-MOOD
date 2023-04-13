@@ -7,6 +7,7 @@ const {
   Musics,
   Reviews,
   ReComments,
+  EmailChecks,
 } = require("../../db/models");
 const sequelize = require("sequelize");
 
@@ -174,6 +175,15 @@ class UserRepository {
   updateUserStatus = async (userId, message) => {
     await UserInfos.update({ myStatus: message }, { where: { userId } });
     return;
+  };
+  savePassword = async ({ email, password }) => {
+    await EmailChecks.destroy({ where: { email } });
+    await EmailChecks.create({ email, password });
+    return;
+  };
+  mailCheck = async ({ email, password }) => {
+    const check = await EmailChecks.findOne({ where: { email, password } });
+    return check;
   };
 }
 
