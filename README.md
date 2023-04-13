@@ -162,7 +162,7 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 <details>
 <summary><b>➡️ 문제6</b></summary>
   
-> **문제** : LAP(layerd architecture pattern) 환경에서 테스트 코드 작성시 DB Moking 문제
+> **문제** : LAP(layerd architecture pattern) 환경에서 테스트 코드 작성시 DB Mocking 문제
 >
 > **해결** : LAP (layered architecture pattern) 아키텍쳐 환경에서의 repository layer 테스트 코드 작성시, repository layer에서 sequelize-cli 의 model 을 직접 가져와 사용하고 있었습니다. sequelize module에 의존하고 있는 repository layer 의 코드를 constructor injection 방식의 의존성 주입을 통해 테스트 코드 작성을 가능하게 했습니다. 
 
