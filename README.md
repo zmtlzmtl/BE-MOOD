@@ -77,13 +77,17 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 <br>
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![Amazon S3](https://img.shields.io/badge/Amazon%20S3-Latest-orange)]
+![Amazon CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-Latest-orange)
+![AWS CodeDeploy](https://img.shields.io/badge/AWS%20CodeDeploy-Latest-orange)]
 <br>
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
-<br>
+![Sequelize](https://img.shields.io/badge/Sequelize-6.6.5-blue.svg)
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 <br>
 <img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=for-the-badge&logo=JSON Web Tokens&logoColor=white">
 <br>
+![PM2](https://img.shields.io/badge/PM2-4.5.0-blue.svg)
 ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=Jest&logoColor=white)
 
 
