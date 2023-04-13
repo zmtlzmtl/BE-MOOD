@@ -7,10 +7,14 @@ const validationMiddleWare = require("../middlewares/validation.middleware");
 const UserController = require("../controllers/user.controller");
 const userController = new UserController();
 
-router.post("/signup", validationMiddleWare.signUpCheck, userController.signUp);
+router.post("/signup", 
+// validationMiddleWare.signUpCheck, 
+userController.signUp);
 router.post("/signup/idcheck", userController.check);
 router.post("/signup/nicknamecheck", userController.check);
-router.post("/login", validationMiddleWare.loginCheck, userController.login);
+router.post("/login", 
+// validationMiddleWare.loginCheck, 
+userController.login);
 router.post("/login/kakao", userController.kakaoLogin);
 router.post("/user/refresh", userController.refresh);
 router.get("/user/userinfo", authMiddleWare, userController.userInfo);
@@ -25,13 +29,13 @@ router.patch(
 );
 router.patch(
   "/user/changenickname",
-  validationMiddleWare.nicknameCheck,
+  // validationMiddleWare.nicknameCheck,
   authMiddleWare,
   userController.changeNickname
 );
 router.delete(
   "/user/delete",
-  validationMiddleWare.emailCheck,
+  // validationMiddleWare.emailCheck,
   authMiddleWare,
   userController.deleteUser
 );
