@@ -78,7 +78,7 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 <br>
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 <br>
-<img src ="https://img.shields.io/badge/MySQL-#4479A1?style=for-the-badge&logo=mysql&logoColor=white">
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)](https://dev.mysql.com/doc/relnotes/mysql/8.0/en/)
 <br>
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 <br>
