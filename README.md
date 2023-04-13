@@ -81,8 +81,9 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 ![Amazon CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-Latest-orange)
 ![AWS CodeDeploy](https://img.shields.io/badge/AWS%20CodeDeploy-Latest-orange)
 <br>
-![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
-![Sequelize](https://img.shields.io/badge/Sequelize-6.6.5-blue.svg)
+![MySQL](https://img.shields.io/badge/MySQL-#52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
+![Sequelize](https://img.shields.io/badge/Sequelize-#52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
+<br>
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 <br>
 <img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=for-the-badge&logo=JSON Web Tokens&logoColor=white">
