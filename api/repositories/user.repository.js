@@ -176,13 +176,13 @@ class UserRepository {
     await UserInfos.update({ myStatus: message }, { where: { userId } });
     return;
   };
-  savePassword = async ({ email, password }) => {
+  savePassword = async ({ email, hashedPw }) => {
     await EmailChecks.destroy({ where: { email } });
-    await EmailChecks.create({ email, password });
+    await EmailChecks.create({ email, password: hashedPw });
     return;
   };
-  mailCheck = async ({ email, password }) => {
-    const check = await EmailChecks.findOne({ where: { email, password } });
+  mailCheck = async ({ email }) => {
+    const check = await EmailChecks.findOne({ where: { email } });
     return check;
   };
 }
