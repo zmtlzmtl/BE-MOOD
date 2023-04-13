@@ -25,11 +25,20 @@ router.patch(
 );
 router.patch(
   "/user/changenickname",
+  validationMiddleWare.nicknameCheck,
   authMiddleWare,
   userController.changeNickname
 );
-router.delete("/user/delete", authMiddleWare, userController.deleteUser);
-router.get("/user/email", userController.mailSavePassword);
-router.get("/user/emailCheck", userController.mailCheck);
+router.delete(
+  "/user/delete",
+  validationMiddleWare.emailCheck,
+  authMiddleWare,
+  userController.deleteUser
+);
+router.get(
+  "/user/email",
+  validationMiddleWare.emailCheck,
+  userController.mailCheck
+);
 
 module.exports = router;

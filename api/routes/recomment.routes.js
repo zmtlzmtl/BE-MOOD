@@ -9,12 +9,14 @@ const reCommentController = new ReCommentController();
 
 router.post(
   "/:reviewId/recomment",
+  Validation.commentCheck,
   authMiddleWare,
   reCommentController.addReviewComment
 );
 router.get("/:reviewId/recomment", reCommentController.getReviewComment);
 router.put(
   "/:reviewId/recomment/:reCommentId",
+  Validation.commentCheck,
   authMiddleWare,
   reCommentController.updateReviewComment
 );

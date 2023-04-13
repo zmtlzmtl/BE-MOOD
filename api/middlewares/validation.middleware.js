@@ -16,7 +16,7 @@ const Validation = {
         ),
       password: Joi.string()
         .regex(
-          /^(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/
         )
         .required()
         .error(
@@ -27,7 +27,7 @@ const Validation = {
         ),
       confirm: Joi.string()
         .regex(
-          /^(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])[a-zA-Z0-9!@#$%^&*(),.?":{}|<>]{8,}$/
         )
         .required()
         .error(
@@ -37,7 +37,22 @@ const Validation = {
           })
         ),
       email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+        .email({
+          minDomainSegments: 3,
+          tlds: {
+            allow: [
+              "com",
+              "net",
+              "co.kr",
+              "or.kr",
+              "go.kr",
+              "ac.kr",
+              "ne.kr",
+              "pe.kr",
+              "re.kr",
+            ],
+          },
+        })
         .required()
         .error(
           new makeError({
@@ -46,11 +61,13 @@ const Validation = {
           })
         ),
       nickname: Joi.string()
+        .trim()
         .min(2)
+        .max(8)
         .required()
         .error(
           new makeError({
-            message: "닉네임은 2글자이상이어야 합니다.",
+            message: "닉네임은 2글자 이상 ~ 8글자 이하 이어야 합니다.",
             code: 400,
           })
         ),
@@ -93,7 +110,7 @@ const Validation = {
     }
     next();
   },
-  //review check
+  //musicId check
   paramGetCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       musicId: Joi.number()
@@ -142,9 +159,85 @@ const Validation = {
     const check = Joi.object().keys({
       review: Joi.string()
         .required()
+        .trim()
+        .min(1)
         .error(
           new makeError({
-            message: "알맞은 형식의 게시글을 입력하세요.",
+            message: "알맞은 형식의 리뷰를 입력하세요.",
+            code: 400,
+          })
+        ),
+    });
+    try {
+      await check.validateAsync(req.body);
+    } catch (error) {
+      next(error);
+    }
+    next();
+  },
+  nicknameCheck: async (req, res, next) => {
+    const check = Joi.object().keys({
+      nickname: Joi.string()
+        .trim() //여백 없애기
+        .min(2)
+        .max(8)
+        .required()
+        .error(
+          new makeError({
+            message: "닉네임은 2글자 이상 ~ 8글자 이하 이어야 합니다.",
+            code: 400,
+          })
+        ),
+    });
+    try {
+      await check.validateAsync(req.body);
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  emailCheck: async (req, res, next) => {
+    const check = Joi.object().keys({
+      email: Joi.string()
+        .email({
+          minDomainSegments: 3,
+          tlds: {
+            allow: [
+              "com",
+              "net",
+              "co.kr",
+              "or.kr",
+              "go.kr",
+              "ac.kr",
+              "ne.kr",
+              "pe.kr",
+              "re.kr",
+            ],
+          },
+        })
+        .required()
+        .error(
+          new makeError({
+            message: "Email형식이 아닙니다.",
+            code: 400,
+          })
+        ),
+    });
+    try {
+      await check.validateAsync(req.body);
+    } catch (error) {
+      next(error);
+    }
+  },
+  commentCheck: async (req, res, next) => {
+    const check = Joi.object().keys({
+      comment: Joi.string()
+        .required()
+        .trim()
+        .min(1)
+        .error(
+          new makeError({
+            message: "알맞은 형식의 리뷰를 입력하세요.",
             code: 400,
           })
         ),
