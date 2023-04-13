@@ -16,6 +16,7 @@ router.post("/user/refresh", userController.refresh);
 router.get("/user/userinfo", authMiddleWare, userController.userInfo);
 router.get("/user/likelist", authMiddleWare, userController.likeList);
 router.get("/user/scraplist", authMiddleWare, userController.scrapList);
+router.get("/user/mylist", authMiddleWare, userController.myList);
 router.get("/user/reviewlist", authMiddleWare, userController.reviewList);
 router.patch(
   "/user/uploadprofile",

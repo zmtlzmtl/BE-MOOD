@@ -120,6 +120,18 @@ class UserController {
       next(error);
     }
   };
+  myList = async (req, res, next) => {
+    try {
+      const { userId } = res.locals.user;
+      const myList = await this.userService.myList(userId);
+      res.status(200).json({
+        message: "사용자가 스크랩한 음악조회를 성공했습니다.",
+        myList,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   reviewList = async (req, res, next) => {
     try {
@@ -225,7 +237,7 @@ class UserController {
       const { email } = req.body;
       console.log(email)
       const password = Math.floor(Math.random() * 1000000); // 6자리 랜덤한 비밀번호 생성
-      await this.userService.savePassword({ email, password })
+      await this.userService.savePassword({ email, password });
       let mailOptions = {
         from: "MoodClassic99@gmail.com", //송신할 이메일
         to: email, //수신할 이메일
@@ -244,16 +256,15 @@ class UserController {
       next(err);
     }
   };
-  mailCheck = async(req, res, next) => {
+  mailCheck = async (req, res, next) => {
     try {
       const { email, password } = req.body;
-      console.log(email, password)
-      const check = await this.userService.mailCheck({ email, password })
-      return res.json({ check })
+      const check = await this.userService.mailCheck({ email, password });
+      return res.json({ check });
     } catch (err) {
       next(err);
     }
-  }
+  };
 }
 
 module.exports = UserController;

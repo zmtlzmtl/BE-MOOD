@@ -255,6 +255,21 @@ class UserService {
       musicCount: musicList.musicCount,
     };
   };
+  myList = async (userId) => {
+    const scrapList = await this.userRepository.scrapList(userId);
+    const musicId = [];
+    for (let i = 0; i < scrapList.length; i++) {
+      musicId.push(scrapList[i].musicId);
+    }
+    const musicList = await this.userRepository.findMusic(musicId);
+    for (let i = 0; i < musicList.length; i++) {
+      const musicId = musicList[i].dataValues.musicId;
+      const likeStatus = await this.likeRepository.findLike(userId, musicId);
+      musicList[i].dataValues.likeStatus = !!likeStatus;
+    }
+    return musicList;
+  };
+
   reviewList = async (userId, page) => {
     const reviewData = await this.userRepository.findReview(userId);
     const recommentData = await this.userRepository.findRecomment(userId);
