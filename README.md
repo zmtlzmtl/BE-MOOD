@@ -120,16 +120,50 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 <details>
 <summary><b>➡️ 문제1</b></summary>
   
-> **문제** : 문제1
+> **문제** : redis 무한 루프 문제
 >
-> **해결** : 해결1
+> **해결** : ![image](https://user-images.githubusercontent.com/63998542/231757396-78c3cc6b-60fa-4bfe-b369-2e94844b3853.png)
+
   
 </details>
 
 <details>
 <summary><b>➡️ 문제2</b></summary>
   
-> **문제** : 문제2
+> **문제** : 카카오 로그인시 프론트와 백엔드 분업
 >
-> **해결** : 해결2
+> **해결** : ![image](https://user-images.githubusercontent.com/63998542/231757738-2a69d378-87b1-4989-a84c-71e1955c2a24.png)
+</details>
+
+<details>
+<summary><b>➡️ 문제3</b></summary>
+  
+> **문제** : 응답 시간이 너무 오래걸리는 로직
+>
+> **해결** : ![image](https://user-images.githubusercontent.com/63998542/231757993-4ea0944d-0c89-410b-a8f2-d6fd42ee57f6.png)
+</details>
+
+<details>
+<summary><b>➡️ 문제4</b></summary>
+  
+> **문제** : 음악의 분위기를 태그로 저장하여 검색에서 사용할 수 있게 구현
+>
+> **해결** : ![image](https://user-images.githubusercontent.com/63998542/231758778-57e6401f-413c-4525-85e7-13106296202a.png)
+</details>
+
+<details>
+<summary><b>➡️ 문제5</b></summary>
+  
+> **문제** : 클래식 음악에 감정 결합하기
+>
+> **해결** : ![image](https://user-images.githubusercontent.com/63998542/231758892-191f1838-4993-403c-942c-f1e62460faa7.png)
+</details>
+
+<details>
+<summary><b>➡️ 문제6</b></summary>
+  
+> **문제** : LAP(layerd architecture pattern) 환경에서 테스트 코드 작성시 DB Moking 문제
+>
+> **해결** : LAP (layered architecture pattern) 아키텍쳐 환경에서의 repository layer 테스트 코드 작성시, repository layer에서 sequelize-cli 의 model 을 직접 가져와 사용하고 있었습니다. sequelize module에 의존하고 있는 repository layer 의 코드를 constructor injection 방식의 의존성 주입을 통해 테스트 코드 작성을 가능하게 했습니다. 
+
 </details>
