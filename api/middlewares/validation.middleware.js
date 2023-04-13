@@ -229,6 +229,26 @@ const Validation = {
       next(error);
     }
   },
+  commentCheck: async (req, res, next) => {
+    const check = Joi.object().keys({
+      comment: Joi.string()
+        .required()
+        .trim()
+        .min(1)
+        .error(
+          new makeError({
+            message: "알맞은 형식의 리뷰를 입력하세요.",
+            code: 400,
+          })
+        ),
+    });
+    try {
+      await check.validateAsync(req.body);
+    } catch (error) {
+      next(error);
+    }
+    next();
+  },
 };
 
 module.exports = Validation;
