@@ -81,14 +81,14 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 ![Amazon CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-Latest-orange)
 ![AWS CodeDeploy](https://img.shields.io/badge/AWS%20CodeDeploy-Latest-orange)
 <br>
-![MySQL](https://img.shields.io/badge/MySQL-#52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
-![Sequelize](https://img.shields.io/badge/Sequelize-#52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white)
+![mysql](https://user-images.githubusercontent.com/63998542/231709129-0dd28316-8141-4016-b8a8-65ce1204287d.svg)
+![sequelize](https://user-images.githubusercontent.com/63998542/231709027-4550c3e0-3a91-4246-aa88-28007714e8c6.svg)
 <br>
 ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 <br>
 <img src="https://img.shields.io/badge/JSON Web Tokens-000000?style=for-the-badge&logo=JSON Web Tokens&logoColor=white">
 <br>
-![PM2](https://img.shields.io/badge/PM2-4.5.0-blue.svg)
+![pm2](https://user-images.githubusercontent.com/63998542/231709249-47051379-29f2-4be9-8a12-b9bc26d14fb5.svg)
 ![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=Jest&logoColor=white)
 
 
