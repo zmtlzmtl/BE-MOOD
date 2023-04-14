@@ -200,19 +200,9 @@ const Validation = {
     const check = Joi.object().keys({
       email: Joi.string()
         .email({
-          minDomainSegments: 3,
+          minDomainSegments: 2,
           tlds: {
-            allow: [
-              "com",
-              "net",
-              "co.kr",
-              "or.kr",
-              "go.kr",
-              "ac.kr",
-              "ne.kr",
-              "pe.kr",
-              "re.kr",
-            ],
+            allow: ["com", "net", "co.kr", "or.kr", "go.kr", "ac.kr"],
           },
         })
         .required()
