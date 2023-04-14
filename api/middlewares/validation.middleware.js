@@ -38,7 +38,7 @@ const Validation = {
         ),
       email: Joi.string()
         .email({
-          minDomainSegments: 3,
+          minDomainSegments: 2,
           tlds: {
             allow: [
               "com",

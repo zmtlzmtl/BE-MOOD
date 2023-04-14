@@ -124,6 +124,22 @@ class UserRepository {
     return { musicList, musicCount };
   };
 
+  findMyMusic = async (musicId) => {
+    const musicList = await Musics.findAll({
+      where: { musicId },
+      attributes: [
+        "musicTitle",
+        "musicContent",
+        "composer",
+        "musicUrl",
+        "musicId",
+      ],
+      order: [["musicId", "DESC"]],
+    });
+    const musicCount = await Musics.count({ where: { musicId } });
+    return { musicList, musicCount };
+  };
+
   myMusic = async (musicId) => {
     const musicList = await Musics.findAll({
       where: { musicId },
