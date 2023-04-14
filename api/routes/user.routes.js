@@ -43,7 +43,6 @@ router.post(
 );
 router.post(
   "/user/emailCheck",
-  validationMiddleWare.emailCheck,
   userController.mailCheck
 );
 
