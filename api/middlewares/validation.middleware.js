@@ -38,7 +38,7 @@ const Validation = {
         ),
       email: Joi.string()
         .email({
-          minDomainSegments: 3,
+          minDomainSegments: 2,
           tlds: {
             allow: [
               "com",
@@ -200,7 +200,7 @@ const Validation = {
     const check = Joi.object().keys({
       email: Joi.string()
         .email({
-          minDomainSegments: 3,
+          minDomainSegments: 2,
           tlds: {
             allow: [
               "com",
