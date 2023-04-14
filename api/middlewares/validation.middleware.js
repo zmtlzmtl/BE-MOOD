@@ -37,22 +37,7 @@ const Validation = {
           })
         ),
       email: Joi.string()
-        .email({
-          minDomainSegments: 2,
-          tlds: {
-            allow: [
-              "com",
-              "net",
-              "co.kr",
-              "or.kr",
-              "go.kr",
-              "ac.kr",
-              "ne.kr",
-              "pe.kr",
-              "re.kr",
-            ],
-          },
-        })
+        .email()
         .required()
         .error(
           new makeError({
@@ -194,17 +179,13 @@ const Validation = {
     } catch (error) {
       next(error);
     }
+    next();
   },
 
   emailCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       email: Joi.string()
-        .email({
-          minDomainSegments: 2,
-          tlds: {
-            allow: ["com", "net", "co.kr", "or.kr", "go.kr", "ac.kr"],
-          },
-        })
+        .email()
         .required()
         .error(
           new makeError({
@@ -218,6 +199,7 @@ const Validation = {
     } catch (error) {
       next(error);
     }
+    next();
   },
   commentCheck: async (req, res, next) => {
     const check = Joi.object().keys({
