@@ -261,13 +261,15 @@ class UserService {
     for (let i = 0; i < scrapList.length; i++) {
       musicId.push(scrapList[i].musicId);
     }
-    const musicList = await this.userRepository.findMusic(musicId);
-    for (let i = 0; i < musicList.length; i++) {
-      const musicId = musicList[i].dataValues.musicId;
+    const musicList = await this.userRepository.findMyMusic(musicId);
+    for (let i = 0; i < musicList.musicList.length; i++) {
+      const musicId = musicList.musicList[i].dataValues.musicId;
       const likeStatus = await this.likeRepository.findLike(userId, musicId);
-      musicList[i].dataValues.likeStatus = !!likeStatus;
+      musicList.musicList[i].dataValues.likeStatus = !!likeStatus;
     }
-    return musicList;
+    return {
+      musicList: musicList.musicList
+    };
   };
 
   reviewList = async (userId, page) => {
