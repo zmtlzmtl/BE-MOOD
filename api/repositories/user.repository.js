@@ -83,9 +83,8 @@ class UserRepository {
       userId: auto_signup_kakao_user.userId,
       profileUrl: profile_image,
     });
-
     return {
-      userId: auto_signup_kakao_user.user_id,
+      userId: auto_signup_kakao_user.userId,
       email: auto_signup_kakao_user.email,
       nickname: auto_signup_kakao_user.nickname,
       profileUrl: auto_signup_kakao_user_image.profileUrl,
