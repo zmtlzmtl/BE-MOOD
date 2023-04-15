@@ -274,14 +274,12 @@ class UserService {
       musicId.push(scrapList[i].musicId);
     }
     const musicList = await this.userRepository.findMyMusic(musicId);
-    for (let i = 0; i < musicList.musicList.length; i++) {
-      const musicId = musicList.musicList[i].dataValues.musicId;
+    for (let i = 0; i < musicList.length; i++) {
+      const musicId = musicList[i].dataValues.musicId;
       const likeStatus = await this.likeRepository.findLike(userId, musicId);
-      musicList.musicList[i].dataValues.likeStatus = !!likeStatus;
+      musicList[i].dataValues.likeStatus = !!likeStatus;
     }
-    return {
-      musicList: musicList.musicList,
-    };
+    return musicList;
   };
 
   //유저 리뷰 조회
