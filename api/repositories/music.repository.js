@@ -14,6 +14,7 @@ const redisClient = require("../../db/config/redisClient");
 
 class MusicRepository {
   constructor() {}
+  //클래식 음악 생성하기
   create = async ({ musicTitle, musicContent, status, composer, musicUrl }) => {
     let music = await Musics.create({
       musicTitle,
@@ -24,6 +25,8 @@ class MusicRepository {
     });
     return music;
   };
+
+  //클래식 음악 태그 생성하기
   createTag = async ({ musicId, tag }) => {
     const tags = await Tags.findOrCreate({
       where: { tagName: tag.trim() },
@@ -33,6 +36,8 @@ class MusicRepository {
       tagId: tags[0].tagId,
     });
   };
+
+  //클래식 음악 한가지 찾기
   findOneByMusicId = async ({ musicId }) => {
     let music = await Musics.findOne({
       where: { musicId },
@@ -46,12 +51,14 @@ class MusicRepository {
     });
     return music;
   };
+
+  //작곡가 정보와 노래 조회하기
   findAllByComposer = async ({ composer }) => {
     let composerInfo = await Composers.findAll({
       where: composer,
     });
     let music = await Musics.findAll({
-      where: { composer: composer.composer.split(" ").slice(-1) },
+      where: composer,
       attributes: [
         "musicTitle",
         "musicContent",
@@ -71,6 +78,8 @@ class MusicRepository {
     });
     return { composerInfo, music };
   };
+
+  //파일 업로드 하기
   s3Upload = async (file) => {
     const s3 = new S3();
     const param = {
@@ -81,6 +90,7 @@ class MusicRepository {
     return s3.upload(param).promise();
   };
 
+  //감정 상태 별 노래 조회하기
   findOneByStatus = async (status) => {
     const mood = await Musics.findOne({
       order: Sequelize.literal("rand()"),
@@ -103,6 +113,7 @@ class MusicRepository {
     return mood;
   };
 
+  //검색하기
   findByKeyword = async ({ keyword }) => {
     const composerInfo = await Composers.findOne({
       where: {
@@ -135,7 +146,6 @@ class MusicRepository {
       ],
       group: ["Musics.musicId"],
     });
-
     const musicTitle = await Musics.findAll({
       include: [
         {
@@ -174,6 +184,7 @@ class MusicRepository {
     return { composerInfo, composerSong, musicTitle };
   };
 
+  //좋아요 순위 차트
   likeChart = async () => {
     const likeChart = await Musics.findAll({
       attributes: [
@@ -203,6 +214,7 @@ class MusicRepository {
     return likeChart;
   };
 
+  //스트리밍 순위 차트
   streamingChart = async () => {
     const scrapChart = await Musics.findAll({
       attributes: [
@@ -235,11 +247,13 @@ class MusicRepository {
     return scrapChart;
   };
 
+  //스트리밍 수 추가
   sendStreaming = async (userId, musicId) => {
     const streaming = await Streamings.create({ userId, musicId });
     return streaming;
   };
 
+  //음악 태그 변경하기
   tagMusicId = async ({ musicId, tag }) => {
     const tagList = tag.split(",");
     for (const tag of tagList) {
@@ -260,6 +274,7 @@ class MusicRepository {
     return tagList;
   };
 
+  //redis에서 데이터 가져오기
   getChartData = async (cacheKey) => {
     try {
       const data = await redisClient.get(cacheKey);
@@ -275,6 +290,7 @@ class MusicRepository {
     }
   };
 
+  //좋아요 차트 캐싱하기
   setCache = async (processedLikeChart, cacheKey) => {
     await redisClient.set(
       cacheKey,

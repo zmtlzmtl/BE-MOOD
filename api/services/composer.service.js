@@ -5,7 +5,7 @@ class ComposerService {
   constructor() {
     this.composerRepository = new ComposerRepository();
   }
-  //작곡가 조회하기
+  //작곡가 조회
   getComposer = async ({ composer }) => {
     const result = await this.composerRepository.getComposer({
       composer,
@@ -19,7 +19,7 @@ class ComposerService {
     return result;
   };
 
-  //작곡가 수정하기
+  //작곡가 태그 변경
   updateTagComposer = async ({ composer, tag }) => {
     await this.composerRepository.updateTagComposer({
       composer,
@@ -28,4 +28,5 @@ class ComposerService {
     return { message: "태그가 수정되었습니다." };
   };
 }
+
 module.exports = ComposerService;
