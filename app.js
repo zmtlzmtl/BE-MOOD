@@ -39,7 +39,7 @@ app.use(
 app.use(
   cors({
     methods: ["GET", "POST", "UPDATE", "DELETE", "PUT", "PATCH"],
-    origin: true,
+    origin: ["https://mood-classic.site"],
     credentials: true,
   })
 );

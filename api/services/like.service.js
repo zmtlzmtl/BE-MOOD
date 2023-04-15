@@ -6,6 +6,7 @@ class LikeService {
   likeRepository = new LikeRepository();
   musicRepository = new MusicRepository();
 
+  //좋아요 변경
   like = async (userId, musicId) => {
     const findMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!findMusic) {
@@ -21,6 +22,7 @@ class LikeService {
     }
   };
 
+  //좋아요 조회
   likeStatus = async (userId, musicId) => {
     const findLike = await this.likeRepository.findLike(userId, musicId);
     if (!findLike) {

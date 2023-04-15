@@ -3,13 +3,13 @@ const { Users, Reviews } = require("../../db/models/");
 class ReviewRepository {
   constructor() {}
 
-  //리뷰 작성하기
+  //리뷰 작성
   addMusicReview = async ({ userId, musicId, review }) => {
     const result = await Reviews.create({ userId, musicId, review });
     return result;
   };
 
-  //리뷰 조회하기
+  //리뷰 조회
   getMusicReview = async ({ musicId }) => {
     const result = await Reviews.findAll({
       where: { musicId },
@@ -23,20 +23,22 @@ class ReviewRepository {
     });
     return result;
   };
-  //리뷰 상세조회
+
+  //리뷰 상세 조회
   getMusicOneReview = async ({ reviewId }) => {
     const result = await Reviews.findOne({
       where: { reviewId },
     });
     return result;
   };
-  //리뷰 수정하기
+
+  //리뷰 수정
   updateMusicReview = async ({ reviewId, review }) => {
     await Reviews.update({ review }, { where: { reviewId } });
     return;
   };
 
-  //리뷰 삭제하기
+  //리뷰 삭제
   deleteMusicReview = async ({ reviewId }) => {
     await Reviews.destroy({ where: { reviewId } });
     return;

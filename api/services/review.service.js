@@ -7,7 +7,7 @@ class ReviewService {
     this.musicRepository = new MusicRepository();
     this.reviewRepository = new ReviewRepository();
   }
-  //리뷰 작성하기
+  //리뷰 작성
   addMusicReview = async ({ userId, musicId, review }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {
@@ -30,7 +30,7 @@ class ReviewService {
     return { message: "리뷰가 생성되었습니다." };
   };
 
-  //리뷰 조회하기
+  //리뷰 조회
   getMusicReview = async ({ musicId }) => {
     const reviews = await this.reviewRepository.getMusicReview({
       musicId,
@@ -50,7 +50,7 @@ class ReviewService {
     return { count, rows };
   };
 
-  //리뷰 수정하기
+  //리뷰 수정
   updateMusicReview = async ({ userId, musicId, reviewId, review }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {
@@ -81,7 +81,7 @@ class ReviewService {
     return { message: "리뷰가 수정되었습니다." };
   };
 
-  //리뷰 삭제하기 //유저정보 들어와야함
+  //리뷰 삭제
   deleteMusicReview = async ({ userId, musicId, reviewId }) => {
     const existMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!existMusic) {

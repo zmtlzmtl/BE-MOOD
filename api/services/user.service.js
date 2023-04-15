@@ -13,6 +13,7 @@ class UserService {
   likeRepository = new LikeRepository();
   scrapRepository = new ScrapRepository();
 
+  //회원가입
   signUp = async (id, password, confirm, email, nickname) => {
     if (password !== confirm || !confirm) {
       throw new makeError({
@@ -57,6 +58,7 @@ class UserService {
     return user;
   };
 
+  //로그인
   login = async (id, password) => {
     const login = await this.userRepository.login(id);
     if (!login) {
@@ -89,6 +91,7 @@ class UserService {
     };
   };
 
+  //회원가입 시 아이디 확인
   idCheck = async (id) => {
     const idCheck = await this.userRepository.idCheck(id);
     if (idCheck) {
@@ -97,6 +100,7 @@ class UserService {
     return;
   };
 
+  //회원가입 시 닉네임 확인
   nickNameCheck = async (nickname) => {
     const nickNameCheck = await this.userRepository.nickNameCheck(nickname);
     if (nickNameCheck) {
@@ -105,6 +109,7 @@ class UserService {
     return;
   };
 
+  //카카오 인증 받아오기
   getKakaoTokens = async (code) => {
     const KAKAO_OAUTH_TOKEN_API_URL = "https://kauth.kakao.com/oauth/token";
     const grant_type = "authorization_code";
@@ -136,6 +141,7 @@ class UserService {
     return authToken;
   };
 
+  //카카오 유저 정보 받아오기
   getUserInfo = async (authToken) => {
     if (!authToken) {
       throw new makeError({
@@ -168,6 +174,7 @@ class UserService {
     return userData;
   };
 
+  //카카오 로그인 시 토큰 전달
   makeTokenAndUserInfo = async (userData) => {
     const email = userData.email;
     if (!email) {
@@ -214,12 +221,14 @@ class UserService {
     };
   };
 
+  //유저 정보 조회
   userInfo = async (userId) => {
     const userInfo = await this.userRepository.userInfo(userId);
 
     return userInfo;
   };
 
+  //유저 좋아요 조회
   likeList = async (userId, page) => {
     const likeList = await this.userRepository.likeList(userId);
     const musicId = [];
@@ -238,6 +247,7 @@ class UserService {
     };
   };
 
+  //유저 스크랩 조회
   scrapList = async (userId, page) => {
     const scrapList = await this.userRepository.scrapList(userId);
     const musicId = [];
@@ -255,6 +265,8 @@ class UserService {
       musicCount: musicList.musicCount,
     };
   };
+
+  //유저 플레이리스트 조회
   myList = async (userId) => {
     const scrapList = await this.userRepository.scrapList(userId);
     const musicId = [];
@@ -267,9 +279,12 @@ class UserService {
       const likeStatus = await this.likeRepository.findLike(userId, musicId);
       musicList[i].dataValues.likeStatus = !!likeStatus;
     }
-    return musicList;
+    return {
+      musicList: musicList.musicList,
+    };
   };
 
+  //유저 리뷰 조회
   reviewList = async (userId, page) => {
     const reviewData = await this.userRepository.findReview(userId);
     const recommentData = await this.userRepository.findRecomment(userId);
@@ -290,11 +305,13 @@ class UserService {
     return { data: paginatedData, count: combinedData.length };
   };
 
+  //유저 프로필 추가
   uploadImage = async (file) => {
     const data = await this.musicRepository.s3Upload(file);
     return data;
   };
 
+  //유저 프로필 변경
   uploadProfile = async (userId, fileName) => {
     const userInfo = await this.userRepository.userInfo(userId);
     if (!userInfo) {
@@ -304,6 +321,7 @@ class UserService {
     return;
   };
 
+  //회원 탈퇴
   deleteUser = async (userId, email) => {
     const login = await this.userRepository.findUser(userId);
     if (login.email !== email) {
@@ -316,6 +334,7 @@ class UserService {
     return;
   };
 
+  //토큰에 해당하는 유저 검사
   findUserIdAndCheckUser = async (token) => {
     const User = jwt.verify(token, process.env.REFRESH_SECRET_KEY);
     const finsUser = await this.userRepository.findUser(User.userId);
@@ -328,6 +347,7 @@ class UserService {
     return User.userId;
   };
 
+  //새로운 엑세스 토큰 발급
   makeNewAccessToken = async (userId) => {
     const accessToken = jwt.sign(
       { userId: userId },
@@ -337,6 +357,7 @@ class UserService {
     return accessToken;
   };
 
+  //닉네임 변경
   changeNickname = async (userId, nickname) => {
     const user = await this.userRepository.findUser(userId);
     if (user.nickname === nickname) {
@@ -353,6 +374,8 @@ class UserService {
     });
     return;
   };
+
+  ///유저 인증 이메일 발송
   savePassword = async ({ email, password }) => {
     const hashedPw = await bcrypt.hash(
       String(password),
@@ -361,6 +384,8 @@ class UserService {
     await this.userRepository.savePassword({ email, hashedPw });
     return;
   };
+
+  //유저 인증 이메일 검사
   mailCheck = async ({ email, password }) => {
     const check = await this.userRepository.mailCheck({ email });
     const isPasswordCorrect = await bcrypt.compare(password, check.password);

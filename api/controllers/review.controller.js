@@ -5,9 +5,8 @@ class ReviewController {
   constructor() {
     this.reviewService = new ReviewService();
   }
-  //리뷰 작성하기
+  //리뷰 작성
   addMusicReview = async (req, res, next) => {
-    logger.info(`addMusicReview`);
     const { userId } = res.locals.user;
     const { musicId } = req.params;
     const { review } = req.body;
@@ -23,10 +22,9 @@ class ReviewController {
     }
   };
 
-  //리뷰 조회하기
+  //리뷰 조회
   getMusicReview = async (req, res, next) => {
     const { musicId } = req.params;
-    logger.info(`getMusicReview`);
     try {
       const reviews = await this.reviewService.getMusicReview({
         musicId,
@@ -37,9 +35,8 @@ class ReviewController {
     }
   };
 
-  //리뷰 수정하기
+  //리뷰 수정
   updateMusicReview = async (req, res, next) => {
-    logger.info(`updateMusicReview`);
     const { userId } = res.locals.user;
     const { musicId, reviewId } = req.params;
     const { review } = req.body;
@@ -56,9 +53,8 @@ class ReviewController {
     }
   };
 
-  //리뷰 삭제하기
+  //리뷰 삭제
   deleteMusicReview = async (req, res, next) => {
-    logger.info(`deleteMusicReview`);
     const { userId } = res.locals.user;
     const { musicId, reviewId } = req.params;
     try {

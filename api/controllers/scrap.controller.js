@@ -2,7 +2,7 @@ const ScrapService = require("../services/scrap.service");
 
 class ScrapController {
   scrapService = new ScrapService();
-
+  //스크랩 상태변경
   scrap = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -16,6 +16,7 @@ class ScrapController {
     }
   };
 
+  //스크랩 조회
   scrapStatus = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;

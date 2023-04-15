@@ -3,6 +3,7 @@ const LikeService = require("../services/like.service");
 class LikeController {
   likeService = new LikeService();
 
+  //좋아요 변경
   like = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -16,6 +17,7 @@ class LikeController {
     }
   };
 
+  //좋아요 조회
   likeStatus = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
