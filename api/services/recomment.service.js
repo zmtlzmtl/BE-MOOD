@@ -7,7 +7,7 @@ class ReCommentService {
     this.reviewRepository = new ReviewRepository();
     this.reCommentRepository = new ReCommentRepository();
   }
-  //코멘트 작성하기
+  //대댓글 작성하기
   addReviewComment = async ({ userId, reviewId, comment }) => {
     const existReview = await this.reviewRepository.getMusicOneReview({
       reviewId,
@@ -31,7 +31,7 @@ class ReCommentService {
     }
     return { message: "리뷰에 대한 댓글이 생성되었습니다." };
   };
-  //코멘트 조회하기
+  //대댓글 조회하기
   getReviewComment = async ({ reviewId }) => {
     const reComments = await this.reCommentRepository.getReviewComment({
       reviewId,
@@ -50,7 +50,7 @@ class ReCommentService {
     });
     return { count, rows };
   };
-  //코멘트 수정하기
+  //대댓글 수정하기
   updateReviewComment = async ({ userId, reCommentId, comment }) => {
     const existReComment = await this.reCommentRepository.existReComment({
       reCommentId,
@@ -74,7 +74,7 @@ class ReCommentService {
     return { message: "리뷰에 대한 댓글이 수정되었습니다." };
   };
 
-  //코멘트 삭제하기
+  //대댓글 삭제하기
   deleteReviewComment = async ({ userId, reCommentId }) => {
     const existReComment = await this.reCommentRepository.existReComment({
       reCommentId,

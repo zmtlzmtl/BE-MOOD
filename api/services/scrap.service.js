@@ -5,7 +5,7 @@ const { makeError } = require("../error");
 class ScrapService {
   scrapRepository = new ScrapRepository();
   musicRepository = new MusicRepository();
-
+  //스크랩 상태변경
   scrap = async (userId, musicId) => {
     const findMusic = await this.musicRepository.findOneByMusicId({ musicId });
     if (!findMusic) {
@@ -21,6 +21,7 @@ class ScrapService {
     }
   };
 
+  //스크랩 조회
   scrapStatus = async (userId, musicId) => {
     const findScrap = await this.scrapRepository.findScrap(userId, musicId);
     if (!findScrap) {

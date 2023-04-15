@@ -1,13 +1,11 @@
 const ComposerService = require("../services/composer.service");
-const logger = require("../../db/config/logger");
 
 class ComposerController {
   constructor() {
     this.composerService = new ComposerService();
   }
-  //작곡가 조회하기
+  //작곡가 조회
   getComposer = async (req, res, next) => {
-    logger.info(`작곡가 조회하기`);
     const { composer } = req.query;
     try {
       const data = await this.composerService.getComposer({
@@ -19,9 +17,8 @@ class ComposerController {
     }
   };
 
-  //작곡가 태그 변경하기
+  //작곡가 태그 변경
   updateTagComposer = async (req, res, next) => {
-    logger.info(`작곡가 태그 변경하기`);
     const { composer } = req.query;
     const { tag } = req.body;
     try {

@@ -6,6 +6,7 @@ const transporter = createTransporter();
 class UserController {
   userService = new UserService();
 
+  //회원가입
   signUp = async (req, res, next) => {
     const { id, password, confirm, email, nickname } = req.body;
     try {
@@ -25,6 +26,7 @@ class UserController {
     }
   };
 
+  //로그인
   login = async (req, res, next) => {
     const { id, password } = req.body;
     try {
@@ -43,6 +45,7 @@ class UserController {
     }
   };
 
+  //회원가입 시 아이디 및 닉네임 확인
   check = async (req, res, next) => {
     const { id, nickname } = req.body;
     try {
@@ -59,6 +62,7 @@ class UserController {
     }
   };
 
+  //로그인 카카오
   kakaoLogin = async (req, res, next) => {
     try {
       const { code } = req.body;
@@ -78,6 +82,7 @@ class UserController {
     }
   };
 
+  //유저 정보 조회
   userInfo = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -91,6 +96,7 @@ class UserController {
     }
   };
 
+  //유저 좋아요 조회
   likeList = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -106,6 +112,7 @@ class UserController {
     }
   };
 
+  //유저 스크랩 조회
   scrapList = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -120,6 +127,8 @@ class UserController {
       next(error);
     }
   };
+
+  //유저 플레이리스트 조회
   myList = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -133,6 +142,7 @@ class UserController {
     }
   };
 
+  //리뷰 조회
   reviewList = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -148,6 +158,7 @@ class UserController {
     }
   };
 
+  //프로필 변경
   uploadProfile = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -178,6 +189,7 @@ class UserController {
     }
   };
 
+  //회원 탈퇴
   deleteUser = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -189,6 +201,7 @@ class UserController {
     }
   };
 
+  //리프레쉬 토큰으로 엑세스 토큰 재발급
   refresh = async (req, res, next) => {
     const { authorization } = req.headers;
     const [tokenType, token] = (authorization ?? "").split(" ");
@@ -221,6 +234,7 @@ class UserController {
     }
   };
 
+  //유저 닉네임 변경
   changeNickname = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -232,6 +246,8 @@ class UserController {
       next(error);
     }
   };
+
+  //유저 인증 이메일 발송
   mailSavePassword = async (req, res, next) => {
     try {
       const { email } = req.body;
@@ -255,11 +271,13 @@ class UserController {
       next(err);
     }
   };
+
+  //유저 인증 이메일 검사
   mailCheck = async (req, res, next) => {
     try {
       const { email, password } = req.body;
-      const check = await this.userService.mailCheck({ email, password })
-      return res.json({ check })
+      const check = await this.userService.mailCheck({ email, password });
+      return res.json({ check });
     } catch (err) {
       next(err);
     }

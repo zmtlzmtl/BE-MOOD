@@ -5,7 +5,8 @@ class MusicController {
   constructor() {
     this.musicService = new musicService();
     this.musicRepository = new musicRepository();
-  } //test
+  }
+  //음악 생성
   create = async (req, res) => {
     try {
       let file = req.files[0];
@@ -26,6 +27,8 @@ class MusicController {
       return res.status(400).json({ msg: err.message + "생성 실패" });
     }
   };
+
+  //음악 조회
   findOneByMusicId = async (req, res, next) => {
     try {
       const { musicId } = req.params;
@@ -35,6 +38,8 @@ class MusicController {
       next(err);
     }
   };
+
+  //작곡가 모든 노래 조회
   findAllByComposer = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -48,6 +53,8 @@ class MusicController {
       next(err);
     }
   };
+
+  //감정 좌표를 status로 변경
   findAllByCoOrdinates = async (req, res, next) => {
     try {
       if (!res.locals.user || typeof res.locals.user.userId !== "number") {
@@ -63,6 +70,8 @@ class MusicController {
       next(err);
     }
   };
+
+  //음악 검색
   findByKeyword = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -77,6 +86,7 @@ class MusicController {
     }
   };
 
+  //실시간 좋아요 차트 조회
   likeChart = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -90,6 +100,7 @@ class MusicController {
     }
   };
 
+  //실시간 스트리밍 차트 조회
   streamingChart = async (req, res, next) => {
     try {
       const streamingChart = await this.musicService.streamingChart();
@@ -101,6 +112,7 @@ class MusicController {
     }
   };
 
+  //스트리밍 수 추가
   sendStreaming = async (req, res, next) => {
     try {
       const { userId } = res.locals.user;
@@ -112,6 +124,8 @@ class MusicController {
       next(error);
     }
   };
+
+  //음악 태그 수정
   tagMusicId = async (req, res, next) => {
     try {
       const { musicId } = req.params;

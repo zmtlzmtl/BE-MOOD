@@ -2,21 +2,16 @@ const musicRepository = require("../repositories/music.repository");
 const LikeRepository = require("../repositories/like.repository");
 const ScrapRepository = require("../repositories/scrap.repository");
 const UserRepository = require("../repositories/user.repository");
-const ComposerRepository = require("../repositories/composer.repository");
 const { makeError } = require("../error");
-const {
-  cloudfront,
-  cloudfrontfor,
-} = require("../middlewares/cloudfront.middleware");
+
 class MusicService {
   constructor() {
     this.musicRepository = new musicRepository();
+    this.likeRepository = new LikeRepository();
+    this.scrapRepository = new ScrapRepository();
+    this.userRepository = new UserRepository();
   }
-  likeRepository = new LikeRepository();
-  scrapRepository = new ScrapRepository();
-  composerRepository = new ComposerRepository();
-  userRepository = new UserRepository();
-
+  //음악 생성
   create = async ({
     musicTitle,
     musicContent,
@@ -40,6 +35,8 @@ class MusicService {
     }
     return music;
   };
+
+  //음악 조회
   findOneByMusicId = async ({ musicId }) => {
     let music = await this.musicRepository.findOneByMusicId({ musicId });
     if (music == null) {
@@ -50,6 +47,8 @@ class MusicService {
     }
     return music;
   };
+
+  //작곡가 모든 노래 조회
   findAllByComposer = async ({ userId, composer }) => {
     let music = await this.musicRepository.findAllByComposer({ composer });
     if (music == "") {
@@ -72,6 +71,8 @@ class MusicService {
     }
     return music;
   };
+
+  //감정 좌표를 status로 변경
   mood = async ({ userId, x, y }) => {
     let status;
     let message;
@@ -214,6 +215,7 @@ class MusicService {
     }
   };
 
+  //음악 검색
   findByKeyword = async ({ userId, keyword }) => {
     const music = await this.musicRepository.findByKeyword({ keyword });
     if (keyword.length === 0) {
@@ -244,6 +246,7 @@ class MusicService {
     return music;
   };
 
+  //실시간 좋아요 차트 조회
   likeChart = async (userId) => {
     const cacheKey = "likeChart";
 
@@ -272,11 +275,13 @@ class MusicService {
     }
   };
 
+  //실시간 스트리밍 차트 조회
   streamingChart = async () => {
     const streamingChart = await this.musicRepository.streamingChart();
     return streamingChart;
   };
 
+  //스트리밍 수 추가
   sendStreaming = async (userId, musicId) => {
     const makeStreaming = await this.musicRepository.sendStreaming(
       userId,
@@ -291,4 +296,5 @@ class MusicService {
     return;
   };
 }
+
 module.exports = MusicService;

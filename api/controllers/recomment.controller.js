@@ -4,7 +4,7 @@ class ReCommentController {
   constructor() {
     this.reCommentService = new ReCommentService();
   }
-  //코멘트 작성하기
+  //대댓글 작성하기
   addReviewComment = async (req, res, next) => {
     const { userId } = res.locals.user;
     const { reviewId } = req.params;
@@ -20,7 +20,7 @@ class ReCommentController {
       next(err);
     }
   };
-  //코멘트 조회하기
+  //대댓글 조회하기
   getReviewComment = async (req, res, next) => {
     const { reviewId } = req.params;
     try {
@@ -33,7 +33,7 @@ class ReCommentController {
     }
   };
 
-  //코멘트 수정하기
+  //대댓글 수정하기
   updateReviewComment = async (req, res, next) => {
     const { userId } = res.locals.user;
     const { reviewId, reCommentId } = req.params;
@@ -51,7 +51,7 @@ class ReCommentController {
     }
   };
 
-  //코멘트 삭제하기
+  //대댓글 삭제하기
   deleteReviewComment = async (req, res, next) => {
     const { userId } = res.locals.user;
     const { reviewId, reCommentId } = req.params;

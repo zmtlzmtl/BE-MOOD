@@ -2,7 +2,7 @@ const Joi = require("joi");
 const { makeError } = require("../error");
 
 const Validation = {
-  //회원가입 check
+  //회원가입
   signUpCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       id: Joi.string()
@@ -64,7 +64,8 @@ const Validation = {
     }
     next();
   },
-  //로그인 check
+
+  //로그인
   loginCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       id: Joi.string()
@@ -95,7 +96,8 @@ const Validation = {
     }
     next();
   },
-  //musicId check
+
+  //musicId
   paramGetCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       musicId: Joi.number()
@@ -114,6 +116,8 @@ const Validation = {
     }
     next();
   },
+
+  //리뷰 기본값
   paramCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       musicId: Joi.number()
@@ -140,6 +144,8 @@ const Validation = {
     }
     next();
   },
+
+  //리뷰 내용
   reviewCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       review: Joi.string()
@@ -160,6 +166,8 @@ const Validation = {
     }
     next();
   },
+
+  //닉네임
   nicknameCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       nickname: Joi.string()
@@ -182,6 +190,7 @@ const Validation = {
     next();
   },
 
+  //이메일
   emailCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       email: Joi.string()
@@ -201,6 +210,8 @@ const Validation = {
     }
     next();
   },
+
+  //대댓글
   commentCheck: async (req, res, next) => {
     const check = Joi.object().keys({
       comment: Joi.string()
