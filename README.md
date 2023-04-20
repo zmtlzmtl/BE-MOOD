@@ -148,7 +148,7 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
   
 > **문제** : 음악의 분위기를 태그로 저장하여 검색에서 사용할 수 있게 구현
 >
-> **해결** : ![image](https://user-images.githubusercontent.com/63998542/231758778-57e6401f-413c-4525-85e7-13106296202a.png)
+> **해결** : ![image](https://user-images.githubusercontent.com/122267164/233242603-5bfba9a2-6311-4700-af6f-8510e28ee352.png)
 </details>
 
 <details>
@@ -156,7 +156,7 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
   
 > **문제** : 클래식 음악에 감정 결합하기
 >
-> **해결** : ![image](https://user-images.githubusercontent.com/63998542/231758892-191f1838-4993-403c-942c-f1e62460faa7.png)
+> **해결** : ![image](https://user-images.githubusercontent.com/122267164/233242713-1bc27497-0d37-47b3-a991-72a2179760de.png)
 </details>
 
 <details>
