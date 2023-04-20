@@ -12,7 +12,7 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 
 ### 🏛 Architecture
 
-![archibe](https://user-images.githubusercontent.com/63998542/231699355-40dd226d-252f-4ff6-8d59-831317103fd1.jpg)
+![image](https://user-images.githubusercontent.com/122267164/233242245-9e39e72e-62df-4e7d-a144-f2734b0e122a.png)
 
 <hr/>
 
