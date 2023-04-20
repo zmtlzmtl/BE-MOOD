@@ -103,18 +103,6 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
   <img src="https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white">
 <br>
 
-<hr>
-
-| 이름       | 포지션       | 
-| ---------- | ------------ | 
-| **김상목** | `백엔드` | 
-| **신동윤** | `백엔드` |
-| **곽승민** | `백엔드` | 
-| **이재욱** | `프론트엔드` | 
-| **김명주** | `프론트엔드` | 
-| **이인영** | `프론트엔드` | 
-| **이예림** | `디자이너` |
-
 ## 🧨이슈 및 트러블슈팅
 
 <details>
@@ -167,3 +155,18 @@ Mood Classic 에서 특별히 엄선한 클래식 음악에 대한 소통을 통
 > **해결** : LAP (layered architecture pattern) 아키텍쳐 환경에서의 repository layer 테스트 코드 작성시, repository layer에서 sequelize-cli 의 model 을 직접 가져와 사용하고 있었습니다. sequelize module에 의존하고 있는 repository layer 의 코드를 constructor injection 방식의 의존성 주입을 통해 테스트 코드 작성을 가능하게 했습니다. 
 
 </details>
+
+##📃 유저 피드백 개선
+  
+  
+<hr>
+
+| 이름       | 포지션       | 
+| ---------- | ------------ | 
+| **김상목** | `백엔드` | 
+| **신동윤** | `백엔드` |
+| **곽승민** | `백엔드` | 
+| **이재욱** | `프론트엔드` | 
+| **김명주** | `프론트엔드` | 
+| **이인영** | `프론트엔드` | 
+| **이예림** | `디자이너` |
